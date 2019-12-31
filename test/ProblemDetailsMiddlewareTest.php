@@ -1,22 +1,23 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-problem-details for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-problem-details/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-problem-details for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-problem-details/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\ProblemDetails;
+namespace MezzioTest\ProblemDetails;
 
 use ErrorException;
 use Interop\Http\ServerMiddleware\DelegateInterface;
+use Mezzio\ProblemDetails\Exception\MissingResponseException;
+use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use MezzioTest\ProblemDetails\TestAsset;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\ProblemDetails\Exception\MissingResponseException;
-use Zend\ProblemDetails\ProblemDetailsMiddleware;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
-use ZendTest\ProblemDetails\TestAsset;
 
 class ProblemDetailsMiddlewareTest extends TestCase
 {

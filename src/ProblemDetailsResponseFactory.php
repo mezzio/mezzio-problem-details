@@ -1,22 +1,23 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-problem-details for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-problem-details/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-problem-details for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-problem-details/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md New BSD License
  */
 
-namespace Zend\ProblemDetails;
+namespace Mezzio\ProblemDetails;
 
 use Closure;
 use Fig\Http\Message\StatusCodeInterface as StatusCode;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Stream;
 use Negotiation\Negotiator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Spatie\ArrayToXml\ArrayToXml;
 use Throwable;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Stream;
 
 /**
  * Create a Problem Details response.
@@ -130,7 +131,7 @@ class ProblemDetailsResponseFactory
      * Factory for generating an empty response body.
      *
      * If none is provided, defaults to a closure that returns an empty
-     * zend-diactoros Stream instance using a php://temp stream.
+     * laminas-diactoros Stream instance using a php://temp stream.
      *
      * The factory MUST return a StreamInterface
      *
@@ -161,7 +162,7 @@ class ProblemDetailsResponseFactory
     /**
      * Response prototype to use when generating Problem Details responses.
      *
-     * Defaults to a zend-diactoros response if none is injected.
+     * Defaults to a laminas-diactoros response if none is injected.
      *
      * @var ResponseInterface
      */
