@@ -8,7 +8,7 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Added
 
-- [#29](https://github.com/zendframework/zend-problem-details/pull/29) adds
+- [zendframework/zend-problem-details#29](https://github.com/zendframework/zend-problem-details/pull/29) adds
   the ability for the `ProblemDetailsMiddleware` to trigger listeners when
   it catches a `Throwable` to produce a response. Listeners are PHP callables
   and receive the following arguments, in the following order:
@@ -59,12 +59,12 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Fixed
 
-- [#20](https://github.com/zendframework/zend-problem-details/pull/20) fixes an
+- [zendframework/zend-problem-details#20](https://github.com/zendframework/zend-problem-details/pull/20) fixes an
   issue with serialization when PHP resources are within the `$additional`
   aspect of the payload. When these values are encountered, the response factory
   now will instead return `Resource of type {resource type}`.
 
-- [#21](https://github.com/zendframework/zend-problem-details/pull/21) provides
+- [zendframework/zend-problem-details#21](https://github.com/zendframework/zend-problem-details/pull/21) provides
   a defence for `$additional` data keys that would otherwise create malformed
   XML tag names.
 
@@ -72,8 +72,8 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Added
 
-- In [#1](https://github.com/zendframework/zend-problem-details/pull/1),
-  `Zend\ProblemDetails\ProblemDetailsResponseFactory` was updated to attempt to
+- In [zendframework/zend-problem-details#1](https://github.com/zendframework/zend-problem-details/pull/1),
+  `Mezzio\ProblemDetails\ProblemDetailsResponseFactory` was updated to attempt to
   generate a secure-by-default and secure-in-production Problem Details response
   when the response is generated from an exception; essentially, it now defaults
   to NOT exposing this information, in order to prevent exposing internals of
@@ -91,17 +91,17 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
   Additionally, `ProblemDetailsResponseFactoryFactory` was updated to re-use the
   configuration `debug` setting for the `$exceptionDetailsInResponse` flag.
 
-- [#7](https://github.com/zendframework/zend-problem-details/pull/7) adds a
+- [zendframework/zend-problem-details#7](https://github.com/zendframework/zend-problem-details/pull/7) adds a
   `ProblemDetailsNotFoundHandler` class and associated factory. This can be used
   in place of the default application `NotFoundHandler`, in addition to it, or
   within specific routed pipelines in order to provide Problem Details 404
   responses.
 
-- [#8](https://github.com/zendframework/zend-problem-details/pull/8) adds
-  `Zend\Expressive\ProblemDetails\Exception\ExceptionInterface`, a marker
+- [zendframework/zend-problem-details#8](https://github.com/zendframework/zend-problem-details/pull/8) adds
+  `Mezzio\ProblemDetails\Exception\ExceptionInterface`, a marker
   interface for exceptions provided by the package.
 
-- [#12](https://github.com/zendframework/zend-problem-details/pull/12) adds
+- [zendframework/zend-problem-details#12](https://github.com/zendframework/zend-problem-details/pull/12) adds
   support for http-interop/http-middleware 0.5.0 via a polyfill provided by the
   package webimpress/http-middleware-compatibility. Essentially, this means you
   can drop this package into an application targeting either the 0.4.1 or 0.5.0
@@ -109,15 +109,15 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Changed
 
-- [#8](https://github.com/zendframework/zend-problem-details/pull/8) renames the
+- [zendframework/zend-problem-details#8](https://github.com/zendframework/zend-problem-details/pull/8) renames the
   interface `ProblemDetailsException` to `ProblemDetailsExceptionInterface`.
-  This was done to make the naming consistent with other ZF packages.
+  This was done to make the naming consistent with other Laminas packages.
 
-- [#8](https://github.com/zendframework/zend-problem-details/pull/8) renames the
+- [zendframework/zend-problem-details#8](https://github.com/zendframework/zend-problem-details/pull/8) renames the
   trait `CommonProblemDetailsException` to `CommonProblemDetailsExceptionTrait`.
-  This was done to make the naming consistent with other ZF packages.
+  This was done to make the naming consistent with other Laminas packages.
 
-- [#8](https://github.com/zendframework/zend-problem-details/pull/8) updates the
+- [zendframework/zend-problem-details#8](https://github.com/zendframework/zend-problem-details/pull/8) updates the
   shipped `InvalidResponseBodyException` and `MissingResponseException` to
   extend the new `ExceptionInterface`.
 
@@ -160,12 +160,12 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Added
 
-- [#7](https://github.com/weierophinney/problem-details/pull/7) adds an explicit
+- [zendframework/zend-problem-details#7](https://github.com/weierophinney/problem-details/pull/7) adds an explicit
   dependency on ext/json.
 
 ### Changed
 
-- [#7](https://github.com/weierophinney/problem-details/pull/7) updates each
+- [zendframework/zend-problem-details#7](https://github.com/weierophinney/problem-details/pull/7) updates each
   of the following to place them under the new `ProblemDetails\Exception`
   namespace:
   - `CommonProblemDetailsException`
@@ -201,7 +201,7 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Fixed
 
-- [#5](https://github.com/weierophinney/problem-details/pull/5) updates the
+- [zendframework/zend-problem-details#5](https://github.com/weierophinney/problem-details/pull/5) updates the
   response factory and middleware to treat lack of/empty `Accept` header values
   as `*/*`, per RFC-7231 section 5.3.2.
 
@@ -209,13 +209,13 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Added
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) adds
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) adds
   `ProblemDetailsReponseFactoryFactory` for generating a
   `ProblemDetailsResponseFactory` instance.
 
 ### Changed
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) changes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) changes the
   `ProblemDetailsResponseFactory` in several ways:
   - It is now instantiable. The constructor accepts a boolean indicating debug
     status (`false` by default), an integer bitmask of JSON encoding flags, a
@@ -228,12 +228,12 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
     argument is no longer an `Accept` header, but a PSR-7
     `ServerRequestInterface` instance.
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) changes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) changes the
   `ProblemDetailsMiddleware`; it now composes a `ProblemDetailsResponseFactory`
   insteead of an `isDebug` flag. Additionally, it no longer wraps processing of
   the delegate in a try/catch block if the request cannot accept JSON or XML.
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) changes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) changes the
   `ProblemDetailsMiddlewareFactory` to inject the `ProblemDetailsMiddleware`
   with a `ProblemDetailsResponseFactory` instead of an `isDebug` flag.
 
@@ -243,23 +243,23 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Removed
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) removes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) removes the
   `ProblemDetailsJsonResponse`; use the `ProblemDetailsResponseFactory` instead.
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) removes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) removes the
   `ProblemDetailsXmlResponse`; use the `ProblemDetailsResponseFactory` instead.
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) removes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) removes the
   `CommonProblemDetails` trait; the logic is now incorporated in the
   `ProblemDetailsResponseFactory`.
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) removes the
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) removes the
   `ProblemDetailsResponse` interface; PSR-7 response prototypes are now used
   instead.
 
 ### Fixed
 
-- [#4](https://github.com/weierophinney/problem-details/pull/4) updates JSON
+- [zendframework/zend-problem-details#4](https://github.com/weierophinney/problem-details/pull/4) updates JSON
   response generation to allow specifying your own JSON encoding flags. By
   default, it now does pretty JSON, with unescaped slashes and unicode.
 

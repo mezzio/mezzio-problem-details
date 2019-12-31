@@ -1,17 +1,18 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-problem-details for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-problem-details/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-problem-details for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-problem-details/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\ProblemDetails;
+namespace MezzioTest\ProblemDetails;
 
+use Mezzio\ProblemDetails\ProblemDetailsJsonResponse;
+use Mezzio\ProblemDetails\ProblemDetailsResponse;
+use Mezzio\ProblemDetails\ProblemDetailsXmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
-use Zend\ProblemDetails\ProblemDetailsJsonResponse;
-use Zend\ProblemDetails\ProblemDetailsResponse;
-use Zend\ProblemDetails\ProblemDetailsXmlResponse;
 
 trait ProblemDetailsAssertionsTrait
 {
