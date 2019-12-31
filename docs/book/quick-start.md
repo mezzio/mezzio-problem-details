@@ -6,7 +6,7 @@ To install this package in your application, use
 [Composer](https://getcomposer.org):
 
 ```bash
-$ composer require zendframework/zend-problem-details
+$ composer require mezzio/mezzio-problem-details
 ```
 
 ## Usage
@@ -25,10 +25,10 @@ Problem Details responses:
 
 ### ProblemDetailsResponseFactory
 
-If you are using [Expressive](https://docs.zendframework.com/zend-expressive/)
-and have installed [zend-component-installer](https://docs.zendframework.com/zend-component-installer)
+If you are using [Mezzio](https://docs.mezzio.dev/mezzio/)
+and have installed [laminas-component-installer](https://docs.laminas.dev/laminas-component-installer)
 (which is installed by default in v2.0 and above), you can write middleware that
-composes the `Zend\ProblemDetails\ProblemDetailsResponseFactory` immediately, and
+composes the `Mezzio\ProblemDetails\ProblemDetailsResponseFactory` immediately, and
 inject that service in your middleware.
 
 As an example, the following catches domain excpetions and uses them to create
@@ -39,8 +39,8 @@ use Interop\Http\Server\MiddlewareInterface;
 use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Laminas\Diactoros\Response\JsonResponse;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class DomainTransactionMiddleware implements MiddlewareInterface
 {
@@ -72,7 +72,7 @@ The factory for the above might look like:
 
 ```php
 use Psr\Container\ContainerInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class DomainTransactionMiddlewareFactory
 {
@@ -95,9 +95,9 @@ use Interop\Http\Server\MiddlewareInterface;
 use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\InputFilter\InputFilterInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\InputFilter\InputFilterInterface;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class DomainTransactionMiddleware implements MiddlewareInterface
 {
@@ -155,11 +155,11 @@ as the HTTP status if it falls in the 400 or 500 range (500 will be used
 otherwise).
 
 You can also create custom exceptions that provide details for the factory to
-consume by implementing `Zend\ProblemDetails\Exception\ProblemDetailsExceptionInterface`,
+consume by implementing `Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface`,
 which defines the following:
 
 ```php
-namespace Zend\ProblemDetails\Exception;
+namespace Mezzio\ProblemDetails\Exception;
 
 use JsonSerializable;
 
@@ -211,8 +211,8 @@ By composing this trait, you can easily define custom exception types:
 namespace Api;
 
 use DomainException as PhpDomainException;
-use Zend\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
-use Zend\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
+use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
+use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
 class DomainException extends PhpDomainException implements ProblemDetailsExceptionInterface
 {
@@ -253,7 +253,7 @@ a `ProblemDetailsResponseFactory`, and does the following:
   `ProblemDetailsResponseFactory::createResponseFromThrowable()` method, and the
   response generated is returned.
 
-When using Expressive, the middleware service is already wired to a factory that
+When using Mezzio, the middleware service is already wired to a factory that
 ensures the `ProblemDetailsResponseFactory` is composed. As such, you can wire
 it into your workflow in several ways.
 
@@ -263,7 +263,7 @@ First, you can have it intercept every request:
 $app->pipe(ProblemDetailsMiddleware::class);
 ```
 
-With Expressive, you can also segregate this to a subpath:
+With Mezzio, you can also segregate this to a subpath:
 
 ```php
 $app->pipe('/api', ProblemDetailsMiddleware::class);
@@ -286,10 +286,10 @@ This package provides `ProblemDetailsNotFoundHandler` which will return a
 problem details `Response` with a `404` status if the request can accept either
 JSON or XML.
 
-To use this handler in Expressive add it into your pipeline immediate before the 
+To use this handler in Mezzio add it into your pipeline immediate before the 
 default `NotFoundHandler`:
 
 ```php
-$app->pipe(\Zend\ProblemDetails\ProblemDetailsNotFoundHandler::class);
+$app->pipe(\Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler::class);
 $app->pipe(NotFoundHandler::class);
 ```

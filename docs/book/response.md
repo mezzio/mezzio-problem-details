@@ -6,7 +6,7 @@ details response.
 
 ## ProblemDetailsResponseFactory
 
-This library provides a factory named `Zend\ProblemDetails\ProblemDetailsResponseFactory`.
+This library provides a factory named `Mezzio\ProblemDetails\ProblemDetailsResponseFactory`.
 It defines two static methods, `createResponse()` and `createResponseFromThrowable()`.
 Each accepts the PSR-7 `ServerRequestInterface` instance as its first argument,
 and then additional arguments in order to create the response itself:
@@ -64,7 +64,7 @@ where:
   exceptions](exception.md) for more details.
 
 Normal usage of the factory will use a response and a stream from
-[zend-diactoros](https://docs.zendframework.com/zend-diactoros/) for the
+[laminas-diactoros](https://docs.laminas.dev/laminas-diactoros/) for the
 response prototype and response body, respectively; additionally, responses will
 not include exception details (file, line number, backtrace, etc.), and JSON
 responses will use a set of flags for generating human-readable JSON. If these
@@ -116,14 +116,14 @@ where:
   `StreamInterface` instance. Since some stream implementations are mutable (for
   instance, those backed by a resource), a factory is necessary in order to
   ensure a new instance is returned. If you provide such a factory, the stream
-  must be writable. The default will return a zend-diactoros `Stream` instance
+  must be writable. The default will return a laminas-diactoros `Stream` instance
   backed by a PHP temp stream in `wb+` mode.
 
 ## ProblemDetailsResponseFactoryFactory
 
 This package also provides a factory for generating the
 `ProblemDetailsResponseFactory` for usage within dependency injection containers:
-`Zend\ProblemDetails\ProblemDetailsResponseFactoryFactory`. It does the following:
+`Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory`. It does the following:
 
 - If a `config` service is present:
     - If the service contains a `debug` key with a boolean value, that value is
@@ -139,11 +139,11 @@ This package also provides a factory for generating the
 If any of the above are not present, a `null` value will be passed, allowing the
 default value to be used.
 
-If you are using [Expressive](https://docs.zendframework.com/zend-expressive/)
-and have installed [zend-component-installer](https://docs.zendframework.com/zend-component-installer)
+If you are using [Mezzio](https://docs.mezzio.dev/mezzio/)
+and have installed [laminas-component-installer](https://docs.laminas.dev/laminas-component-installer)
 in your application, the above factory will be wired already to the
-`Zend\ProblemDetails\ProblemDetailsResponseFactory` service via the provided
-`Zend\ProblemDetails\ConfigProvider` class.
+`Mezzio\ProblemDetails\ProblemDetailsResponseFactory` service via the provided
+`Mezzio\ProblemDetails\ConfigProvider` class.
 
 ## Examples
 
@@ -157,7 +157,7 @@ use Interop\Http\Server\MiddlewareInterface;
 use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class ApiMiddleware implements MiddlewareInterface
 {
@@ -192,7 +192,7 @@ use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class ApiMiddleware implements MiddlewareInterface
 {
@@ -228,7 +228,7 @@ use Interop\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Throwable;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class ApiMiddleware implements MiddlewareInterface
 {
@@ -264,7 +264,7 @@ could have a `RateLimitResponse` generated as follows:
 
 ```php
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class RateLimitResponseFactory extends ProblemDetailsResponseFactory
 {
