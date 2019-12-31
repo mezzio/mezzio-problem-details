@@ -1,15 +1,13 @@
 docs_dir: docs/book
 site_dir: docs/html
 nav:
-    - Home: index.md
-    - Introduction: intro.md
-    - "Quick Start": quick-start.md
-    - Reference:
-        - "Generating Responses": response.md
-        - "Exceptions": exception.md
-        - "Error Handling Middleware": middleware.md
-        - "Not Found Handler": not-found-handler.md
-        - "Default Types": default-types.md
+    - { Home: index.md }
+    - { Introduction: intro.md }
+    - { 'Quick Start': quick-start.md }
+    - { Reference: [{ 'Generating Responses': response.md }, { Exceptions: exception.md }, { 'Error Handling Middleware': middleware.md }, { 'Not Found Handler': not-found-handler.md }, { 'Default Types': default-types.md }] }
 site_name: mezzio-problem-details
 site_description: 'PSR-7 Problem Details for HTTP API responses and middleware'
 repo_url: 'https://github.com/mezzio/mezzio-problem-details'
+extra:
+    project: Mezzio
+    project_url: 'https://docs.mezzio.dev'
