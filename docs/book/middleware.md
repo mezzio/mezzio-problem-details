@@ -23,7 +23,7 @@ This middleware does the following:
 As such, you can register this in middleware stacks in order to automate
 generation of problem details for exceptions and PHP errors.
 
-As an example, using Expressive, you could compose it as an error handler within
+As an example, using Mezzio, you could compose it as an error handler within
 your application pipeline, having it handle _all_ errors and exceptions from
 your application:
 
@@ -97,20 +97,20 @@ $middleware->attachListener($listener);
 
 The `ProblemDetailsMiddleware` ships with a corresponding PSR-11 compatible factory,
 `ProblemDetailsMiddlewareFactory`. This factory uses the service named
-`Zend\ProblemDetails\ProblemDetailsResponseFactory` to instantiate the
+`Mezzio\ProblemDetails\ProblemDetailsResponseFactory` to instantiate the
 middleware.
 
-For Expressive 2+ users, this middleware should be registered automatically with
-your application on install, assuming you have the zend-component-installer
-plugin in place (it's shipped by default with the Expressive skeleton).
+For Mezzio 2+ users, this middleware should be registered automatically with
+your application on install, assuming you have the laminas-component-installer
+plugin in place (it's shipped by default with the Mezzio skeleton).
 
 ### Registering listeners
 
 - Since 0.5.2
 
 In order to register listeners, we recommend using a
-[delegator factory](https://docs.zendframework.com/zend-expressive/features/container/delegator-factories/)
-on the `Zend\ProblemDetails\ProblemDetailsMiddleware` service.
+[delegator factory](https://docs.mezzio.dev/mezzio/features/container/delegator-factories/)
+on the `Mezzio\ProblemDetails\ProblemDetailsMiddleware` service.
 
 As an example:
 

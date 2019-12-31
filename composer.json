@@ -1,26 +1,40 @@
 {
-    "name": "zendframework/zend-problem-details",
+    "name": "mezzio/mezzio-problem-details",
     "description": "Problem Details for PSR-7 HTTP APIs",
     "license": "BSD-3-Clause",
     "keywords": [
+        "laminas",
+        "mezzio",
         "api",
         "rest",
-        "problem-details",
-        "zendframework",
-        "zf"
+        "problem-details"
     ],
+    "homepage": "https://mezzio.dev",
     "support": {
-        "docs": "https://docs.zendframework.com/zend-problem-details/",
-        "issues": "https://github.com/zendframework/zend-problem-details/issues",
-        "source": "https://github.com/zendframework/zend-problem-details",
-        "rss": "https://github.com/zendframework/zend-problem-details/releases.atom",
-        "slack": "https://zendframework-slack.herokuapp.com",
-        "forum": "https://discourse.zendframework.com/c/questions/expressive"
+        "docs": "https://docs.mezzio.dev/mezzio-problem-details/",
+        "issues": "https://github.com/mezzio/mezzio-problem-details/issues",
+        "source": "https://github.com/mezzio/mezzio-problem-details",
+        "rss": "https://github.com/mezzio/mezzio-problem-details/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev",
+            "dev-develop": "1.1.x-dev"
+        },
+        "laminas": {
+            "config-provider": "Mezzio\\ProblemDetails\\ConfigProvider"
+        }
     },
     "require": {
         "php": "^7.1",
         "ext-json": "*",
         "fig/http-message-util": "^1.1.2",
+        "laminas/laminas-zendframework-bridge": "^1.0",
         "psr/container": "^1.0",
         "psr/http-message": "^1.0",
         "psr/http-server-middleware": "^1.0",
@@ -28,29 +42,17 @@
         "willdurand/negotiation": "^2.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0.1",
-        "zendframework/zend-coding-standard": "~1.0.0"
+        "laminas/laminas-coding-standard": "~1.0.0",
+        "phpunit/phpunit": "^7.0.1"
     },
     "autoload": {
         "psr-4": {
-            "Zend\\ProblemDetails\\": "src/"
+            "Mezzio\\ProblemDetails\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ZendTest\\ProblemDetails\\": "test/"
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "zf": {
-            "config-provider": "Zend\\ProblemDetails\\ConfigProvider"
-        },
-        "branch-alias": {
-            "dev-master": "1.0.x-dev",
-            "dev-develop": "1.1.x-dev"
+            "MezzioTest\\ProblemDetails\\": "test/"
         }
     },
     "scripts": {
@@ -62,5 +64,8 @@
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "replace": {
+        "zendframework/zend-problem-details": "self.version"
     }
 }
