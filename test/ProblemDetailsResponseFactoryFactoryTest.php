@@ -1,19 +1,20 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-problem-details for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-problem-details/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-problem-details for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-problem-details/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\ProblemDetails;
+namespace MezzioTest\ProblemDetails;
 
 use Closure;
+use Laminas\Diactoros\Response;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Response;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
-use Zend\ProblemDetails\ProblemDetailsResponseFactoryFactory;
 
 class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 {
@@ -26,7 +27,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     {
         $this->container->has('config')->willReturn(false);
         $this->container->has(ResponseInterface::class)->willReturn(false);
-        $this->container->has('Zend\ProblemDetails\StreamFactory')->willReturn(false);
+        $this->container->has('Mezzio\ProblemDetails\StreamFactory')->willReturn(false);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory = $factoryFactory($this->container->reveal());
@@ -49,7 +50,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $this->container->get('config')->willReturn(['debug' => true]);
 
         $this->container->has(ResponseInterface::class)->willReturn(false);
-        $this->container->has('Zend\ProblemDetails\StreamFactory')->willReturn(false);
+        $this->container->has('Mezzio\ProblemDetails\StreamFactory')->willReturn(false);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory = $factoryFactory($this->container->reveal());
@@ -65,7 +66,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $this->container->get('config')->willReturn(['problem-details' => ['json_flags' => JSON_PRETTY_PRINT]]);
 
         $this->container->has(ResponseInterface::class)->willReturn(false);
-        $this->container->has('Zend\ProblemDetails\StreamFactory')->willReturn(false);
+        $this->container->has('Mezzio\ProblemDetails\StreamFactory')->willReturn(false);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory = $factoryFactory($this->container->reveal());
@@ -81,7 +82,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $this->container->has('config')->willReturn(false);
         $this->container->has(ResponseInterface::class)->willReturn(true);
         $this->container->get(ResponseInterface::class)->willReturn($response);
-        $this->container->has('Zend\ProblemDetails\StreamFactory')->willReturn(false);
+        $this->container->has('Mezzio\ProblemDetails\StreamFactory')->willReturn(false);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory = $factoryFactory($this->container->reveal());
@@ -100,7 +101,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $this->container->has('config')->willReturn(false);
         $this->container->has(ResponseInterface::class)->willReturn(true);
         $this->container->get(ResponseInterface::class)->willReturn($responseFactory);
-        $this->container->has('Zend\ProblemDetails\StreamFactory')->willReturn(false);
+        $this->container->has('Mezzio\ProblemDetails\StreamFactory')->willReturn(false);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory = $factoryFactory($this->container->reveal());
@@ -117,8 +118,8 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 
         $this->container->has('config')->willReturn(false);
         $this->container->has(ResponseInterface::class)->willReturn(false);
-        $this->container->has('Zend\ProblemDetails\StreamFactory')->willReturn(true);
-        $this->container->get('Zend\ProblemDetails\StreamFactory')->willReturn($streamFactory);
+        $this->container->has('Mezzio\ProblemDetails\StreamFactory')->willReturn(true);
+        $this->container->get('Mezzio\ProblemDetails\StreamFactory')->willReturn($streamFactory);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory = $factoryFactory($this->container->reveal());

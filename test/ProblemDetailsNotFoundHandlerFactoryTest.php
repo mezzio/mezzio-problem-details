@@ -1,17 +1,18 @@
 <?php
+
 /**
- * @see       https://github.com/zendframework/zend-problem-details for the canonical source repository
- * @copyright Copyright (c) 2017 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   https://github.com/zendframework/zend-problem-details/blob/master/LICENSE.md New BSD License
+ * @see       https://github.com/mezzio/mezzio-problem-details for the canonical source repository
+ * @copyright https://github.com/mezzio/mezzio-problem-details/blob/master/COPYRIGHT.md
+ * @license   https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZendTest\ProblemDetails;
+namespace MezzioTest\ProblemDetails;
 
+use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
+use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandlerFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Zend\ProblemDetails\ProblemDetailsNotFoundHandler;
-use Zend\ProblemDetails\ProblemDetailsNotFoundHandlerFactory;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 
 class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
 {
@@ -24,7 +25,9 @@ class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
     public function testCreatesNotFoundHandlerWithoutResponseFactoryIfServiceDoesNotExist() : void
     {
         $this->container->has(ProblemDetailsResponseFactory::class)->willReturn(false);
+        $this->container->has(\Zend\ProblemDetails\ProblemDetailsResponseFactory::class)->willReturn(false);
         $this->container->get(ProblemDetailsResponseFactory::class)->shouldNotBeCalled();
+        $this->container->get(\Zend\ProblemDetails\ProblemDetailsResponseFactory::class)->shouldNotBeCalled();
 
         $notFoundHandler = ($this->factory)($this->container->reveal());
 
