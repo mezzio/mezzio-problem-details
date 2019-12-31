@@ -6,7 +6,7 @@ details response.
 
 ## ProblemDetailsResponseFactory
 
-This library provides a factory named `Zend\ProblemDetails\ProblemDetailsResponseFactory`.
+This library provides a factory named `Mezzio\ProblemDetails\ProblemDetailsResponseFactory`.
 
 The factory has one _required_ argument: a _response factory_ capable of
 producing an mepty PSR-7 `ResponseInterface`. This may be an PHP callable.
@@ -69,7 +69,7 @@ where:
   exceptions](exception.md) for more details.
 
 Normal usage of the factory will use a response and a stream from
-[zend-diactoros](https://docs.zendframework.com/zend-diactoros/) for the
+[laminas-diactoros](https://docs.laminas.dev/laminas-diactoros/) for the
 response prototype and response body, respectively; additionally, responses will
 not include exception details (file, line number, backtrace, etc.), and JSON
 responses will use a set of flags for generating human-readable JSON. If these
@@ -136,7 +136,7 @@ where:
 
 This package also provides a factory for generating the
 `ProblemDetailsResponseFactory` for usage within dependency injection containers:
-`Zend\ProblemDetails\ProblemDetailsResponseFactoryFactory`. It does the following:
+`Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory`. It does the following:
 
 - Pulls the `Psr\Http\Message\ResponseInterface` service to provide as the
   `$responseFactory` parameter.
@@ -155,19 +155,19 @@ This package also provides a factory for generating the
 If any of the above config values are not present, a `null` value will be
 passed, allowing the default value to be used.
 
-If you are using [Expressive](https://docs.zendframework.com/zend-expressive/)
-and have installed [zend-component-installer](https://docs.zendframework.com/zend-component-installer)
+If you are using [Mezzio](https://docs.mezzio.dev/mezzio/)
+and have installed [laminas-component-installer](https://docs.laminas.dev/laminas-component-installer)
 in your application, the above factory will be wired already to the
-`Zend\ProblemDetails\ProblemDetailsResponseFactory` service via the provided
-`Zend\ProblemDetails\ConfigProvider` class.
+`Mezzio\ProblemDetails\ProblemDetailsResponseFactory` service via the provided
+`Mezzio\ProblemDetails\ConfigProvider` class.
 
 > ### Response Factory
 >
 > You will need to provide a `Psr\Http\Message\ResponseInterface` service that
 > resolves to a PHP callable capable of returning an instance of that type.
 >
-> If you are using Expressive 3.0.0alpha8 or later, this service is provided via
-> the zend-expressive package itself.
+> If you are using Mezzio 3.0.0alpha8 or later, this service is provided via
+> the mezzio package itself.
 
 ## Examples
 
@@ -180,7 +180,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class ApiMiddleware implements MiddlewareInterface
 {
@@ -222,7 +222,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class ApiMiddleware implements MiddlewareInterface
 {
@@ -267,7 +267,7 @@ could have a `RateLimitResponse` generated as follows:
 
 ```php
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\ProblemDetails\ProblemDetailsResponseFactory;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class RateLimitResponseFactory extends ProblemDetailsResponseFactory
 {
