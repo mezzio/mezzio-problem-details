@@ -6,10 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="PSR-7 Problem Details for HTTP API responses and middleware">  
-    <link rel="canonical" href="https://docs.mezzio.dev/quick-start/">
     <link rel="shortcut icon" href="/img/trademark-laminas-foundation-rgb.svg">
 
-    <title>Quick Start - mezzio-problem-details - Laminas Docs</title>
+    <title>mezzio-problem-details - Laminas Docs</title>
 
     <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -59,7 +58,7 @@
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">mezzio-problem-details</a>
+            <a href="../.">mezzio-problem-details</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -87,8 +86,8 @@
                     
                     
                         
-                            <li class="subnavigation__list-item subnavigation__list-item--active">
-                                <a href="./" class="subnavigation__link">Quick Start</a>
+                            <li class="subnavigation__list-item ">
+                                <a href="../quick-start/" class="subnavigation__link">Quick Start</a>
                             </li>
                         
                     
@@ -200,333 +199,21 @@
         <div class="row">
             <div class="col-md-2 col-sm-12">
                 
-    
-
-    
-    
-        <div class="toc">
-            <h6 class="toc__headline">On this page</h6>
-            <ul class="toc__list">
-                
-                    <li class="toc__entry">
-                        <a href="#installation" class="toc__link">Installation</a>
-                    </li>
-                
-                    <li class="toc__entry">
-                        <a href="#usage" class="toc__link">Usage</a>
-                    </li>
-                
-            </ul>
-        </div>
-    
-
             </div>
             <div class="col-md-7 col-sm-12 content" role="main" data-spy="scroll" data-target=".toc">
                 
-                    <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        
-            <li class="breadcrumb-item"><a href="">Overview</a></li>
 
-            
-                <li class="breadcrumb-item"><a href="..">mezzio-problem-details</a></li>
+<h1 class="content__title">404</h1>
+<blockquote>
+    <h3>Something went wrong!</h3>
+    <p>
+        We're sorry, but the page you are looking for does not exist.
+    </p>
+</blockquote>
 
-                
-
-                <li class="breadcrumb-item active" aria-current="page">Quick Start</li>
-            
-        
-    </ol>
-</nav>
+<a href="../." class="btn btn-default" role="button">Go to homepage</a>
 
 
-
-
-
-
-    
-    
-
-    <h1 id="quick-start">Quick Start</h1>
-<h2 id="installation">Installation</h2>
-<p>To install this package in your application, use
-<a href="https://getcomposer.org">Composer</a>:</p>
-<pre class=codehilite><code class=language-bash>$ composer require mezzio/mezzio-problem-details</code></pre>
-<h2 id="usage">Usage</h2>
-<p>This package provides three primary mechanisms for creating and returning
-Problem Details responses:</p>
-<ul>
-<li><code>ProblemDetailsResponseFactory</code> for generating problem details responses on
-  the fly from either PHP primitives or exceptions/throwables.</li>
-<li><code>ProblemDetailsExceptionInterface</code> for creating exceptions with additional problem
-  details that may be used when generating a response.</li>
-<li><code>ProblemDetailsMiddleware</code> that acts as error/exception handler middleware,
-  casting and throwing PHP errors as <code>ErrorException</code> instances, and all caught
-  exceptions as problem details responses using the
-  <code>ProblemDetailsResponseFactory</code>.</li>
-</ul>
-<h3>ProblemDetailsResponseFactory</h3>
-<p>If you are using <a href="https://docs.mezzio.dev/mezzio/">Mezzio</a>
-and have installed <a href="https://docs.laminas.dev/laminas-component-installer">laminas-component-installer</a>
-(which is installed by default in v2.0 and above), you can write middleware that
-composes the <code>Mezzio\ProblemDetails\ProblemDetailsResponseFactory</code> immediately, and
-inject that service in your middleware.</p>
-<p>As an example, the following catches domain exceptions and uses them to create
-problem details responses:</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
-use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
-
-class DomainTransactionMiddleware implements MiddlewareInterface
-{
-    private $domainService;
-
-    private $problemDetailsFactory;
-
-    public function __construct(
-        DomainService $service,
-        ProblemDetailsResponseFactory $problemDetailsFactory
-    ) {
-        $this-&gt;domainService = $service;
-        $this-&gt;problemDetailsFactory = $problemDetailsFactory;
-    }
-
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
-    {
-        try {
-            $result = $this-&gt;domainService-&gt;transaction($request-&gt;getParsedBody());
-            return new JsonResponse($result);
-        } catch (DomainException $e) {
-            return $this-&gt;problemDetailsFactory-&gt;createResponseFromThrowable($request, $e);
-        }
-    }
-}</code></pre>
-<p>The factory for the above might look like:</p>
-<pre class=codehilite><code class=language-php>use Psr\Container\ContainerInterface;
-use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
-
-class DomainTransactionMiddlewareFactory
-{
-    public function __invoke(ContainerInterface $container)
-    {
-        return new DomainTransactionMiddleware(
-            $container-&gt;get(DomainService::class),
-            $container-&gt;get(ProblemDetailsResponseFactory::class)
-        );
-    }
-}</code></pre>
-<p>Another way to use the factory is to provide PHP primitives to the factory. As
-an example, validation failure is an expected condition, but should likely
-result in problem details to the end user.</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Throwable;
-use Laminas\Diactoros\Response\JsonResponse;
-use Laminas\InputFilter\InputFilterInterface;
-use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
-
-class DomainTransactionMiddleware implements MiddlewareInterface
-{
-    private $domainService;
-
-    private $inputFilter;
-
-    private $problemDetailsFactory;
-
-    public function __construct(
-        DomainService $service,
-        InputFilterInterface $inputFilter,
-        ProblemDetailsResponseFactory $problemDetailsFactory
-    ) {
-        $this-&gt;domainService = $service;
-        $this-&gt;inputFilter = $inputFilter;
-        $this-&gt;problemDetailsFactory = $problemDetailsFactory;
-    }
-
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
-    {
-        $this-&gt;inputFilter-&gt;setData($request-&gt;getParsedBody());
-        if (! $this-&gt;inputFilter-&gt;isValid()) {
-            return $this-&gt;problemDetailsFactory-&gt;createResponse(
-                $request,
-                422,
-                'Domain transaction request failed validation',
-                '',
-                '',
-                ['messages' =&gt; $this-&gt;inputFilter-&gt;getMessages()]
-            );
-        }
-
-        try {
-            $result =
-            $this-&gt;domainService-&gt;transaction($this-&gt;inputFilter-&gt;getValues());
-            return new JsonResponse($result);
-        } catch (DomainException $e) {
-            return $this-&gt;problemDetailsFactory-&gt;createResponseFromThrowable($request, $e);
-        }
-    }
-}</code></pre>
-<p>The above modifies the original example to add validation and, on failed
-validation, return a custom response that includes the validation failure
-messages.</p>
-<h3>Custom Exceptions</h3>
-<p>In the above examples, we have a <code>DomainException</code> that is used to create a
-Problem Details response. By default, in production mode, the factory will use
-the exception message as the Problem Details description, and the exception code
-as the HTTP status if it falls in the 400 or 500 range (500 will be used
-otherwise).</p>
-<p>You can also create custom exceptions that provide details for the factory to
-consume by implementing <code>Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface</code>,
-which defines the following:</p>
-<pre class=codehilite><code class=language-php>namespace Mezzio\ProblemDetails\Exception;
-
-use JsonSerializable;
-
-interface ProblemDetailsExceptionInterface extends JsonSerializable
-{
-    public function getStatus() : int;
-    public function getType() : string;
-    public function getTitle() : string;
-    public function getDetail() : string;
-    public function getAdditionalData() : array;
-    public function toArray() : array;
-}</code></pre>
-<p>We also provide the trait <code>CommonProblemDetailsExceptionTrait</code>, which implements each
-of the above, the <code>jsonSerialize()</code> method, and also defines the following
-instance properties:</p>
-<pre class=codehilite><code class=language-php>/**
- * @var int
- */
-private $status;
-
-/**
- * @var string
- */
-private $detail;
-
-/**
- * @var string
- */
-private $title;
-
-/**
- * @var string
- */
-private $type;
-
-/**
- * @var array
- */
-private $additional = [];</code></pre>
-<p>By composing this trait, you can easily define custom exception types:</p>
-<pre class=codehilite><code class=language-php>namespace Api;
-
-use DomainException as PhpDomainException;
-use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
-use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
-
-class DomainException extends PhpDomainException implements ProblemDetailsExceptionInterface
-{
-    use CommonProblemDetailsExceptionTrait;
-
-    public static function create(string $message, array $details) : self
-    {
-        $e = new self($message)
-        $e-&gt;status = 417;
-        $e-&gt;detail = $message;
-        $e-&gt;type = 'https://example.com/api/doc/domain-exception';
-        $e-&gt;title = 'Domain transaction failed';
-        $e-&gt;additional['transaction'] = $details;
-        return $e;
-    }
-}</code></pre>
-<p>The data present in the generated exception will then be used by the
-<code>ProblemDetailsResponseFactory</code> to generate full Problem Details.</p>
-<h3>Error handling</h3>
-<p>When writing APIs, you may not want to handle every error or exception manually,
-or may not be aware of problems in your code that might lead to them. In such
-cases, having error handling middleware that can generate problem details can be
-handy.</p>
-<p>This package provides <code>ProblemDetailsMiddleware</code> for that situation. It composes
-a <code>ProblemDetailsResponseFactory</code>, and does the following:</p>
-<ul>
-<li>If the request can not accept either JSON or XML responses, it simply
-  passes handling to the request handler.</li>
-<li>Otherwise, it creates a PHP error handler that converts PHP errors to
-  <code>ErrorException</code> instances, and then wraps processing of the request handler
-  in a try/catch block.</li>
-<li>Any throwable or exception caught is passed to the
-  <code>ProblemDetailsResponseFactory::createResponseFromThrowable()</code> method, and the
-  response generated is returned.</li>
-</ul>
-<p>When using Mezzio, the middleware service is already wired to a factory that
-ensures the <code>ProblemDetailsResponseFactory</code> is composed. As such, you can wire
-it into your workflow in several ways.</p>
-<p>First, you can have it intercept every request:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;pipe(ProblemDetailsMiddleware::class);</code></pre>
-<p>With Mezzio, you can also segregate this to a subpath:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;pipe('/api', ProblemDetailsMiddleware::class);</code></pre>
-<p>Finally, you can include it in a route-specific pipeline:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;post('/api/domain/transaction', [
-    ProblemDetailsMiddleware::class,
-    BodyParamsMiddleware::class,
-    DomainTransactionMiddleware::class,
-]);</code></pre>
-<h3>Not Found handling</h3>
-<p>When writing APIs you may also want 404 responses be in the accepted content-type.
-This package provides <code>ProblemDetailsNotFoundHandler</code> which will return a
-problem details <code>Response</code> with a <code>404</code> status if the request can accept either
-JSON or XML.</p>
-<p>To use this handler in Mezzio add it into your pipeline immediate before the
-default <code>NotFoundHandler</code>:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;pipe(\Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler::class);
-$app-&gt;pipe(NotFoundHandler::class);</code></pre>
-
-
-
-
-    <nav>
-    <ul class="page-nav hidden-print">
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../intro/">
-                    <i class="fa fa-chevron-left"></i> Previous
-                </a>
-            
-        </li>
-
-        
-        <li class="page-nav__item">
-            
-                <a rel="next" class="page-nav__link page-nav__link--next" href="../response/">
-                    Next <i class="fa fa-chevron-right"></i>
-                </a>
-            
-        </li>
-    </ul>
-</nav>
-
-
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/mezzio/mezzio-problem-details/edit/master/docs/book/quick-start.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
-
-                
             </div>
             <div class="col-md-3 col-sm-12 sidebar">
                 
@@ -541,7 +228,7 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                     
     <div class="subnavigation hidden-print">
         <h4 class="subnavigation__title">
-            <a href="..">mezzio-problem-details</a>
+            <a href="../.">mezzio-problem-details</a>
         </h4>
 
         <h5 class="subnavigation__subtitle">Table of Contents</h5>
@@ -569,8 +256,8 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                     
                     
                         
-                            <li class="subnavigation__list-item subnavigation__list-item--active">
-                                <a href="./" class="subnavigation__link">Quick Start</a>
+                            <li class="subnavigation__list-item ">
+                                <a href="../quick-start/" class="subnavigation__link">Quick Start</a>
                             </li>
                         
                     

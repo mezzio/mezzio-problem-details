@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -269,18 +273,17 @@ producing an mepty PSR-7 <code>ResponseInterface</code>. This may be an PHP call
 <code>ServerRequestInterface</code> instance as its first argument, and then additional
 arguments in order to create the response itself:</p>
 <p>For <code>createResponse()</code>, the signature is:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ResponseInterface;</span>
-<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-<span class=x>public function createResponse(</span>
-<span class=x>    ServerRequestInterface $request,</span>
-<span class=x>    int $status,</span>
-<span class=x>    string $detail,</span>
-<span class=x>    string $title = &#39;&#39;,</span>
-<span class=x>    string $type = &#39;&#39;,</span>
-<span class=x>    array $additional = []</span>
-<span class=x>) : ResponseInterface {</span>
-</pre></div></p>
+public function createResponse(
+    ServerRequestInterface $request,
+    int $status,
+    string $detail,
+    string $title = '',
+    string $type = '',
+    array $additional = []
+) : ResponseInterface {</code></pre>
 <p>where:</p>
 <ul>
 <li><code>ServerRequestInterface $request</code> is the current request.</li>
@@ -296,14 +299,13 @@ arguments in order to create the response itself:</p>
   transaction data, etc.</li>
 </ul>
 <p>The signature of <code>createResponseFromThrowable()</code> is:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ResponseInterface;</span>
-<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
-<span class=x>public function createResponseFromThrowable(</span>
-<span class=x>    ServerRequestInterface $request,</span>
-<span class=x>    Throwable $e</span>
-<span class=x>) : ResponseInterface {</span>
-</pre></div></p>
+public function createResponseFromThrowable(
+    ServerRequestInterface $request,
+    Throwable $e
+) : ResponseInterface {</code></pre>
 <p>where:</p>
 <ul>
 <li><code>ServerRequestInterface $request</code> is the current request.</li>
@@ -321,31 +323,29 @@ not include exception details (file, line number, backtrace, etc.), and JSON
 responses will use a set of flags for generating human-readable JSON. If these
 defaults work for your needs, you can instantiate the factory directly in your
 code in order to generate a response:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// From scalar data:</span>
-<span class=x>$response = (new ProblemDetailsResponseFactory())-&gt;createResponse(</span>
-<span class=x>    $request,</span>
-<span class=x>    400,</span>
-<span class=x>    &#39;Unrecognized fields present in request&#39;</span>
-<span class=x>);</span>
+<pre class=codehilite><code class=language-php>// From scalar data:
+$response = (new ProblemDetailsResponseFactory())-&gt;createResponse(
+    $request,
+    400,
+    'Unrecognized fields present in request'
+);
 
-<span class=x>// From a throwable:</span>
-<span class=x>$response = (new ProblemDetailsResponseFactory())</span>
-<span class=x>    -&gt;createResponseFromThrowable($request, $e);</span>
-</pre></div></p>
+// From a throwable:
+$response = (new ProblemDetailsResponseFactory())
+    -&gt;createResponseFromThrowable($request, $e);</code></pre>
 <p>More often, you will want to customize behavior of the factory; for instance,
 you may want it to act differently in development than in production, or provide
 an alternate PSR-7 implementation. As such, the constructor has the following
 signature:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ResponseInterface;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
 
-<span class=x>public function __construct(</span>
-<span class=x>    callable $responseFactory,</span>
-<span class=x>    bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,</span>
-<span class=x>    int $jsonFlags = null,</span>
-<span class=x>    bool $exceptionDetailsInResponse = false,</span>
-<span class=x>    string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE</span>
-<span class=x>) {</span>
-</pre></div></p>
+public function __construct(
+    callable $responseFactory,
+    bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
+    int $jsonFlags = null,
+    bool $exceptionDetailsInResponse = false,
+    string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE
+) {</code></pre>
 <p>where:</p>
 <ul>
 <li><code>callable $responseFactory</code> is a PHP callable that can produce a PSR-7
@@ -410,35 +410,34 @@ the mezzio package itself.</p>
 <h2 id="examples">Examples</h2>
 <h3>Returning a Problem Details response</h3>
 <p>Let's say you have middleware that needs to return problem details:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ResponseInterface;</span>
-<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
-<span class=x>use Psr\Http\Server\MiddlewareInterface;</span>
-<span class=x>use Psr\Http\Server\RequestHandlerInterface;</span>
-<span class=x>use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
-<span class=x>class ApiMiddleware implements MiddlewareInterface</span>
-<span class=x>{</span>
-<span class=x>    private $problemDetailsFactory;</span>
+class ApiMiddleware implements MiddlewareInterface
+{
+    private $problemDetailsFactory;
 
-<span class=x>    public function __construct(ProblemDetailsResponseFactory $problemDetailsFactory)</span>
-<span class=x>    {</span>
-<span class=x>        $this-&gt;problemDetailsFactory = $problemDetailsFactory;</span>
-<span class=x>    }</span>
+    public function __construct(ProblemDetailsResponseFactory $problemDetailsFactory)
+    {
+        $this-&gt;problemDetailsFactory = $problemDetailsFactory;
+    }
 
-<span class=x>    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface</span>
-<span class=x>    {</span>
-<span class=x>        // discovered an error, so returning problem details:</span>
-<span class=x>        return $this-&gt;problemDetailsFactory-&gt;createResponse(</span>
-<span class=x>            $request,</span>
-<span class=x>            403,</span>
-<span class=x>            &#39;You do not have valid credentials to access &#39; . $request-&gt;getUri()-&gt;getPath(),</span>
-<span class=x>            &#39;&#39;,</span>
-<span class=x>            &#39;&#39;,</span>
-<span class=x>            [&#39;login&#39; =&gt; &#39;/login&#39;]</span>
-<span class=x>        );</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    {
+        // discovered an error, so returning problem details:
+        return $this-&gt;problemDetailsFactory-&gt;createResponse(
+            $request,
+            403,
+            'You do not have valid credentials to access ' . $request-&gt;getUri()-&gt;getPath(),
+            '',
+            '',
+            ['login' =&gt; '/login']
+        );
+    }
+}</code></pre>
 <p>The above will return a JSON response if the <code>Accept</code> request header matches
 <code>application/json</code> or any <code>application/*+json</code> mediatype. Any other mediatype
 will generate an XML response.</p>
@@ -446,33 +445,32 @@ will generate an XML response.</p>
 <p>Let's say you have middleware that invokes functionality from a service it
 composes, and that service could raise an exception or other <code>Throwable</code>. For
 this, you can use the <code>createResponseFromThrowable()</code> method instead.</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ResponseInterface;</span>
-<span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
-<span class=x>use Psr\Http\Server\MiddlewareInterface;</span>
-<span class=x>use Psr\Http\Server\RequestHandlerInterface;</span>
-<span class=x>use Throwable;</span>
-<span class=x>use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
-<span class=x>class ApiMiddleware implements MiddlewareInterface</span>
-<span class=x>{</span>
-<span class=x>    private $problemDetailsFactory;</span>
+class ApiMiddleware implements MiddlewareInterface
+{
+    private $problemDetailsFactory;
 
-<span class=x>    public function __construct(ProblemDetailsResponseFactory $problemDetailsFactory)</span>
-<span class=x>    {</span>
-<span class=x>        $this-&gt;problemDetailsFactory = $problemDetailsFactory;</span>
-<span class=x>    }</span>
+    public function __construct(ProblemDetailsResponseFactory $problemDetailsFactory)
+    {
+        $this-&gt;problemDetailsFactory = $problemDetailsFactory;
+    }
 
-<span class=x>    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface</span>
-<span class=x>    {</span>
-<span class=x>        try {</span>
-<span class=x>            // some code that may raise an exception or throwable</span>
-<span class=x>        } catch (Throwable $e) {</span>
-<span class=x>            return $this-&gt;problemDetailsFactory</span>
-<span class=x>                -&gt;createResponseFromThrowable($request, $e);</span>
-<span class=x>        }</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    {
+        try {
+            // some code that may raise an exception or throwable
+        } catch (Throwable $e) {
+            return $this-&gt;problemDetailsFactory
+                -&gt;createResponseFromThrowable($request, $e);
+        }
+    }
+}</code></pre>
 <p>As with the previous example, the above will return a JSON response if the
 <code>Accept</code> request header matches <code>application/json</code> or any <code>application/*+json</code>
 mediatype. Any other mediatype will generate an XML response.</p>
@@ -489,45 +487,43 @@ wish to provide the <code>type</code>, <code>title</code>, and/or <code>status</
 problem details. For those, we suggest creating extensions to
 <code>ProblemDetailsResponseFactory</code>. To use the example from the introduction, we
 could have a <code>RateLimitResponse</code> generated as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use Psr\Http\Message\ServerRequestInterface;</span>
-<span class=x>use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;</span>
+<pre class=codehilite><code class=language-php>use Psr\Http\Message\ServerRequestInterface;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
-<span class=x>class RateLimitResponseFactory extends ProblemDetailsResponseFactory</span>
-<span class=x>{</span>
-<span class=x>    const STATUS = 403;</span>
-<span class=x>    const TITLE = &#39;https://example.com/problems/rate-limit-exceeded&#39;;</span>
-<span class=x>    const TYPE = &#39;You have exceeded the rate limit.&#39;;</span>
+class RateLimitResponseFactory extends ProblemDetailsResponseFactory
+{
+    const STATUS = 403;
+    const TITLE = 'https://example.com/problems/rate-limit-exceeded';
+    const TYPE = 'You have exceeded the rate limit.';
 
-<span class=x>    public function create(</span>
-<span class=x>        ServerRequestInterface $request,</span>
-<span class=x>        int $tries,</span>
-<span class=x>        int $rateLimit,</span>
-<span class=x>        int $expires</span>
-<span class=x>    ) {</span>
-<span class=x>        return self::createResponse(</span>
-<span class=x>            $request,</span>
-<span class=x>            self::STATUS,</span>
-<span class=x>            sprintf(&#39;You have exceeded your %d requests per hour rate limit&#39;, $rateLimit),</span>
-<span class=x>            self::TITLE,</span>
-<span class=x>            self::TYPE,</span>
-<span class=x>            [</span>
-<span class=x>                &#39;requests_this_hour&#39; =&gt; $tries,</span>
-<span class=x>                &#39;rate_limit&#39; =&gt; $rateLimit,</span>
-<span class=x>                &#39;rate_limit_reset&#39; =&gt; date(&#39;c&#39;, $expires),</span>
-<span class=x>            ]</span>
-<span class=x>        );</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+    public function create(
+        ServerRequestInterface $request,
+        int $tries,
+        int $rateLimit,
+        int $expires
+    ) {
+        return self::createResponse(
+            $request,
+            self::STATUS,
+            sprintf('You have exceeded your %d requests per hour rate limit', $rateLimit),
+            self::TITLE,
+            self::TYPE,
+            [
+                'requests_this_hour' =&gt; $tries,
+                'rate_limit' =&gt; $rateLimit,
+                'rate_limit_reset' =&gt; date('c', $expires),
+            ]
+        );
+    }
+}</code></pre>
 <p>You would then compose this alternate factory in your middleware, and invoke it
 as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$this-&gt;rateLimitResponseFactory-&gt;create(</span>
-<span class=x>    $request,</span>
-<span class=x>    $tries,</span>
-<span class=x>    $rateLimit,</span>
-<span class=x>    $expires</span>
-<span class=x>);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$this-&gt;rateLimitResponseFactory-&gt;create(
+    $request,
+    $tries,
+    $rateLimit,
+    $expires
+);</code></pre>
 
 
 
@@ -687,9 +683,10 @@ as follows:</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -726,7 +723,7 @@ as follows:</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/mezzio/mezzio-problem-details//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -735,8 +732,8 @@ as follows:</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/mezzio/mezzio-problem-details//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/mezzio/mezzio-problem-details/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

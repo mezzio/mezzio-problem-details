@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -276,17 +280,14 @@ generation of problem details for exceptions and PHP errors.</p>
 <p>As an example, using Mezzio, you could compose it as an error handler within
 your application pipeline, having it handle <em>all</em> errors and exceptions from
 your application:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$app-&gt;pipe(ProblemDetailsMiddleware::class);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$app-&gt;pipe(ProblemDetailsMiddleware::class);</code></pre>
 <p>Or for a subpath of your application:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$app-&gt;pipe(&#39;/api&#39;, ProblemDetailsMiddleware::class);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$app-&gt;pipe('/api', ProblemDetailsMiddleware::class);</code></pre>
 <p>Alternately, you could pipe it within a routed-middleware pipeline:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$app-&gt;get(&#39;/api/books&#39;, [</span>
-<span class=x>    ProblemDetailsMiddleware::class,</span>
-<span class=x>    BooksList::class,</span>
-<span class=x>], &#39;books&#39;);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$app-&gt;get('/api/books', [
+    ProblemDetailsMiddleware::class,
+    BooksList::class,
+], 'books');</code></pre>
 <p>This latter approach ensures that you are only providing problem details for
 specific API endpoints, which can be useful when you have a mix of APIs and
 traditional web content in your application.</p>
@@ -308,24 +309,22 @@ triggers them with the following arguments, in the following order:</p>
 a way that that state will propagate meaningfully. As such, you should use
 listeners for reporting purposes only (e.g., logging).</p>
 <p>As an example:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>// Where $logger is a PSR-3 logger implementation</span>
-<span class=x>$listener = function (</span>
-<span class=x>    Throwable $error,</span>
-<span class=x>    ServerRequestInterface $request,</span>
-<span class=x>    ResponseInterface $response</span>
-<span class=x>) use ($logger) {</span>
-<span class=x>    $logger-&gt;error(&#39;[{status}] {method} {uri}: {message}&#39;, [</span>
-<span class=x>        &#39;status&#39;  =&gt; $response-&gt;getStatusCode(),</span>
-<span class=x>        &#39;method&#39;  =&gt; $request-&gt;getMethod(),</span>
-<span class=x>        &#39;uri&#39;     =&gt; (string) $request-&gt;getUri(),</span>
-<span class=x>        &#39;message&#39; =&gt; $error-&gt;getMessage(),</span>
-<span class=x>    ]);</span>
-<span class=x>};</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>// Where $logger is a PSR-3 logger implementation
+$listener = function (
+    Throwable $error,
+    ServerRequestInterface $request,
+    ResponseInterface $response
+) use ($logger) {
+    $logger-&gt;error('[{status}] {method} {uri}: {message}', [
+        'status'  =&gt; $response-&gt;getStatusCode(),
+        'method'  =&gt; $request-&gt;getMethod(),
+        'uri'     =&gt; (string) $request-&gt;getUri(),
+        'message' =&gt; $error-&gt;getMessage(),
+    ]);
+};</code></pre>
 <p>Attach listeners to the <code>ProblemDetailsMiddleware</code> instance using its
 <code>attachListener()</code> method:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>$middleware-&gt;attachListener($listener);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>$middleware-&gt;attachListener($listener);</code></pre>
 <h2 id="factory">Factory</h2>
 <p>The <code>ProblemDetailsMiddleware</code> ships with a corresponding PSR-11 compatible factory,
 <code>ProblemDetailsMiddlewareFactory</code>. This factory uses the service named
@@ -342,23 +341,21 @@ plugin in place (it's shipped by default with the Mezzio skeleton).</p>
 <a href="https://docs.mezzio.dev/mezzio/features/container/delegator-factories/">delegator factory</a>
 on the <code>Mezzio\ProblemDetails\ProblemDetailsMiddleware</code> service.</p>
 <p>As an example:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>class LoggerProblemDetailsListenerDelegator</span>
-<span class=x>{</span>
-<span class=x>    public function __construct(ContainerInterface $container, $serviceName, callable $callback)</span>
-<span class=x>    {</span>
-<span class=x>        $middleware = $callback();</span>
-<span class=x>        $middleware-&gt;attachListener($container-&gt;get(LoggerProblemDetailsListener::class));</span>
-<span class=x>        return $middleware;</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>class LoggerProblemDetailsListenerDelegator
+{
+    public function __construct(ContainerInterface $container, $serviceName, callable $callback)
+    {
+        $middleware = $callback();
+        $middleware-&gt;attachListener($container-&gt;get(LoggerProblemDetailsListener::class));
+        return $middleware;
+    }
+}</code></pre>
 <p>You would then register this as a delegator factory in your configuration:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>&#39;delegators&#39; =&gt; [</span>
-<span class=x>    ProblemDetailsMiddleware::class =&gt; [</span>
-<span class=x>        LoggerProblemDetailsListenerDelegator::class,</span>
-<span class=x>    ],</span>
-<span class=x>],</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>'delegators' =&gt; [
+    ProblemDetailsMiddleware::class =&gt; [
+        LoggerProblemDetailsListenerDelegator::class,
+    ],
+],</code></pre>
 
 
 
@@ -518,9 +515,10 @@ on the <code>Mezzio\ProblemDetails\ProblemDetailsMiddleware</code> service.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -557,7 +555,7 @@ on the <code>Mezzio\ProblemDetails\ProblemDetailsMiddleware</code> service.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/mezzio/mezzio-problem-details//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -566,8 +564,8 @@ on the <code>Mezzio\ProblemDetails\ProblemDetailsMiddleware</code> service.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/mezzio/mezzio-problem-details//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/mezzio/mezzio-problem-details/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>

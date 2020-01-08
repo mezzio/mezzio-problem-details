@@ -20,7 +20,7 @@
     <div class="container">
         
         <a class="logo-link navbar-brand offset-md-2" href="https://getlaminas.org/" data-tooltip data-placement="bottom" title="Go to the Laminas homepage">
-            <img src="../img/laminas-foundation-white.svg" height="28" alt="Lamnias">
+            <img src="../img/laminas-foundation-white.svg" height="28" alt="Laminas">
         </a>
         <a class="navbar-title" href="https://docs.laminas.dev/" data-tooltip data-placement="bottom" title="Go to the Laminas Documentation">
             Documentation
@@ -36,13 +36,17 @@
             
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a href="https://getlaminas.org/about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://getlaminas.org/blog" class="nav-link">Blog</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://docs.laminas.dev" class="nav-link">All Docs</a>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                            All Docs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="https://docs.laminas.dev/components">Components</a>
+                            <a class="dropdown-item" href="https://docs.mezzio.dev/">Mezzio</a>
+                            <a class="dropdown-item" href="https://api-tools.getlaminas.org/docs">API Tools</a>
+                            <a class="dropdown-item" href="https://docs.laminas.dev/mvc">MVC</a>
+                        </div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a href="https://getlaminas.org/participate" class="nav-link">Community</a>
@@ -242,25 +246,24 @@
 business domain that contain all the information necessary to report problem
 details.</p>
 <p>To facilitate this, we provide an interface, <code>ProblemDetailsExceptionInterface</code>:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>namespace Mezzio\ProblemDetails\Exception;</span>
+<pre class=codehilite><code class=language-php>namespace Mezzio\ProblemDetails\Exception;
 
-<span class=x>use JsonSerializable;</span>
+use JsonSerializable;
 
-<span class=x>interface ProblemDetailsExceptionInterface extends JsonSerializable</span>
-<span class=x>{</span>
-<span class=x>    public function getStatus() : int;</span>
+interface ProblemDetailsExceptionInterface extends JsonSerializable
+{
+    public function getStatus() : int;
 
-<span class=x>    public function getType() : string;</span>
+    public function getType() : string;
 
-<span class=x>    public function getTitle() : string;</span>
+    public function getTitle() : string;
 
-<span class=x>    public function getDetail() : string;</span>
+    public function getDetail() : string;
 
-<span class=x>    public function getAdditionalData() : array;</span>
+    public function getAdditionalData() : array;
 
-<span class=x>    public function toArray() : array;</span>
-<span class=x>}</span>
-</pre></div></p>
+    public function toArray() : array;
+}</code></pre>
 <p>You may create exceptions that implement this interface. When such exceptions
 are passed to <code>ProblemDetailsResponseFactory::createResponseFromThrowable()</code>,
 these will pull the relevant details in order to create a Problem Details
@@ -279,50 +282,47 @@ developer to create implementations with either constructors or named
 constructors for generating exception instances.</p>
 <p>As an example, if you wanted to create an exception type for providing
 transaction problem details, you might do so as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>use DomainException;</span>
-<span class=x>use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;</span>
-<span class=x>use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;</span>
+<pre class=codehilite><code class=language-php>use DomainException;
+use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
+use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 
-<span class=x>class TransactionException extends DomainException implements ProblemDetailsExceptionInterface</span>
-<span class=x>{</span>
-<span class=x>    use CommonProblemDetailsExceptionTrait;</span>
+class TransactionException extends DomainException implements ProblemDetailsExceptionInterface
+{
+    use CommonProblemDetailsExceptionTrait;
 
-<span class=x>    const STATUS = 403;</span>
-<span class=x>    const TYPE = &#39;https://example.com/problems/insufficient-funds&#39;;</span>
-<span class=x>    const TITLE = &#39;You have insufficient funds to complete the transaction.&#39;;</span>
+    const STATUS = 403;
+    const TYPE = 'https://example.com/problems/insufficient-funds';
+    const TITLE = 'You have insufficient funds to complete the transaction.';
 
-<span class=x>    public static function create(int $needed, float $balance, string $account) : self</span>
-<span class=x>    {</span>
-<span class=x>        $e = new self(sprintf(</span>
-<span class=x>            &#39;Your transaction required %01.2f, but you only have %01.2f in your account&#39;,</span>
-<span class=x>            $needed,</span>
-<span class=x>            $balance</span>
-<span class=x>        ));</span>
-<span class=x>        $e-&gt;status = self::STATUS;</span>
-<span class=x>        $e-&gt;type   = self::TYPE;</span>
-<span class=x>        $e-&gt;title  = self::TITLE;</span>
-<span class=x>        $e-&gt;additional = [</span>
-<span class=x>            &#39;account&#39; =&gt; $account,</span>
-<span class=x>            &#39;balance&#39; =&gt; $balance,</span>
-<span class=x>        ];</span>
+    public static function create(int $needed, float $balance, string $account) : self
+    {
+        $e = new self(sprintf(
+            'Your transaction required %01.2f, but you only have %01.2f in your account',
+            $needed,
+            $balance
+        ));
+        $e-&gt;status = self::STATUS;
+        $e-&gt;type   = self::TYPE;
+        $e-&gt;title  = self::TITLE;
+        $e-&gt;additional = [
+            'account' =&gt; $account,
+            'balance' =&gt; $balance,
+        ];
 
-<span class=x>        return $e;</span>
-<span class=x>    }</span>
-<span class=x>}</span>
-</pre></div></p>
+        return $e;
+    }
+}</code></pre>
 <p>You might then raise the exception as follows:</p>
-<p> <div class=codehilite><pre><span></span><span class=x>throw TransactionException::create($price, $balance, $accountUri);</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-php>throw TransactionException::create($price, $balance, $accountUri);</code></pre>
 <p>And it might result in the following:</p>
-<p> <div class=codehilite><pre><span></span><span class=p>{</span>
-    <span class=nt>&quot;status&quot;</span><span class=p>:</span> <span class=mi>403</span><span class=p>,</span>
-    <span class=nt>&quot;type&quot;</span><span class=p>:</span> <span class=s2>&quot;https://example.com/problems/insufficient-funds&quot;</span><span class=p>,</span>
-    <span class=nt>&quot;title&quot;</span><span class=p>:</span> <span class=s2>&quot;You have insufficient funds to complete the transaction.&quot;</span><span class=p>,</span>
-    <span class=nt>&quot;detail&quot;</span><span class=p>:</span> <span class=s2>&quot;Your transaction required 5.63, but you only have 1.37 in your account&quot;</span><span class=p>,</span>
-    <span class=nt>&quot;account&quot;</span><span class=p>:</span> <span class=s2>&quot;https://example.com/api/accounts/12345&quot;</span><span class=p>,</span>
-    <span class=nt>&quot;balance&quot;</span><span class=p>:</span> <span class=mf>1.37</span>
-<span class=p>}</span>
-</pre></div></p>
+<pre class=codehilite><code class=language-json>{
+    &quot;status&quot;: 403,
+    &quot;type&quot;: &quot;https://example.com/problems/insufficient-funds&quot;,
+    &quot;title&quot;: &quot;You have insufficient funds to complete the transaction.&quot;,
+    &quot;detail&quot;: &quot;Your transaction required 5.63, but you only have 1.37 in your account&quot;,
+    &quot;account&quot;: &quot;https://example.com/api/accounts/12345&quot;,
+    &quot;balance&quot;: 1.37
+}</code></pre>
 <p>The benefit to this approach is that you can easily provide domain-specific
 exceptions throughout your application that can, as a side-effect, be
 re-purposed immediately to provide problem details in your application.</p>
@@ -485,9 +485,10 @@ re-purposed immediately to provide problem details in your application.</p>
             <div class="col-md-7 offset-md-2">
                 <h5>Laminas</h5>
                 <ul>
-                    <li>Laminas Project <a href="https://getlaminas.org/">Components and MVC for Enterprise Applications</a></li>
-                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 Middleware in Minutes</a></li>
-                    <li>Laminas API Tools: <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
+                    <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
+                    <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
+                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
                 </ul>
             </div>
         </div>
@@ -524,7 +525,7 @@ re-purposed immediately to provide problem details in your application.</p>
                 <h4 class="footer__headline">License</h4>
                 <p>
                     Code licensed under <a
-                        href="https://github.com/mezzio/mezzio-problem-details//blob/master/LICENSE.md">BSD 3-Clause</a>.
+                        href="https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md">BSD 3-Clause</a>.
                 </p>
             </div>
 
@@ -533,8 +534,8 @@ re-purposed immediately to provide problem details in your application.</p>
                 <h4 class="footer__headline">Copyright</h4>
                 <p>
                     <!--Built with love by the Laminas team with the help of our
-                    <a href="https://github.com/mezzio/mezzio-problem-details//graphs/contributors">contributors</a>.<br>-->
-                    &copy; 2019-2019 by <a href="https://getlaminas.org/">The Laminas Project</a>.
+                    <a href="https://github.com/mezzio/mezzio-problem-details/graphs/contributors">contributors</a>.<br>-->
+                    &copy; 2019-2020 by <a href="https://getlaminas.org/">The Laminas Project</a>.
                 </p>
             </div>
         </div>
