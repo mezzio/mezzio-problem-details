@@ -1,6 +1,6 @@
 # Problem Details for PSR-7 Applications
 
-[![Build Status](https://travis-ci.org/mezzio/mezzio-problem-details.svg?branch=master)](https://travis-ci.org/mezzio/mezzio-problem-details)
+[![Build Status](https://travis-ci.com/mezzio/mezzio-problem-details.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-problem-details)
 [![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-problem-details/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-problem-details?branch=master)
 
 This library provides a factory for generating Problem Details
