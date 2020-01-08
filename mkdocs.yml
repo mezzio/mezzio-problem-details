@@ -15,4 +15,3 @@ site_description: 'PSR-7 Problem Details for HTTP API responses and middleware'
 repo_url: 'https://github.com/mezzio/mezzio-problem-details'
 extra:
     project: Mezzio
-    project_url: 'https://docs.mezzio.dev'
