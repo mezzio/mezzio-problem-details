@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-     <loc>https://docs.mezzio.dev/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/intro/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/intro/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/quick-start/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/quick-start/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/response/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/response/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/exception/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/exception/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/middleware/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/middleware/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/not-found-handler/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/not-found-handler/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
-     <loc>https://docs.mezzio.dev/default-types/</loc>
-     <lastmod>2020-01-08</lastmod>
+     <loc>https://docs.mezzio.dev/mezzio-problem-details/default-types/</loc>
+     <lastmod>2020-01-15</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
