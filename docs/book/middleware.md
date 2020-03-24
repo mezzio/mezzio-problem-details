@@ -117,7 +117,7 @@ As an example:
 ```php
 class LoggerProblemDetailsListenerDelegator
 {
-    public function __construct(ContainerInterface $container, $serviceName, callable $callback)
+    public function __invoke(ContainerInterface $container, $serviceName, callable $callback)
     {
         $middleware = $callback();
         $middleware->attachListener($container->get(LoggerProblemDetailsListener::class));
