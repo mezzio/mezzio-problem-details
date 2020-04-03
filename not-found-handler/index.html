@@ -310,7 +310,7 @@ the request's <code>Accept</code> header.</p>
 that it will accept either JSON or XML.</p>
 <p>To use this handler in Mezzio add it into your pipeline (usually <code>pipeline.php</code>)
 immediate before the default <code>NotFoundHandler</code>:</p>
-<pre class=codehilite><code class=language-php>$app-&gt;pipe(\Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler::class);
+<pre class="highlight"><code class="language-php">$app-&gt;pipe(\Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler::class);
 $app-&gt;pipe(NotFoundHandler::class);</code></pre>
 
 

@@ -343,7 +343,7 @@ identify an error, you might want to be able to provide your own custom values
 for the <code>type</code> property.</p>
 <p>In order to do that, this library lets you configure the default <code>type</code> value to
 be used for every status code when some of the cases listed above happens.</p>
-<pre class=codehilite><code class=language-php>return [
+<pre class="highlight"><code class="language-php">return [
     'problem-details' =&gt; [
         'default_types_map' =&gt; [
             404 =&gt; 'https://example.com/problem-details/error/not-found',
@@ -351,6 +351,7 @@ be used for every status code when some of the cases listed above happens.</p>
         ],
     ],
 ];</code></pre>
+
 <p>If this configuration is found, it will be consumed by the
 <a href="../response/#problemdetailsresponsefactoryfactory">ProblemDetailsResponseFactoryFactory</a>
 and your custom values will be used when the <code>type</code> was not explicitly provided.</p>

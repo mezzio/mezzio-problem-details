@@ -332,7 +332,7 @@ producing an mepty PSR-7 <code>ResponseInterface</code>. This may be an PHP call
 <code>ServerRequestInterface</code> instance as its first argument, and then additional
 arguments in order to create the response itself:</p>
 <p>For <code>createResponse()</code>, the signature is:</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 public function createResponse(
@@ -343,6 +343,7 @@ public function createResponse(
     string $type = '',
     array $additional = []
 ) : ResponseInterface {</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>ServerRequestInterface $request</code> is the current request.</li>
@@ -358,13 +359,14 @@ public function createResponse(
   transaction data, etc.</li>
 </ul>
 <p>The signature of <code>createResponseFromThrowable()</code> is:</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 public function createResponseFromThrowable(
     ServerRequestInterface $request,
     Throwable $e
 ) : ResponseInterface {</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>ServerRequestInterface $request</code> is the current request.</li>
@@ -382,7 +384,7 @@ not include exception details (file, line number, backtrace, etc.), and JSON
 responses will use a set of flags for generating human-readable JSON. If these
 defaults work for your needs, you can instantiate the factory directly in your
 code in order to generate a response:</p>
-<pre class=codehilite><code class=language-php>// From scalar data:
+<pre class="highlight"><code class="language-php">// From scalar data:
 $response = (new ProblemDetailsResponseFactory())-&gt;createResponse(
     $request,
     400,
@@ -392,11 +394,12 @@ $response = (new ProblemDetailsResponseFactory())-&gt;createResponse(
 // From a throwable:
 $response = (new ProblemDetailsResponseFactory())
     -&gt;createResponseFromThrowable($request, $e);</code></pre>
+
 <p>More often, you will want to customize behavior of the factory; for instance,
 you may want it to act differently in development than in production, or provide
 an alternate PSR-7 implementation. As such, the constructor has the following
 signature:</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ResponseInterface;
 
 public function __construct(
     callable $responseFactory,
@@ -405,6 +408,7 @@ public function __construct(
     bool $exceptionDetailsInResponse = false,
     string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE
 ) {</code></pre>
+
 <p>where:</p>
 <ul>
 <li><code>callable $responseFactory</code> is a PHP callable that can produce a PSR-7
@@ -469,7 +473,7 @@ the mezzio package itself.</p>
 <h2 id="examples">Examples</h2>
 <h3>Returning a Problem Details response</h3>
 <p>Let's say you have middleware that needs to return problem details:</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -497,6 +501,7 @@ class ApiMiddleware implements MiddlewareInterface
         );
     }
 }</code></pre>
+
 <p>The above will return a JSON response if the <code>Accept</code> request header matches
 <code>application/json</code> or any <code>application/*+json</code> mediatype. Any other mediatype
 will generate an XML response.</p>
@@ -504,7 +509,7 @@ will generate an XML response.</p>
 <p>Let's say you have middleware that invokes functionality from a service it
 composes, and that service could raise an exception or other <code>Throwable</code>. For
 this, you can use the <code>createResponseFromThrowable()</code> method instead.</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ResponseInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -530,6 +535,7 @@ class ApiMiddleware implements MiddlewareInterface
         }
     }
 }</code></pre>
+
 <p>As with the previous example, the above will return a JSON response if the
 <code>Accept</code> request header matches <code>application/json</code> or any <code>application/*+json</code>
 mediatype. Any other mediatype will generate an XML response.</p>
@@ -546,7 +552,7 @@ wish to provide the <code>type</code>, <code>title</code>, and/or <code>status</
 problem details. For those, we suggest creating extensions to
 <code>ProblemDetailsResponseFactory</code>. To use the example from the introduction, we
 could have a <code>RateLimitResponse</code> generated as follows:</p>
-<pre class=codehilite><code class=language-php>use Psr\Http\Message\ServerRequestInterface;
+<pre class="highlight"><code class="language-php">use Psr\Http\Message\ServerRequestInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
 class RateLimitResponseFactory extends ProblemDetailsResponseFactory
@@ -575,9 +581,10 @@ class RateLimitResponseFactory extends ProblemDetailsResponseFactory
         );
     }
 }</code></pre>
+
 <p>You would then compose this alternate factory in your middleware, and invoke it
 as follows:</p>
-<pre class=codehilite><code class=language-php>$this-&gt;rateLimitResponseFactory-&gt;create(
+<pre class="highlight"><code class="language-php">$this-&gt;rateLimitResponseFactory-&gt;create(
     $request,
     $tries,
     $rateLimit,
