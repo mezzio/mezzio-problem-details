@@ -407,7 +407,7 @@ on the <code>Mezzio\ProblemDetails\ProblemDetailsMiddleware</code> service.</p>
 <p>As an example:</p>
 <pre class="highlight"><code class="language-php">class LoggerProblemDetailsListenerDelegator
 {
-    public function __construct(ContainerInterface $container, $serviceName, callable $callback)
+    public function __invoke(ContainerInterface $container, $serviceName, callable $callback)
     {
         $middleware = $callback();
         $middleware-&gt;attachListener($container-&gt;get(LoggerProblemDetailsListener::class));
