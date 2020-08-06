@@ -43,6 +43,7 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~1.0.0",
+        "phpspec/prophecy": "^1.8.0",
         "phpunit/phpunit": "^7.0.1"
     },
     "autoload": {
