@@ -11,11 +11,12 @@ declare(strict_types=1);
 namespace Mezzio\ProblemDetails\Exception;
 
 use JsonSerializable;
+use Throwable;
 
 /**
  * Defines an exception type for generating Problem Details.
  */
-interface ProblemDetailsExceptionInterface extends JsonSerializable
+interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
 {
     public function getStatus() : int;
 

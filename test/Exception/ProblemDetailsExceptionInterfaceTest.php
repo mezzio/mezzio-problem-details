@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace MezzioTest\ProblemDetails\Exception;
 
+use Exception;
 use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +36,7 @@ class ProblemDetailsExceptionTest extends TestCase
             $this->title,
             $this->type,
             $this->additional
-        ) implements ProblemDetailsExceptionInterface {
+        ) extends Exception implements ProblemDetailsExceptionInterface {
             use CommonProblemDetailsExceptionTrait;
 
             public function __construct(int $status, string $detail, string $title, string $type, array $additional)

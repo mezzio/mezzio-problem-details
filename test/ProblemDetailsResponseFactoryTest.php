@@ -199,7 +199,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
     public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface() : void
     {
-        $e = $this->prophesize(RuntimeException::class)->willImplement(ProblemDetailsExceptionInterface::class);
+        $e = $this->prophesize(ProblemDetailsExceptionInterface::class);
         $e->getStatus()->willReturn(400);
         $e->getDetail()->willReturn('Exception details');
         $e->getTitle()->willReturn('Invalid client request');
@@ -443,7 +443,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
     public function testRenderWithMalformedUtf8Sequences(): void
     {
-        $e = $this->prophesize(RuntimeException::class)->willImplement(ProblemDetailsExceptionInterface::class);
+        $e = $this->prophesize(ProblemDetailsExceptionInterface::class);
         $e->getStatus()->willReturn(400);
         $e->getDetail()->willReturn('Exception details');
         $e->getTitle()->willReturn('Invalid client request');

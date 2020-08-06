@@ -10,8 +10,9 @@ To facilitate this, we provide an interface, `ProblemDetailsExceptionInterface`:
 namespace Mezzio\ProblemDetails\Exception;
 
 use JsonSerializable;
+use Throwable;
 
-interface ProblemDetailsExceptionInterface extends JsonSerializable
+interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
 {
     public function getStatus() : int;
 
