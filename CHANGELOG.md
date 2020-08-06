@@ -12,7 +12,7 @@ Versions 0.3.0 and prior were released as "weierophinney/problem-details".
 
 ### Changed
 
-- Nothing.
+- [#5](https://github.com/mezzio/mezzio-problem-details/pull/5) updates the `ProblemDetailsExceptionInterface` to explicitly extend `Throwable`, forcing users to extend an `Exception` type in implementations. As using it outside that context was never intended, the maintainers do not consider this a BC break.
 
 ### Deprecated
 
