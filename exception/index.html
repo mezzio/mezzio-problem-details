@@ -308,8 +308,9 @@ details.</p>
 <pre class="highlight"><code class="language-php">namespace Mezzio\ProblemDetails\Exception;
 
 use JsonSerializable;
+use Throwable;
 
-interface ProblemDetailsExceptionInterface extends JsonSerializable
+interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
 {
     public function getStatus() : int;
 
