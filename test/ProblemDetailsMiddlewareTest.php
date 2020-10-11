@@ -14,7 +14,6 @@ use ErrorException;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,14 +26,14 @@ class ProblemDetailsMiddlewareTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->request = $this->createMock(ServerRequestInterface::class);
+        $this->request         = $this->createMock(ServerRequestInterface::class);
         $this->responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
-        $this->middleware = new ProblemDetailsMiddleware($this->responseFactory);
+        $this->middleware      = new ProblemDetailsMiddleware($this->responseFactory);
     }
 
-    public function acceptHeaders() : array
+    public function acceptHeaders(): array
     {
         return [
             'empty'                    => [''],
@@ -45,10 +44,10 @@ class ProblemDetailsMiddlewareTest extends TestCase
         ];
     }
 
-    public function testSuccessfulDelegationReturnsHandlerResponse() : void
+    public function testSuccessfulDelegationReturnsHandlerResponse(): void
     {
         $response = $this->createMock(ResponseInterface::class);
-        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler  = $this->createMock(RequestHandlerInterface::class);
         $handler
             ->method('handle')
             ->with($this->request)
@@ -62,7 +61,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testThrowableRaisedByHandlerResultsInProblemDetails(string $accept) : void
+    public function testThrowableRaisedByHandlerResultsInProblemDetails(string $accept): void
     {
         $this->request
             ->method('getHeaderLine')
@@ -71,7 +70,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 
         $exception = new TestAsset\RuntimeException('Thrown!', 507);
 
-        $handler  = $this->createMock(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
         $handler
             ->method('handle')
             ->with($this->request)
@@ -91,7 +90,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testMiddlewareRegistersErrorHandlerToConvertErrorsToProblemDetails(string $accept) : void
+    public function testMiddlewareRegistersErrorHandlerToConvertErrorsToProblemDetails(string $accept): void
     {
         $this->request
             ->method('getHeaderLine')
@@ -122,7 +121,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function testRethrowsCaughtExceptionIfUnableToNegotiateAcceptHeader() : void
+    public function testRethrowsCaughtExceptionIfUnableToNegotiateAcceptHeader(): void
     {
         $this->request
             ->method('getHeaderLine')
@@ -130,7 +129,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->willReturn('text/html');
 
         $exception = new TestAsset\RuntimeException('Thrown!', 507);
-        $handler  = $this->createMock(RequestHandlerInterface::class);
+        $handler   = $this->createMock(RequestHandlerInterface::class);
         $handler
             ->method('handle')
             ->with($this->request)
@@ -145,7 +144,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testErrorHandlingTriggersListeners(string $accept) : void
+    public function testErrorHandlingTriggersListeners(string $accept): void
     {
         $this->request
             ->method('getHeaderLine')
@@ -154,7 +153,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 
         $exception = new TestAsset\RuntimeException('Thrown!', 507);
 
-        $handler  = $this->createMock(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
         $handler
             ->method('handle')
             ->with($this->request)
@@ -166,7 +165,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->with($this->request, $exception)
             ->willReturn($expected);
 
-        $listener = function ($error, $request, $response) use ($exception, $expected) {
+        $listener  = function ($error, $request, $response) use ($exception, $expected) {
             $this->assertSame($exception, $error, 'Listener did not receive same exception as was raised');
             $this->assertSame($this->request, $request, 'Listener did not receive same request');
             $this->assertSame($expected, $response, 'Listener did not receive same response');

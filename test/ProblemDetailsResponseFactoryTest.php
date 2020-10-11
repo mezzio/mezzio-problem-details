@@ -22,6 +22,7 @@ use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 use function array_keys;
+use function chr;
 use function fclose;
 use function fopen;
 use function json_decode;
@@ -42,16 +43,16 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
     private const UTF_8_INVALID_2_OCTET_SEQUENCE = "\xc3\x28";
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->request = $this->createMock(ServerRequestInterface::class);
+        $this->request  = $this->createMock(ServerRequestInterface::class);
         $this->response = $this->createMock(ResponseInterface::class);
-        $this->factory = new ProblemDetailsResponseFactory(function () {
+        $this->factory  = new ProblemDetailsResponseFactory(function () {
             return $this->response;
         });
     }
 
-    public function acceptHeaders() : array
+    public function acceptHeaders(): array
     {
         return [
             'empty'                    => ['', 'application/problem+json'],
@@ -65,7 +66,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseCreatesExpectedType(string $header, string $expectedType) : void
+    public function testCreateResponseCreatesExpectedType(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
@@ -88,7 +89,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseFromThrowableCreatesExpectedType(string $header, string $expectedType) : void
+    public function testCreateResponseFromThrowableCreatesExpectedType(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
@@ -100,7 +101,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $exception = new RuntimeException();
-        $response = $this->factory->createResponseFromThrowable(
+        $response  = $this->factory->createResponseFromThrowable(
             $this->request,
             $exception
         );
@@ -114,7 +115,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     public function testCreateResponseFromThrowableCreatesExpectedTypeWithExtraInformation(
         string $header,
         string $expectedType
-    ) : void {
+    ): void {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
@@ -134,7 +135,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         );
 
         $exception = new RuntimeException();
-        $response = $factory->createResponseFromThrowable(
+        $response  = $factory->createResponseFromThrowable(
             $this->request,
             $exception
         );
@@ -145,7 +146,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseRemovesInvalidCharactersFromXmlKeys(string $header, string $expectedType) : void
+    public function testCreateResponseRemovesInvalidCharactersFromXmlKeys(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
@@ -196,7 +197,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->assertSame($this->response, $response);
     }
 
-    public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface() : void
+    public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface(): void
     {
         $e = $this->createMock(ProblemDetailsExceptionInterface::class);
         $e->method('getStatus')->willReturn(400);
@@ -239,7 +240,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseRemovesResourcesFromInputData(string $header, string $expectedType) : void
+    public function testCreateResponseRemovesResourcesFromInputData(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
@@ -256,7 +257,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
-        $fh = fopen(__FILE__, 'r');
+        $fh       = fopen(__FILE__, 'r');
         $response = $this->factory->createResponse(
             $this->request,
             500,
@@ -266,7 +267,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             [
                 'args' => [
                     'resource' => $fh,
-                ]
+                ],
             ]
         );
         fclose($fh);
@@ -274,7 +275,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->assertSame($this->response, $response);
     }
 
-    public function testFactoryGeneratesXmlResponseIfNegotiationFails() : void
+    public function testFactoryGeneratesXmlResponseIfNegotiationFails(): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('text/plain');
 
@@ -297,7 +298,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->assertSame($this->response, $response);
     }
 
-    public function testFactoryRendersPreviousExceptionsInDebugMode() : void
+    public function testFactoryRendersPreviousExceptionsInDebugMode(): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
 
@@ -322,7 +323,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with('Content-Type', 'application/problem+json')
             ->willReturn($this->response);
 
-        $first = new RuntimeException('first', 101010);
+        $first  = new RuntimeException('first', 101010);
         $second = new RuntimeException('second', 101011, $first);
 
         $factory = new ProblemDetailsResponseFactory(
@@ -343,7 +344,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     public function testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode()
     {
         $fragileMessage = 'Your SQL or password here';
-        $exception = new Exception($fragileMessage);
+        $exception      = new Exception($fragileMessage);
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
@@ -394,7 +395,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag()
     {
         $fragileMessage = 'Your SQL or password here';
-        $exception = new Exception($fragileMessage);
+        $exception      = new Exception($fragileMessage);
 
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
@@ -499,7 +500,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->assertSame($this->response, $response);
     }
 
-    public function provideMappedStatuses() : array
+    public function provideMappedStatuses(): array
     {
         $defaultTypesMap = [
             404 => 'https://example.com/problem-details/error/not-found',
@@ -517,7 +518,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider provideMappedStatuses
      */
-    public function testTypeIsInferredFromDefaultTypesMap(array $map, int $status, string $expectedType) : void
+    public function testTypeIsInferredFromDefaultTypesMap(array $map, int $status, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
 

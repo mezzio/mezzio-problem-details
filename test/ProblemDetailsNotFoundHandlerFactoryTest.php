@@ -15,14 +15,15 @@ use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandlerFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionObject;
 use RuntimeException;
 
 class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->factory = new ProblemDetailsNotFoundHandlerFactory();
+        $this->factory   = new ProblemDetailsNotFoundHandlerFactory();
     }
 
     public function testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable()
@@ -37,7 +38,7 @@ class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
         $this->factory->__invoke($this->container);
     }
 
-    public function testCreatesNotFoundHandlerUsingResponseFactoryService() : void
+    public function testCreatesNotFoundHandlerUsingResponseFactoryService(): void
     {
         $responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
         $this->container
@@ -47,7 +48,7 @@ class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
 
         $notFoundHandler = ($this->factory)($this->container);
 
-        $r = (new \ReflectionObject($notFoundHandler))->getProperty('responseFactory');
+        $r = (new ReflectionObject($notFoundHandler))->getProperty('responseFactory');
         $r->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsNotFoundHandler::class, $notFoundHandler);

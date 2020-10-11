@@ -4,6 +4,8 @@
  * @see       https://github.com/mezzio/mezzio-problem-details for the canonical source repository
  * @copyright https://github.com/mezzio/mezzio-problem-details/blob/master/COPYRIGHT.md
  * @license   https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md New BSD License
+ *
+ * phpcs:disable WebimpressCodingStandard.Namespaces.UnusedUseStatement.UnusedUse
  */
 
 declare(strict_types=1);
@@ -30,6 +32,7 @@ use function json_encode;
 use function preg_replace;
 use function print_r;
 use function sprintf;
+use function str_replace;
 use function strpos;
 
 use const JSON_PARTIAL_OUTPUT_ON_ERROR;
@@ -79,36 +82,36 @@ class ProblemDetailsResponseFactory
      */
     public const DEFAULT_TITLE_MAP = [
         // 4×× Client Error
-        StatusCode::STATUS_BAD_REQUEST                        => 'Bad Request',
-        StatusCode::STATUS_UNAUTHORIZED                       => 'Unauthorized',
-        StatusCode::STATUS_PAYMENT_REQUIRED                   => 'Payment Required',
-        StatusCode::STATUS_FORBIDDEN                          => 'Forbidden',
-        StatusCode::STATUS_NOT_FOUND                          => 'Not Found',
-        StatusCode::STATUS_METHOD_NOT_ALLOWED                 => 'Method Not Allowed',
-        StatusCode::STATUS_NOT_ACCEPTABLE                     => 'Not Acceptable',
-        StatusCode::STATUS_PROXY_AUTHENTICATION_REQUIRED      => 'Proxy Authentication Required',
-        StatusCode::STATUS_REQUEST_TIMEOUT                    => 'Request Timeout',
-        StatusCode::STATUS_CONFLICT                           => 'Conflict',
-        StatusCode::STATUS_GONE                               => 'Gone',
-        StatusCode::STATUS_LENGTH_REQUIRED                    => 'Length Required',
-        StatusCode::STATUS_PRECONDITION_FAILED                => 'Precondition Failed',
-        StatusCode::STATUS_PAYLOAD_TOO_LARGE                  => 'Payload Too Large',
-        StatusCode::STATUS_URI_TOO_LONG                       => 'Request-URI Too Long',
-        StatusCode::STATUS_UNSUPPORTED_MEDIA_TYPE             => 'Unsupported Media Type',
-        StatusCode::STATUS_RANGE_NOT_SATISFIABLE              => 'Requested Range Not Satisfiable',
-        StatusCode::STATUS_EXPECTATION_FAILED                 => 'Expectation Failed',
-        StatusCode::STATUS_IM_A_TEAPOT                        => 'I\'m a teapot',
-        StatusCode::STATUS_MISDIRECTED_REQUEST                => 'Misdirected Request',
-        StatusCode::STATUS_UNPROCESSABLE_ENTITY               => 'Unprocessable Entity',
-        StatusCode::STATUS_LOCKED                             => 'Locked',
-        StatusCode::STATUS_FAILED_DEPENDENCY                  => 'Failed Dependency',
-        StatusCode::STATUS_UPGRADE_REQUIRED                   => 'Upgrade Required',
-        StatusCode::STATUS_PRECONDITION_REQUIRED              => 'Precondition Required',
-        StatusCode::STATUS_TOO_MANY_REQUESTS                  => 'Too Many Requests',
-        StatusCode::STATUS_REQUEST_HEADER_FIELDS_TOO_LARGE    => 'Request Header Fields Too Large',
-        444                                                   => 'Connection Closed Without Response',
-        StatusCode::STATUS_UNAVAILABLE_FOR_LEGAL_REASONS      => 'Unavailable For Legal Reasons',
-        499                                                   => 'Client Closed Request',
+        StatusCode::STATUS_BAD_REQUEST                     => 'Bad Request',
+        StatusCode::STATUS_UNAUTHORIZED                    => 'Unauthorized',
+        StatusCode::STATUS_PAYMENT_REQUIRED                => 'Payment Required',
+        StatusCode::STATUS_FORBIDDEN                       => 'Forbidden',
+        StatusCode::STATUS_NOT_FOUND                       => 'Not Found',
+        StatusCode::STATUS_METHOD_NOT_ALLOWED              => 'Method Not Allowed',
+        StatusCode::STATUS_NOT_ACCEPTABLE                  => 'Not Acceptable',
+        StatusCode::STATUS_PROXY_AUTHENTICATION_REQUIRED   => 'Proxy Authentication Required',
+        StatusCode::STATUS_REQUEST_TIMEOUT                 => 'Request Timeout',
+        StatusCode::STATUS_CONFLICT                        => 'Conflict',
+        StatusCode::STATUS_GONE                            => 'Gone',
+        StatusCode::STATUS_LENGTH_REQUIRED                 => 'Length Required',
+        StatusCode::STATUS_PRECONDITION_FAILED             => 'Precondition Failed',
+        StatusCode::STATUS_PAYLOAD_TOO_LARGE               => 'Payload Too Large',
+        StatusCode::STATUS_URI_TOO_LONG                    => 'Request-URI Too Long',
+        StatusCode::STATUS_UNSUPPORTED_MEDIA_TYPE          => 'Unsupported Media Type',
+        StatusCode::STATUS_RANGE_NOT_SATISFIABLE           => 'Requested Range Not Satisfiable',
+        StatusCode::STATUS_EXPECTATION_FAILED              => 'Expectation Failed',
+        StatusCode::STATUS_IM_A_TEAPOT                     => 'I\'m a teapot',
+        StatusCode::STATUS_MISDIRECTED_REQUEST             => 'Misdirected Request',
+        StatusCode::STATUS_UNPROCESSABLE_ENTITY            => 'Unprocessable Entity',
+        StatusCode::STATUS_LOCKED                          => 'Locked',
+        StatusCode::STATUS_FAILED_DEPENDENCY               => 'Failed Dependency',
+        StatusCode::STATUS_UPGRADE_REQUIRED                => 'Upgrade Required',
+        StatusCode::STATUS_PRECONDITION_REQUIRED           => 'Precondition Required',
+        StatusCode::STATUS_TOO_MANY_REQUESTS               => 'Too Many Requests',
+        StatusCode::STATUS_REQUEST_HEADER_FIELDS_TOO_LARGE => 'Request Header Fields Too Large',
+        444                                                => 'Connection Closed Without Response',
+        StatusCode::STATUS_UNAVAILABLE_FOR_LEGAL_REASONS   => 'Unavailable For Legal Reasons',
+        499                                                => 'Client Closed Request',
         // 5×× Server Error
         StatusCode::STATUS_INTERNAL_SERVER_ERROR           => 'Internal Server Error',
         StatusCode::STATUS_NOT_IMPLEMENTED                 => 'Not Implemented',
@@ -217,16 +220,16 @@ class ProblemDetailsResponseFactory
     public function __construct(
         callable $responseFactory,
         bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
-        int $jsonFlags = null,
+        ?int $jsonFlags = null,
         bool $exceptionDetailsInResponse = false,
         string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE,
         array $defaultTypesMap = []
     ) {
         // Ensures type safety of the composed factory
-        $this->responseFactory = function () use ($responseFactory) : ResponseInterface {
+        $this->responseFactory = function () use ($responseFactory): ResponseInterface {
             return $responseFactory();
         };
-        $this->isDebug = $isDebug;
+        $this->isDebug         = $isDebug;
         if (! $jsonFlags) {
             $jsonFlags = JSON_UNESCAPED_SLASHES
                 | JSON_UNESCAPED_UNICODE
@@ -236,10 +239,10 @@ class ProblemDetailsResponseFactory
                 $jsonFlags = JSON_PRETTY_PRINT | $jsonFlags;
             }
         }
-        $this->jsonFlags = $jsonFlags;
+        $this->jsonFlags                  = $jsonFlags;
         $this->exceptionDetailsInResponse = $exceptionDetailsInResponse;
-        $this->defaultDetailMessage = $defaultDetailMessage;
-        $this->defaultTypesMap = $defaultTypesMap;
+        $this->defaultDetailMessage       = $defaultDetailMessage;
+        $this->defaultTypesMap            = $defaultTypesMap;
     }
 
     public function createResponse(
@@ -249,7 +252,7 @@ class ProblemDetailsResponseFactory
         string $title = '',
         string $type = '',
         array $additional = []
-    ) : ResponseInterface {
+    ): ResponseInterface {
         $status = $this->normalizeStatus($status);
         $title  = $title ?: $this->createTitleFromStatus($status);
         $type   = $type ?: $this->createTypeFromStatus($status);
@@ -280,7 +283,7 @@ class ProblemDetailsResponseFactory
     public function createResponseFromThrowable(
         ServerRequestInterface $request,
         Throwable $e
-    ) : ResponseInterface {
+    ): ResponseInterface {
         if ($e instanceof Exception\ProblemDetailsExceptionInterface) {
             return $this->createResponse(
                 $request,
@@ -292,9 +295,10 @@ class ProblemDetailsResponseFactory
             );
         }
 
-        $detail = $this->isDebug || $this->exceptionDetailsInResponse ? $e->getMessage() : $this->defaultDetailMessage;
+        $detail            = $this->isDebug
+            || $this->exceptionDetailsInResponse ? $e->getMessage() : $this->defaultDetailMessage;
         $additionalDetails = $this->isDebug ? $this->createThrowableDetail($e) : [];
-        $code = $this->isDebug || $this->exceptionDetailsInResponse ? $this->getThrowableCode($e) : 500;
+        $code              = $this->isDebug || $this->exceptionDetailsInResponse ? $this->getThrowableCode($e) : 500;
 
         return $this->createResponse(
             $request,
@@ -306,14 +310,14 @@ class ProblemDetailsResponseFactory
         );
     }
 
-    protected function getThrowableCode(Throwable $e) : int
+    protected function getThrowableCode(Throwable $e): int
     {
         $code = $e->getCode();
 
         return is_int($code) ? $code : 0;
     }
 
-    protected function generateJsonResponse(array $payload) : ResponseInterface
+    protected function generateJsonResponse(array $payload): ResponseInterface
     {
         return $this->generateResponse(
             $payload['status'],
@@ -330,15 +334,15 @@ class ProblemDetailsResponseFactory
     {
         $return = [];
         foreach ($input as $key => $value) {
-            $key = str_replace("\n", '_', $key);
+            $key                   = str_replace("\n", '_', $key);
             $startCharacterPattern =
                 '[A-Z]|_|[a-z]|[\xC0-\xD6]|[\xD8-\xF6]|[\xF8-\x{2FF}]|[\x{370}-\x{37D}]|[\x{37F}-\x{1FFF}]|'
                 . '[\x{200C}-\x{200D}]|[\x{2070}-\x{218F}]|[\x{2C00}-\x{2FEF}]|[\x{3001}-\x{D7FF}]|[\x{F900}-\x{FDCF}]'
                 . '|[\x{FDF0}-\x{FFFD}]';
-            $characterPattern = $startCharacterPattern . '|\-|\.|[0-9]|\xB7|[\x{300}-\x{36F}]|[\x{203F}-\x{2040}]';
+            $characterPattern      = $startCharacterPattern . '|\-|\.|[0-9]|\xB7|[\x{300}-\x{36F}]|[\x{203F}-\x{2040}]';
 
-            $key = preg_replace('/(?!'.$characterPattern.')./u', '_', $key);
-            $key = preg_replace('/^(?!'.$startCharacterPattern.')./u', '_', $key);
+            $key = preg_replace('/(?!' . $characterPattern . ')./u', '_', $key);
+            $key = preg_replace('/^(?!' . $startCharacterPattern . ')./u', '_', $key);
 
             if (is_array($value)) {
                 $value = $this->cleanKeysForXml($value);
@@ -348,7 +352,7 @@ class ProblemDetailsResponseFactory
         return $return;
     }
 
-    protected function generateXmlResponse(array $payload) : ResponseInterface
+    protected function generateXmlResponse(array $payload): ResponseInterface
     {
         // Ensure any objects are flattened to arrays first
         $content = json_decode(json_encode($payload), true);
@@ -357,8 +361,8 @@ class ProblemDetailsResponseFactory
         $cleanedContent = $this->cleanKeysForXml($content);
 
         $converter = new ArrayToXml($cleanedContent, 'problem');
-        $dom = $converter->toDom();
-        $root = $dom->firstChild;
+        $dom       = $converter->toDom();
+        $root      = $dom->firstChild;
         $root->setAttribute('xmlns', 'urn:ietf:rfc:7807');
 
         return $this->generateResponse(
@@ -368,7 +372,7 @@ class ProblemDetailsResponseFactory
         );
     }
 
-    protected function generateResponse(int $status, string $contentType, string $payload) : ResponseInterface
+    protected function generateResponse(int $status, string $contentType, string $payload): ResponseInterface
     {
         $response = ($this->responseFactory)();
         $response->getBody()->write($payload);
@@ -378,7 +382,7 @@ class ProblemDetailsResponseFactory
             ->withHeader('Content-Type', $contentType);
     }
 
-    private function getResponseGenerator(ServerRequestInterface $request) : callable
+    private function getResponseGenerator(ServerRequestInterface $request): callable
     {
         $accept    = $request->getHeaderLine('Accept') ?: '*/*';
         $mediaType = (new Negotiator())->getBest($accept, self::NEGOTIATION_PRIORITIES);
@@ -388,7 +392,7 @@ class ProblemDetailsResponseFactory
             : Closure::fromCallable([$this, 'generateJsonResponse']);
     }
 
-    private function normalizeStatus(int $status) : int
+    private function normalizeStatus(int $status): int
     {
         if ($status < 400 || $status > 599) {
             return 500;
@@ -397,17 +401,17 @@ class ProblemDetailsResponseFactory
         return $status;
     }
 
-    private function createTitleFromStatus(int $status) : string
+    private function createTitleFromStatus(int $status): string
     {
         return self::DEFAULT_TITLE_MAP[$status] ?? 'Unknown Error';
     }
 
-    private function createTypeFromStatus(int $status) : string
+    private function createTypeFromStatus(int $status): string
     {
         return $this->defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status);
     }
 
-    private function createThrowableDetail(Throwable $e) : array
+    private function createThrowableDetail(Throwable $e): array
     {
         $detail = [
             'class'   => get_class($e),
