@@ -22,9 +22,9 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    public function setUp()
+    protected function setUp() : void
     {
-        $this->responseFactory = $this->prophesize(ProblemDetailsResponseFactory::class);
+        $this->responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
     }
 
     public function acceptHeaders() : array
@@ -40,44 +40,46 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
      */
     public function testResponseFactoryPassedInConstructorGeneratesTheReturnedResponse(string $acceptHeader) : void
     {
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getMethod()->willReturn('POST');
-        $request->getHeaderLine('Accept')->willReturn($acceptHeader);
-        $request->getUri()->willReturn('https://example.com/foo');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getHeaderLine')->with('Accept')->willReturn($acceptHeader);
+        $request->method('getUri')->willReturn('https://example.com/foo');
 
-        $response = $this->prophesize(ResponseInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
 
-        $this->responseFactory->createResponse(
-            Argument::that([$request, 'reveal']),
-            404,
-            'Cannot POST https://example.com/foo!'
-        )->will([$response, 'reveal']);
+        $this->responseFactory
+            ->method('createResponse')
+            ->with(
+                $request,
+                404,
+                'Cannot POST https://example.com/foo!'
+            )->willReturn($response);
 
-        $notFoundHandler = new ProblemDetailsNotFoundHandler($this->responseFactory->reveal());
+        $notFoundHandler = new ProblemDetailsNotFoundHandler($this->responseFactory);
 
         $this->assertSame(
-            $response->reveal(),
-            $notFoundHandler->process($request->reveal(), $this->prophesize(RequestHandlerInterface::class)->reveal())
+            $response,
+            $notFoundHandler->process($request, $this->createMock(RequestHandlerInterface::class))
         );
     }
 
     public function testHandlerIsCalledIfAcceptHeaderIsUnacceptable() : void
     {
-        $request = $this->prophesize(ServerRequestInterface::class);
-        $request->getMethod()->willReturn('POST');
-        $request->getHeaderLine('Accept')->willReturn('text/html');
-        $request->getUri()->willReturn('https://example.com/foo');
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getMethod')->willReturn('POST');
+        $request->method('getHeaderLine')->with('Accept')->willReturn('text/html');
+        $request->method('getUri')->willReturn('https://example.com/foo');
 
-        $response = $this->prophesize(ResponseInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
 
-        $handler = $this->prophesize(RequestHandlerInterface::class);
-        $handler->handle($request->reveal())->will([$response, 'reveal']);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+        $handler->method('handle')->with($request)->willReturn($response);
 
-        $notFoundHandler = new ProblemDetailsNotFoundHandler($this->responseFactory->reveal());
+        $notFoundHandler = new ProblemDetailsNotFoundHandler($this->responseFactory);
 
         $this->assertSame(
-            $response->reveal(),
-            $notFoundHandler->process($request->reveal(), $handler->reveal())
+            $response,
+            $notFoundHandler->process($request, $handler)
         );
     }
 }
