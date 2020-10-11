@@ -36,5 +36,5 @@ interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
      */
     public function toArray(): array;
 
-    public function jsonSerialize(): array;
+    public function jsonSerialize();
 }
