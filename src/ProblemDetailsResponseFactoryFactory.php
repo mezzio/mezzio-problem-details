@@ -15,14 +15,14 @@ use Psr\Http\Message\ResponseInterface;
 
 class ProblemDetailsResponseFactoryFactory
 {
-    public function __invoke(ContainerInterface $container) : ProblemDetailsResponseFactory
+    public function __invoke(ContainerInterface $container): ProblemDetailsResponseFactory
     {
-        $config = $container->has('config') ? $container->get('config') : [];
+        $config                 = $container->has('config') ? $container->get('config') : [];
         $includeThrowableDetail = $config['debug'] ?? ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS;
 
         $problemDetailsConfig = $config['problem-details'] ?? [];
-        $jsonFlags = $problemDetailsConfig['json_flags'] ?? null;
-        $defaultTypesMap = $problemDetailsConfig['default_types_map'] ?? [];
+        $jsonFlags            = $problemDetailsConfig['json_flags'] ?? null;
+        $defaultTypesMap      = $problemDetailsConfig['default_types_map'] ?? [];
 
         return new ProblemDetailsResponseFactory(
             $container->get(ResponseInterface::class),

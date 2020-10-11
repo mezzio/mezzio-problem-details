@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
 
 class ProblemDetailsNotFoundHandlerFactory
 {
-    public function __invoke(ContainerInterface $container) : ProblemDetailsNotFoundHandler
+    public function __invoke(ContainerInterface $container): ProblemDetailsNotFoundHandler
     {
         return new ProblemDetailsNotFoundHandler($container->get(ProblemDetailsResponseFactory::class));
     }

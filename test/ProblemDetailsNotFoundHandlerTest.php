@@ -13,7 +13,6 @@ namespace MezzioTest\ProblemDetails;
 use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -22,12 +21,12 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
     }
 
-    public function acceptHeaders() : array
+    public function acceptHeaders(): array
     {
         return [
             'application/json' => ['application/json', 'application/problem+json'],
@@ -38,7 +37,7 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testResponseFactoryPassedInConstructorGeneratesTheReturnedResponse(string $acceptHeader) : void
+    public function testResponseFactoryPassedInConstructorGeneratesTheReturnedResponse(string $acceptHeader): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getMethod')->willReturn('POST');
@@ -63,7 +62,7 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
         );
     }
 
-    public function testHandlerIsCalledIfAcceptHeaderIsUnacceptable() : void
+    public function testHandlerIsCalledIfAcceptHeaderIsUnacceptable(): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
         $request->method('getMethod')->willReturn('POST');

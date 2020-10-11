@@ -14,13 +14,15 @@ namespace Mezzio\ProblemDetails;
  * Configuration provider for the package.
  *
  * @see https://docs.laminas.dev/laminas-component-installer/
+ *
+ * phpcs:disable WebimpressCodingStandard.PHP.DisallowFqn.FileName
  */
 class ConfigProvider
 {
     /**
      * Returns the configuration array.
      */
-    public function __invoke() : array
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
@@ -30,17 +32,17 @@ class ConfigProvider
     /**
      * Returns the container dependencies.
      */
-    public function getDependencies() : array
+    public function getDependencies(): array
     {
         return [
             // Legacy Zend Framework aliases
-            'aliases' => [
-                \Zend\ProblemDetails\ProblemDetailsMiddleware::class => ProblemDetailsMiddleware::class,
+            'aliases'   => [
+                \Zend\ProblemDetails\ProblemDetailsMiddleware::class      => ProblemDetailsMiddleware::class,
                 \Zend\ProblemDetails\ProblemDetailsNotFoundHandler::class => ProblemDetailsNotFoundHandler::class,
                 \Zend\ProblemDetails\ProblemDetailsResponseFactory::class => ProblemDetailsResponseFactory::class,
             ],
-            'factories'  => [
-                ProblemDetailsMiddleware::class => ProblemDetailsMiddlewareFactory::class,
+            'factories' => [
+                ProblemDetailsMiddleware::class      => ProblemDetailsMiddlewareFactory::class,
                 ProblemDetailsNotFoundHandler::class => ProblemDetailsNotFoundHandlerFactory::class,
                 ProblemDetailsResponseFactory::class => ProblemDetailsResponseFactoryFactory::class,
             ],

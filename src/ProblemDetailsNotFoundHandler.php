@@ -20,9 +20,7 @@ use function sprintf;
 
 class ProblemDetailsNotFoundHandler implements MiddlewareInterface
 {
-    /**
-     * @var ProblemDetailsResponseFactory
-     */
+    /** @var ProblemDetailsResponseFactory */
     private $responseFactory;
 
     /**
@@ -37,7 +35,7 @@ class ProblemDetailsNotFoundHandler implements MiddlewareInterface
     /**
      * Creates and returns a 404 response.
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // If we cannot provide a representation, act as a no-op.
         if (! $this->canActAsErrorHandler($request)) {
@@ -54,7 +52,7 @@ class ProblemDetailsNotFoundHandler implements MiddlewareInterface
     /**
      * Can the middleware act as an error handler?
      */
-    private function canActAsErrorHandler(ServerRequestInterface $request) : bool
+    private function canActAsErrorHandler(ServerRequestInterface $request): bool
     {
         $accept = $request->getHeaderLine('Accept') ?: '*/*';
 

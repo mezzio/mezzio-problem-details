@@ -30,14 +30,10 @@ use function set_error_handler;
  */
 class ProblemDetailsMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var callable[]
-     */
+    /** @var callable[] */
     private $listeners = [];
 
-    /**
-     * @var ProblemDetailsResponseFactory
-     */
+    /** @var ProblemDetailsResponseFactory */
     private $responseFactory;
 
     public function __construct(ProblemDetailsResponseFactory $responseFactory)
@@ -48,7 +44,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
     /**
      * {@inheritDoc}
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // If we cannot provide a representation, act as a no-op.
         if (! $this->canActAsErrorHandler($request)) {
@@ -81,7 +77,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
      * listeners are ignored; use listeners for reporting purposes
      * only.
      */
-    public function attachListener(callable $listener) : void
+    public function attachListener(callable $listener): void
     {
         if (in_array($listener, $this->listeners, true)) {
             return;
@@ -95,7 +91,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
      *
      * Returns a boolean false if negotiation fails.
      */
-    private function canActAsErrorHandler(ServerRequestInterface $request) : bool
+    private function canActAsErrorHandler(ServerRequestInterface $request): bool
     {
         $accept = $request->getHeaderLine('Accept') ?: '*/*';
 
@@ -108,17 +104,16 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
      *
      * Only raises exceptions for errors that are within the error_reporting mask.
      */
-    private function createErrorHandler() : callable
+    private function createErrorHandler(): callable
     {
         /**
          * @param int $errno
          * @param string $errstr
          * @param string $errfile
          * @param int $errline
-         * @return void
          * @throws ErrorException if error is not within the error_reporting mask.
          */
-        return function (int $errno, string $errstr, string $errfile, int $errline) : void {
+        return function (int $errno, string $errstr, string $errfile, int $errline): void {
             if (! (error_reporting() & $errno)) {
                 // error_reporting does not include this error
                 return;
@@ -135,7 +130,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
         Throwable $error,
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) : void {
+    ): void {
         array_walk($this->listeners, function ($listener) use ($error, $request, $response) {
             $listener($error, $request, $response);
         });

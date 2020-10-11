@@ -25,7 +25,7 @@ use function var_export;
 
 trait ProblemDetailsAssertionsTrait
 {
-    public function assertProblemDetails(array $expected, array $details) : void
+    public function assertProblemDetails(array $expected, array $details): void
     {
         foreach ($expected as $key => $value) {
             $this->assertArrayHasKey(
@@ -43,7 +43,7 @@ trait ProblemDetailsAssertionsTrait
         }
     }
 
-    public function assertExceptionDetails(Throwable $e, array $details) : void
+    public function assertExceptionDetails(Throwable $e, array $details): void
     {
         $this->assertArrayHasKey('class', $details);
         $this->assertSame(get_class($e), $details['class']);
@@ -70,7 +70,7 @@ trait ProblemDetailsAssertionsTrait
         string $contentType,
         MockObject $stream,
         callable $assertion
-    ) : void {
+    ): void {
         if ('application/problem+json' === $contentType) {
             $this->preparePayloadForJsonResponse($stream, $assertion);
             return;
@@ -85,7 +85,7 @@ trait ProblemDetailsAssertionsTrait
     /**
      * @param StreamInterface|MockObject $stream
      */
-    public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion) : void
+    public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion): void
     {
         $stream
             ->expects($this->any())
@@ -101,7 +101,7 @@ trait ProblemDetailsAssertionsTrait
     /**
      * @param StreamInterface|MockObject $stream
      */
-    public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion) : void
+    public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion): void
     {
         $stream
             ->expects($this->any())
@@ -114,10 +114,10 @@ trait ProblemDetailsAssertionsTrait
             }));
     }
 
-    public function deserializeXmlPayload(string $xml) : array
+    public function deserializeXmlPayload(string $xml): array
     {
-        $xml = simplexml_load_string($xml);
-        $json = json_encode($xml);
+        $xml     = simplexml_load_string($xml);
+        $json    = json_encode($xml);
         $payload = json_decode($json, true);
 
         // Ensure ints and floats are properly represented

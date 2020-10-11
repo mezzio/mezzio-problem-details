@@ -16,6 +16,7 @@ use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionObject;
 use RuntimeException;
 
 class ProblemDetailsMiddlewareFactoryTest extends TestCase
@@ -23,10 +24,10 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
     /** @var ContainerInterface|MockObject */
     private $container;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->factory = new ProblemDetailsMiddlewareFactory();
+        $this->factory   = new ProblemDetailsMiddlewareFactory();
     }
 
     public function testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable()
@@ -41,7 +42,7 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
         $this->factory->__invoke($this->container);
     }
 
-    public function testCreatesMiddlewareUsingResponseFactoryService() : void
+    public function testCreatesMiddlewareUsingResponseFactoryService(): void
     {
         $responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
 
@@ -52,7 +53,7 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
 
         $middleware = ($this->factory)($this->container);
 
-        $r = (new \ReflectionObject($middleware))->getProperty('responseFactory');
+        $r = (new ReflectionObject($middleware))->getProperty('responseFactory');
         $r->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsMiddleware::class, $middleware);

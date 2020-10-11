@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
 
 class ProblemDetailsMiddlewareFactory
 {
-    public function __invoke(ContainerInterface $container) : ProblemDetailsMiddleware
+    public function __invoke(ContainerInterface $container): ProblemDetailsMiddleware
     {
         return new ProblemDetailsMiddleware($container->get(ProblemDetailsResponseFactory::class));
     }
