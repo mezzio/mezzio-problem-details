@@ -35,4 +35,6 @@ interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
      * for cases where the XML variant is desired.
      */
     public function toArray() : array;
+
+    public function jsonSerialize() : array;
 }

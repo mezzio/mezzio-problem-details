@@ -11,8 +11,7 @@ declare(strict_types=1);
 namespace MezzioTest\ProblemDetails;
 
 use PHPUnit\Framework\Assert;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamInterface;
 use Throwable;
 
@@ -65,11 +64,11 @@ trait ProblemDetailsAssertionsTrait
     }
 
     /**
-     * @param StreamInterface|ObjectProphecy $stream
+     * @param StreamInterface|MockObject $stream
      */
     public function prepareResponsePayloadAssertions(
         string $contentType,
-        ObjectProphecy $stream,
+        MockObject $stream,
         callable $assertion
     ) : void {
         if ('application/problem+json' === $contentType) {
@@ -84,33 +83,35 @@ trait ProblemDetailsAssertionsTrait
     }
 
     /**
-     * @param StreamInterface|ObjectProphecy $stream
+     * @param StreamInterface|MockObject $stream
      */
-    public function preparePayloadForJsonResponse(ObjectProphecy $stream, callable $assertion) : void
+    public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion) : void
     {
         $stream
-            ->write(Argument::that(function ($body) use ($assertion) {
-                Assert::assertInternalType('string', $body);
+            ->expects($this->any())
+            ->method('write')
+            ->with($this->callback(function ($body) use ($assertion) {
+                Assert::assertIsString($body);
                 $data = json_decode($body, true);
                 $assertion($data);
                 return $body;
-            }))
-            ->shouldBeCalled();
+            }));
     }
 
     /**
-     * @param StreamInterface|ObjectProphecy $stream
+     * @param StreamInterface|MockObject $stream
      */
-    public function preparePayloadForXmlResponse(ObjectProphecy $stream, callable $assertion) : void
+    public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion) : void
     {
         $stream
-            ->write(Argument::that(function ($body) use ($assertion) {
-                Assert::assertInternalType('string', $body);
+            ->expects($this->any())
+            ->method('write')
+            ->with($this->callback(function ($body) use ($assertion) {
+                Assert::assertIsString($body);
                 $data = $this->deserializeXmlPayload($body);
                 $assertion($data);
                 return $body;
-            }))
-            ->shouldBeCalled();
+            }));
     }
 
     public function deserializeXmlPayload(string $xml) : array
