@@ -250,7 +250,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->method('write')
             ->with($this->callback(function ($body) {
                 Assert::assertNotEmpty($body);
-                return $body;
+                return true;
             }));
 
         $this->response->method('getBody')->willReturn($stream);
@@ -353,7 +353,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with($this->callback(function ($body) use ($fragileMessage) {
                 Assert::assertNotContains($fragileMessage, $body);
                 Assert::assertContains(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
-                return $body;
+                return true;
             }));
 
         $this->response->method('getBody')->willReturn($stream);
@@ -529,7 +529,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with($this->callback(function (string $body) use ($expectedType) {
                 $payload = json_decode($body, true);
                 Assert::assertEquals($expectedType, $payload['type']);
-                return $body;
+                return true;
             }));
 
         $this->response->method('getBody')->willReturn($stream);

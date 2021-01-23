@@ -94,7 +94,7 @@ trait ProblemDetailsAssertionsTrait
                 Assert::assertIsString($body);
                 $data = json_decode($body, true);
                 $assertion($data);
-                return $body;
+                return true;
             }));
     }
 
@@ -110,7 +110,7 @@ trait ProblemDetailsAssertionsTrait
                 Assert::assertIsString($body);
                 $data = $this->deserializeXmlPayload($body);
                 $assertion($data);
-                return $body;
+                return true;
             }));
     }
 
