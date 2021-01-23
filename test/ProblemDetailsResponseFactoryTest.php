@@ -219,7 +219,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         );
 
         $this->response->method('getBody')->willReturn($stream);
-        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response->method('withStatus')->with(400)->willReturn($this->response);
         $this->response
             ->method('withHeader')
             ->with('Content-Type', 'application/problem+json')
@@ -351,8 +351,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('write')
             ->with($this->callback(function ($body) use ($fragileMessage) {
-                Assert::assertNotContains($fragileMessage, $body);
-                Assert::assertContains(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
+                Assert::assertStringNotContainsString($fragileMessage, $body);
+                Assert::assertStringContainsString(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
                 return true;
             }));
 
@@ -539,7 +539,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with($status)
             ->willReturn($this->response);
         $this->response
-            ->method('withStatus')
+            ->method('withHeader')
             ->with('Content-Type', 'application/problem+json')
             ->willReturn($this->response);
 
