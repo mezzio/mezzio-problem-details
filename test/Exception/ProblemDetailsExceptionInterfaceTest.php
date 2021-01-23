@@ -20,10 +20,15 @@ use function json_encode;
 
 class ProblemDetailsExceptionInterfaceTest extends TestCase
 {
-    protected $status     = 403;
-    protected $detail     = 'You are not authorized to do that';
-    protected $title      = 'Unauthorized';
-    protected $type       = 'https://httpstatus.es/403';
+    /** @var int */
+    protected $status = 403;
+    /** @var string */
+    protected $detail = 'You are not authorized to do that';
+    /** @var string */
+    protected $title = 'Unauthorized';
+    /** @var string */
+    protected $type = 'https://httpstatus.es/403';
+    /** @var string[] */
     protected $additional = [
         'foo' => 'bar',
     ];
