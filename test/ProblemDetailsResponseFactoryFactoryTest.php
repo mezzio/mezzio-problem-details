@@ -17,11 +17,13 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use ReflectionObject;
 use ReflectionProperty;
 use RuntimeException;
 use stdClass;
 use TypeError;
 
+use const JSON_PARTIAL_OUTPUT_ON_ERROR;
 use const JSON_PRESERVE_ZERO_FRACTION;
 use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_SLASHES;
@@ -29,9 +31,9 @@ use const JSON_UNESCAPED_UNICODE;
 
 class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
+        $this->container = $this->createMock(ContainerInterface::class);
     }
 
     public function assertResponseFactoryReturns(ResponseInterface $expected, ProblemDetailsResponseFactory $factory)
@@ -46,119 +48,168 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     public function testLackOfResponseServiceResultsInException()
     {
         $factory = new ProblemDetailsResponseFactoryFactory();
-        $e = new RuntimeException();
+        $e       = new RuntimeException();
 
-        $this->container->has('config')->willReturn(false);
-        $this->container->get('config')->shouldNotBeCalled();
-        $this->container->get(ResponseInterface::class)->willThrow($e);
+        $this->container->method('has')->with('config')->willReturn(false);
+        $this->container->method('get')->with(ResponseInterface::class)->willThrowException($e);
 
         $this->expectException(RuntimeException::class);
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
     public function testNonCallableResponseServiceResultsInException()
     {
         $factory = new ProblemDetailsResponseFactoryFactory();
 
-        $this->container->has('config')->willReturn(false);
-        $this->container->get('config')->shouldNotBeCalled();
-        $this->container->get(ResponseInterface::class)->willReturn(new stdClass);
+        $this->container->method('has')->with('config')->willReturn(false);
+        $this->container->method('get')->with(ResponseInterface::class)->willReturn(new stdClass());
 
         $this->expectException(TypeError::class);
-        $factory($this->container->reveal());
+        $factory($this->container);
     }
 
-    public function testLackOfConfigServiceResultsInFactoryUsingDefaults() : void
+    public function testLackOfConfigServiceResultsInFactoryUsingDefaults(): void
     {
-        $this->container->has('config')->willReturn(false);
+        $this->container->method('has')->with('config')->willReturn(false);
 
-        $response = $this->prophesize(ResponseInterface::class)->reveal();
-        $this->container->get(ResponseInterface::class)->willReturn(function () use ($response) {
-            return $response;
-        });
+        $response = $this->createMock(ResponseInterface::class);
+        $this->container
+            ->method('get')
+            ->with(ResponseInterface::class)
+            ->willReturn(function () use ($response) {
+                return $response;
+            });
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
-        $factory = $factoryFactory($this->container->reveal());
+        $factory        = $factoryFactory($this->container);
+
+        $isDebug = (new ReflectionObject($factory))->getProperty('isDebug');
+        $isDebug->setAccessible(true);
+
+        $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
+        $jsonFlags->setAccessible(true);
+
+        $responseFactory = (new ReflectionObject($factory))->getProperty('responseFactory');
+        $responseFactory->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertAttributeSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, 'isDebug', $factory);
-        $this->assertAttributeSame(
+        $this->assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        $this->assertSame(
             JSON_UNESCAPED_SLASHES
             | JSON_UNESCAPED_UNICODE
             | JSON_PRESERVE_ZERO_FRACTION
             | JSON_PARTIAL_OUTPUT_ON_ERROR,
-            'jsonFlags',
-            $factory
+            $jsonFlags->getValue($factory)
         );
 
-        $this->assertAttributeInstanceOf(Closure::class, 'responseFactory', $factory);
+        $this->assertInstanceOf(Closure::class, $responseFactory->getValue($factory));
         $this->assertResponseFactoryReturns($response, $factory);
     }
 
-    public function testUsesPrettyPrintFlagOnEnabledDebugMode() : void
+    public function testUsesPrettyPrintFlagOnEnabledDebugMode(): void
     {
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn([
-            'debug' => true,
-        ]);
-        $this->container->get(ResponseInterface::class)->willReturn(function () {
-        });
+        $this->container->method('has')->with('config')->willReturn(true);
+
+        $this->container
+            ->method('get')
+            ->willReturnMap([
+                ['config', ['debug' => true]],
+                [
+                    ResponseInterface::class,
+                    function () {
+                    },
+                ],
+            ]);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
-        $factory = $factoryFactory($this->container->reveal());
+        $factory        = $factoryFactory($this->container);
 
-        $this->assertSame(JSON_PRETTY_PRINT, Assert::readAttribute($factory, 'jsonFlags') & JSON_PRETTY_PRINT);
+        $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
+        $jsonFlags->setAccessible(true);
+
+        $this->assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory) & JSON_PRETTY_PRINT);
     }
 
-    public function testUsesDebugSettingFromConfigWhenPresent() : void
+    public function testUsesDebugSettingFromConfigWhenPresent(): void
     {
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(['debug' => true]);
+        $this->container->method('has')->with('config')->willReturn(true);
 
-        $this->container->get(ResponseInterface::class)->willReturn(function () {
-        });
+        $this->container
+            ->method('get')
+            ->willReturnMap([
+                ['config', ['debug' => true]],
+                [
+                    ResponseInterface::class,
+                    function () {
+                    },
+                ],
+            ]);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
-        $factory = $factoryFactory($this->container->reveal());
+        $factory        = $factoryFactory($this->container);
+
+        $isDebug = (new ReflectionObject($factory))->getProperty('isDebug');
+        $isDebug->setAccessible(true);
+
+        $exceptionDetailsInResponse = (new ReflectionObject($factory))->getProperty('exceptionDetailsInResponse');
+        $exceptionDetailsInResponse->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertAttributeSame(ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS, 'isDebug', $factory);
-        $this->assertAttributeSame(true, 'exceptionDetailsInResponse', $factory);
+        $this->assertSame(ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        $this->assertSame(true, $exceptionDetailsInResponse->getValue($factory));
     }
 
-    public function testUsesJsonFlagsSettingFromConfigWhenPresent() : void
+    public function testUsesJsonFlagsSettingFromConfigWhenPresent(): void
     {
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(['problem-details' => ['json_flags' => JSON_PRETTY_PRINT]]);
+        $this->container->method('has')->with('config')->willReturn(true);
 
-        $this->container->get(ResponseInterface::class)->willReturn(function () {
-        });
+        $this->container
+            ->method('get')
+            ->willReturnMap([
+                ['config', ['problem-details' => ['json_flags' => JSON_PRETTY_PRINT]]],
+                [
+                    ResponseInterface::class,
+                    function () {
+                    },
+                ],
+            ]);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
-        $factory = $factoryFactory($this->container->reveal());
+        $factory        = $factoryFactory($this->container);
+
+        $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
+        $jsonFlags->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertAttributeSame(JSON_PRETTY_PRINT, 'jsonFlags', $factory);
+        $this->assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory));
     }
 
-    public function testUsesDefaultTypesSettingFromConfigWhenPresent() : void
+    public function testUsesDefaultTypesSettingFromConfigWhenPresent(): void
     {
         $expectedDefaultTypes = [
             404 => 'https://example.com/problem-details/error/not-found',
         ];
 
-        $this->container->has('config')->willReturn(true);
-        $this->container->get('config')->willReturn(
-            ['problem-details' => ['default_types_map' => $expectedDefaultTypes]]
-        );
+        $this->container->method('has')->with('config')->willReturn(true);
 
-        $this->container->get(ResponseInterface::class)->willReturn(function () {
-        });
+        $this->container
+            ->method('get')
+            ->willReturnMap([
+                ['config', ['problem-details' => ['default_types_map' => $expectedDefaultTypes]]],
+                [
+                    ResponseInterface::class,
+                    function () {
+                    },
+                ],
+            ]);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
-        $factory = $factoryFactory($this->container->reveal());
+        $factory        = $factoryFactory($this->container);
+
+        $defaultTypesMap = (new ReflectionObject($factory))->getProperty('defaultTypesMap');
+        $defaultTypesMap->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertAttributeSame($expectedDefaultTypes, 'defaultTypesMap', $factory);
+        $this->assertSame($expectedDefaultTypes, $defaultTypesMap->getValue($factory));
     }
 }

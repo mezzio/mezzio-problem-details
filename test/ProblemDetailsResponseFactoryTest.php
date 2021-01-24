@@ -11,18 +11,19 @@ declare(strict_types=1);
 namespace MezzioTest\ProblemDetails;
 
 use Exception;
+use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 use function array_keys;
+use function chr;
 use function fclose;
 use function fopen;
 use function json_decode;
@@ -32,10 +33,10 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ServerRequestInterface|MockObject */
     private $request;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ResponseInterface|MockObject */
     private $response;
 
     /** @var ProblemDetailsResponseFactory */
@@ -43,16 +44,16 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
     private const UTF_8_INVALID_2_OCTET_SEQUENCE = "\xc3\x28";
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->request = $this->prophesize(ServerRequestInterface::class);
-        $this->response = $this->prophesize(ResponseInterface::class);
-        $this->factory = new ProblemDetailsResponseFactory(function () {
-            return $this->response->reveal();
+        $this->request  = $this->createMock(ServerRequestInterface::class);
+        $this->response = $this->createMock(ResponseInterface::class);
+        $this->factory  = new ProblemDetailsResponseFactory(function () {
+            return $this->response;
         });
     }
 
-    public function acceptHeaders() : array
+    public function acceptHeaders(): array
     {
         return [
             'empty'                    => ['', 'application/problem+json'],
@@ -66,47 +67,47 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseCreatesExpectedType(string $header, string $expectedType) : void
+    public function testCreateResponseCreatesExpectedType(string $header, string $expectedType): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($header);
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
-        $stream = $this->prophesize(StreamInterface::class);
-        $stream->write(Argument::type('string'))->shouldBeCalled();
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects($this->atLeastOnce())->method('write')->with($this->isType('string'));
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', $expectedType)->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $response = $this->factory->createResponse(
-            $this->request->reveal(),
+            $this->request,
             500,
             'Unknown error occurred'
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseFromThrowableCreatesExpectedType(string $header, string $expectedType) : void
+    public function testCreateResponseFromThrowableCreatesExpectedType(string $header, string $expectedType): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($header);
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
-        $stream = $this->prophesize(StreamInterface::class);
-        $stream->write(Argument::type('string'))->shouldBeCalled();
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects($this->atLeastOnce())->method('write')->with($this->isType('string'));
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', $expectedType)->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $exception = new RuntimeException();
-        $response = $this->factory->createResponseFromThrowable(
-            $this->request->reveal(),
+        $response  = $this->factory->createResponseFromThrowable(
+            $this->request,
             $exception
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     /**
@@ -115,40 +116,40 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     public function testCreateResponseFromThrowableCreatesExpectedTypeWithExtraInformation(
         string $header,
         string $expectedType
-    ) : void {
-        $this->request->getHeaderLine('Accept')->willReturn($header);
+    ): void {
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->prepareResponsePayloadAssertions($expectedType, $stream, function (array $payload) {
             Assert::assertArrayHasKey('exception', $payload);
         });
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', $expectedType)->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
             function () {
-                return $this->response->reveal();
+                return $this->response;
             },
             ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
         );
 
         $exception = new RuntimeException();
-        $response = $factory->createResponseFromThrowable(
-            $this->request->reveal(),
+        $response  = $factory->createResponseFromThrowable(
+            $this->request,
             $exception
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseRemovesInvalidCharactersFromXmlKeys(string $header, string $expectedType) : void
+    public function testCreateResponseRemovesInvalidCharactersFromXmlKeys(string $header, string $expectedType): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($header);
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $additional = [
             'foo' => [
@@ -172,7 +173,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $expectedKeyNames = array_keys($additional['foo']);
         }
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->prepareResponsePayloadAssertions(
             $expectedType,
             $stream,
@@ -181,12 +182,12 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', $expectedType)->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $response = $this->factory->createResponse(
-            $this->request->reveal(),
+            $this->request,
             500,
             'Unknown error occurred',
             'Title',
@@ -194,21 +195,35 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $additional
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
-    public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface() : void
+    private function createProblemDetailsExceptionWithAdditional(array $additional): ProblemDetailsExceptionInterface
     {
-        $e = $this->prophesize(ProblemDetailsExceptionInterface::class);
-        $e->getStatus()->willReturn(400);
-        $e->getDetail()->willReturn('Exception details');
-        $e->getTitle()->willReturn('Invalid client request');
-        $e->getType()->willReturn('https://example.com/api/doc/invalid-client-request');
-        $e->getAdditionalData()->willReturn(['foo' => 'bar']);
+        return new class (
+            400,
+            'Exception details',
+            'Invalid client request',
+            'https://example.com/api/doc/invalid-client-request',
+            $additional
+        ) extends Exception implements ProblemDetailsExceptionInterface {
+            use CommonProblemDetailsExceptionTrait;
 
-        $this->request->getHeaderLine('Accept')->willReturn('application/json');
+            public function __construct(int $status, string $detail, string $title, string $type, array $additional)
+            {
+                $this->status     = $status;
+                $this->detail     = $detail;
+                $this->title      = $title;
+                $this->type       = $type;
+                $this->additional = $additional;
+            }
+        };
+    }
 
-        $stream = $this->prophesize(StreamInterface::class);
+    public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface(): void
+    {
+        $e      = $this->createProblemDetailsExceptionWithAdditional(['foo' => 'bar']);
+        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
             function (array $payload) {
@@ -220,44 +235,48 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(400)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(400)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(function () {
-            return $this->response->reveal();
+            return $this->response;
         });
 
         $response = $factory->createResponseFromThrowable(
-            $this->request->reveal(),
-            $e->reveal()
+            $this->request,
+            $e
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     /**
      * @dataProvider acceptHeaders
      */
-    public function testCreateResponseRemovesResourcesFromInputData(string $header, string $expectedType) : void
+    public function testCreateResponseRemovesResourcesFromInputData(string $header, string $expectedType): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($header);
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->write(Argument::that(function ($body) {
+            ->expects($this->atLeastOnce())
+            ->method('write')
+            ->with($this->callback(function ($body) {
                 Assert::assertNotEmpty($body);
-                return $body;
-            }))
-            ->shouldBeCalled();
+                return true;
+            }));
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', $expectedType)->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
-        $fh = fopen(__FILE__, 'r');
+        $fh       = fopen(__FILE__, 'r');
         $response = $this->factory->createResponse(
-            $this->request->reveal(),
+            $this->request,
             500,
             'Unknown error occurred',
             'Title',
@@ -265,41 +284,42 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             [
                 'args' => [
                     'resource' => $fh,
-                ]
+                ],
             ]
         );
         fclose($fh);
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
-    public function testFactoryGeneratesXmlResponseIfNegotiationFails() : void
+    public function testFactoryGeneratesXmlResponseIfNegotiationFails(): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn('text/plain');
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn('text/plain');
 
-        $stream = $this->prophesize(StreamInterface::class);
-        $stream
-            ->write(Argument::type('string'))
-            ->shouldBeCalled();
+        $stream = $this->createMock(StreamInterface::class);
+        $stream->expects($this->atLeastOnce())->method('write')->with($this->isType('string'));
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+xml')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+xml')
+            ->willReturn($this->response);
 
         $response = $this->factory->createResponse(
-            $this->request->reveal(),
+            $this->request,
             500,
             'Unknown error occurred'
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
-    public function testFactoryRendersPreviousExceptionsInDebugMode() : void
+    public function testFactoryRendersPreviousExceptionsInDebugMode(): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn('application/json');
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
             function (array $payload) {
@@ -307,62 +327,69 @@ class ProblemDetailsResponseFactoryTest extends TestCase
                 Assert::assertEquals(101011, $payload['exception']['code']);
                 Assert::assertEquals('second', $payload['exception']['message']);
                 Assert::assertArrayHasKey('stack', $payload['exception']);
-                Assert::assertInternalType('array', $payload['exception']['stack']);
+                Assert::assertIsArray($payload['exception']['stack']);
                 Assert::assertEquals(101010, $payload['exception']['stack'][0]['code']);
                 Assert::assertEquals('first', $payload['exception']['stack'][0]['message']);
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
-        $first = new RuntimeException('first', 101010);
+        $first  = new RuntimeException('first', 101010);
         $second = new RuntimeException('second', 101011, $first);
 
         $factory = new ProblemDetailsResponseFactory(
             function () {
-                return $this->response->reveal();
+                return $this->response;
             },
             ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
         );
 
         $response = $factory->createResponseFromThrowable(
-            $this->request->reveal(),
+            $this->request,
             $second
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode()
     {
         $fragileMessage = 'Your SQL or password here';
-        $exception = new Exception($fragileMessage);
+        $exception      = new Exception($fragileMessage);
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->write(Argument::that(function ($body) use ($fragileMessage) {
-                Assert::assertNotContains($fragileMessage, $body);
-                Assert::assertContains(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
-                return $body;
-            }))
-            ->shouldBeCalled();
+            ->expects($this->atLeastOnce())
+            ->method('write')
+            ->with($this->callback(function ($body) use ($fragileMessage) {
+                Assert::assertStringNotContainsString($fragileMessage, $body);
+                Assert::assertStringContainsString(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
+                return true;
+            }));
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
-        $response = $this->factory->createResponseFromThrowable($this->request->reveal(), $exception);
+        $response = $this->factory->createResponseFromThrowable($this->request, $exception);
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode()
     {
         $exception = new Exception('', 400);
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
             function (array $payload) {
@@ -370,21 +397,24 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
-        $response = $this->factory->createResponseFromThrowable($this->request->reveal(), $exception);
+        $response = $this->factory->createResponseFromThrowable($this->request, $exception);
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag()
     {
         $fragileMessage = 'Your SQL or password here';
-        $exception = new Exception($fragileMessage);
+        $exception      = new Exception($fragileMessage);
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
             function (array $payload) use ($fragileMessage) {
@@ -392,29 +422,32 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
             function () {
-                return $this->response->reveal();
+                return $this->response;
             },
             false,
             null,
             true
         );
 
-        $response = $factory->createResponseFromThrowable($this->request->reveal(), $exception);
+        $response = $factory->createResponseFromThrowable($this->request, $exception);
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testCustomDetailMessageShouldBeVisible()
     {
         $detailMessage = 'Custom detail message';
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
             function (array $payload) use ($detailMessage) {
@@ -422,13 +455,16 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(500)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(500)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
             function () {
-                return $this->response->reveal();
+                return $this->response;
             },
             false,
             null,
@@ -436,25 +472,20 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $detailMessage
         );
 
-        $response = $factory->createResponseFromThrowable($this->request->reveal(), new Exception());
+        $response = $factory->createResponseFromThrowable($this->request, new Exception());
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testRenderWithMalformedUtf8Sequences(): void
     {
-        $e = $this->prophesize(ProblemDetailsExceptionInterface::class);
-        $e->getStatus()->willReturn(400);
-        $e->getDetail()->willReturn('Exception details');
-        $e->getTitle()->willReturn('Invalid client request');
-        $e->getType()->willReturn('https://example.com/api/doc/invalid-client-request');
-        $e->getAdditionalData()->willReturn([
+        $e = $this->createProblemDetailsExceptionWithAdditional([
             'malformed-utf8' => self::UTF_8_INVALID_2_OCTET_SEQUENCE,
         ]);
 
-        $this->request->getHeaderLine('Accept')->willReturn('application/json');
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
 
-        $stream = $this->prophesize(StreamInterface::class);
+        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
             function (array $payload) {
@@ -462,23 +493,26 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             }
         );
 
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $this->response->withStatus(400)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('withStatus')->with(400)->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(function () {
-            return $this->response->reveal();
+            return $this->response;
         });
 
         $response = $factory->createResponseFromThrowable(
-            $this->request->reveal(),
-            $e->reveal()
+            $this->request,
+            $e
         );
 
-        $this->assertSame($this->response->reveal(), $response);
+        $this->assertSame($this->response, $response);
     }
 
-    public function provideMappedStatuses() : array
+    public function provideMappedStatuses(): array
     {
         $defaultTypesMap = [
             404 => 'https://example.com/problem-details/error/not-found',
@@ -496,25 +530,34 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /**
      * @dataProvider provideMappedStatuses
      */
-    public function testTypeIsInferredFromDefaultTypesMap(array $map, int $status, string $expectedType) : void
+    public function testTypeIsInferredFromDefaultTypesMap(array $map, int $status, string $expectedType): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn('application/json');
+        $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
 
-        $stream = $this->prophesize(StreamInterface::class);
-        $writeStream = $stream->write(Argument::that(function (string $body) use ($expectedType) {
-            $payload = json_decode($body, true);
-            Assert::assertEquals($expectedType, $payload['type']);
+        $stream = $this->createMock(StreamInterface::class);
+        $stream
+            ->expects($this->atLeastOnce())
+            ->method('write')
+            ->with($this->callback(function (string $body) use ($expectedType) {
+                $payload = json_decode($body, true);
+                Assert::assertEquals($expectedType, $payload['type']);
+                return true;
+            }));
 
-            return $body;
-        }));
-
-        $this->response->getBody()->will([$stream, 'reveal']);
-        $withStatus = $this->response->withStatus($status)->will([$this->response, 'reveal']);
-        $this->response->withHeader('Content-Type', 'application/problem+json')->will([$this->response, 'reveal']);
+        $this->response->method('getBody')->willReturn($stream);
+        $this->response
+            ->expects($this->atLeastOnce())
+            ->method('withStatus')
+            ->with($status)
+            ->willReturn($this->response);
+        $this->response
+            ->method('withHeader')
+            ->with('Content-Type', 'application/problem+json')
+            ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
             function () {
-                return $this->response->reveal();
+                return $this->response;
             },
             false,
             null,
@@ -523,9 +566,6 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $map
         );
 
-        $factory->createResponse($this->request->reveal(), $status, 'detail');
-
-        $writeStream->shouldHaveBeenCalled();
-        $withStatus->shouldHaveBeenCalled();
+        $factory->createResponse($this->request, $status, 'detail');
     }
 }

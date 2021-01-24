@@ -14,7 +14,6 @@ use ErrorException;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,14 +26,14 @@ class ProblemDetailsMiddlewareTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->request = $this->prophesize(ServerRequestInterface::class);
-        $this->responseFactory = $this->prophesize(ProblemDetailsResponseFactory::class);
-        $this->middleware = new ProblemDetailsMiddleware($this->responseFactory->reveal());
+        $this->request         = $this->createMock(ServerRequestInterface::class);
+        $this->responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
+        $this->middleware      = new ProblemDetailsMiddleware($this->responseFactory);
     }
 
-    public function acceptHeaders() : array
+    public function acceptHeaders(): array
     {
         return [
             'empty'                    => [''],
@@ -45,40 +44,45 @@ class ProblemDetailsMiddlewareTest extends TestCase
         ];
     }
 
-    public function testSuccessfulDelegationReturnsHandlerResponse() : void
+    public function testSuccessfulDelegationReturnsHandlerResponse(): void
     {
-        $response = $this->prophesize(ResponseInterface::class);
-        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $response = $this->createMock(ResponseInterface::class);
+        $handler  = $this->createMock(RequestHandlerInterface::class);
         $handler
-            ->handle(Argument::that([$this->request, 'reveal']))
-            ->will([$response, 'reveal']);
+            ->method('handle')
+            ->with($this->request)
+            ->willReturn($response);
 
+        $result = $this->middleware->process($this->request, $handler);
 
-        $result = $this->middleware->process($this->request->reveal(), $handler->reveal());
-
-        $this->assertSame($response->reveal(), $result);
+        $this->assertSame($response, $result);
     }
 
     /**
      * @dataProvider acceptHeaders
      */
-    public function testThrowableRaisedByHandlerResultsInProblemDetails(string $accept) : void
+    public function testThrowableRaisedByHandlerResultsInProblemDetails(string $accept): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($accept);
+        $this->request
+            ->method('getHeaderLine')
+            ->with('Accept')
+            ->willReturn($accept);
 
         $exception = new TestAsset\RuntimeException('Thrown!', 507);
 
-        $handler  = $this->prophesize(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
         $handler
-            ->handle(Argument::that([$this->request, 'reveal']))
-            ->willThrow($exception);
+            ->method('handle')
+            ->with($this->request)
+            ->willThrowException($exception);
 
-        $expected = $this->prophesize(ResponseInterface::class)->reveal();
+        $expected = $this->createMock(ResponseInterface::class);
         $this->responseFactory
-            ->createResponseFromThrowable($this->request->reveal(), $exception)
+            ->method('createResponseFromThrowable')
+            ->with($this->request, $exception)
             ->willReturn($expected);
 
-        $result = $this->middleware->process($this->request->reveal(), $handler->reveal());
+        $result = $this->middleware->process($this->request, $handler);
 
         $this->assertSame($expected, $result);
     }
@@ -86,20 +90,25 @@ class ProblemDetailsMiddlewareTest extends TestCase
     /**
      * @dataProvider acceptHeaders
      */
-    public function testMiddlewareRegistersErrorHandlerToConvertErrorsToProblemDetails(string $accept) : void
+    public function testMiddlewareRegistersErrorHandlerToConvertErrorsToProblemDetails(string $accept): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($accept);
+        $this->request
+            ->method('getHeaderLine')
+            ->with('Accept')
+            ->willReturn($accept);
 
-        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
         $handler
-            ->handle(Argument::that([$this->request, 'reveal']))
-            ->will(function () {
+            ->method('handle')
+            ->with($this->request)
+            ->willReturnCallback(function () {
                 trigger_error('Triggered error!', E_USER_ERROR);
             });
 
-        $expected = $this->prophesize(ResponseInterface::class)->reveal();
+        $expected = $this->createMock(ResponseInterface::class);
         $this->responseFactory
-            ->createResponseFromThrowable($this->request->reveal(), Argument::that(function ($e) {
+            ->method('createResponseFromThrowable')
+            ->with($this->request, $this->callback(function ($e) {
                 $this->assertInstanceOf(ErrorException::class, $e);
                 $this->assertEquals(E_USER_ERROR, $e->getSeverity());
                 $this->assertEquals('Triggered error!', $e->getMessage());
@@ -107,55 +116,65 @@ class ProblemDetailsMiddlewareTest extends TestCase
             }))
             ->willReturn($expected);
 
-        $result = $this->middleware->process($this->request->reveal(), $handler->reveal());
+        $result = $this->middleware->process($this->request, $handler);
 
         $this->assertSame($expected, $result);
     }
 
-    public function testRethrowsCaughtExceptionIfUnableToNegotiateAcceptHeader() : void
+    public function testRethrowsCaughtExceptionIfUnableToNegotiateAcceptHeader(): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn('text/html');
+        $this->request
+            ->method('getHeaderLine')
+            ->with('Accept')
+            ->willReturn('text/html');
+
         $exception = new TestAsset\RuntimeException('Thrown!', 507);
-        $handler  = $this->prophesize(RequestHandlerInterface::class);
+        $handler   = $this->createMock(RequestHandlerInterface::class);
         $handler
-            ->handle(Argument::that([$this->request, 'reveal']))
-            ->willThrow($exception);
+            ->method('handle')
+            ->with($this->request)
+            ->willThrowException($exception);
 
         $this->expectException(TestAsset\RuntimeException::class);
         $this->expectExceptionMessage('Thrown!');
         $this->expectExceptionCode(507);
-        $this->middleware->process($this->request->reveal(), $handler->reveal());
+        $this->middleware->process($this->request, $handler);
     }
 
     /**
      * @dataProvider acceptHeaders
      */
-    public function testErrorHandlingTriggersListeners(string $accept) : void
+    public function testErrorHandlingTriggersListeners(string $accept): void
     {
-        $this->request->getHeaderLine('Accept')->willReturn($accept);
+        $this->request
+            ->method('getHeaderLine')
+            ->with('Accept')
+            ->willReturn($accept);
 
         $exception = new TestAsset\RuntimeException('Thrown!', 507);
 
-        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
         $handler
-            ->handle(Argument::that([$this->request, 'reveal']))
-            ->willThrow($exception);
+            ->method('handle')
+            ->with($this->request)
+            ->willThrowException($exception);
 
-        $expected = $this->prophesize(ResponseInterface::class)->reveal();
+        $expected = $this->createMock(ResponseInterface::class);
         $this->responseFactory
-            ->createResponseFromThrowable($this->request->reveal(), $exception)
+            ->method('createResponseFromThrowable')
+            ->with($this->request, $exception)
             ->willReturn($expected);
 
-        $listener = function ($error, $request, $response) use ($exception, $expected) {
+        $listener  = function ($error, $request, $response) use ($exception, $expected) {
             $this->assertSame($exception, $error, 'Listener did not receive same exception as was raised');
-            $this->assertSame($this->request->reveal(), $request, 'Listener did not receive same request');
+            $this->assertSame($this->request, $request, 'Listener did not receive same request');
             $this->assertSame($expected, $response, 'Listener did not receive same response');
         };
         $listener2 = clone $listener;
         $this->middleware->attachListener($listener);
         $this->middleware->attachListener($listener2);
 
-        $result = $this->middleware->process($this->request->reveal(), $handler->reveal());
+        $result = $this->middleware->process($this->request, $handler);
 
         $this->assertSame($expected, $result);
     }

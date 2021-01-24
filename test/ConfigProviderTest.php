@@ -19,10 +19,10 @@ use PHPUnit\Framework\TestCase;
 
 class ConfigProviderTest extends TestCase
 {
-    public function testReturnsExpectedDependencies() : void
+    public function testReturnsExpectedDependencies(): void
     {
         $provider = new ConfigProvider();
-        $config = $provider();
+        $config   = $provider();
 
         $this->assertArrayHasKey('dependencies', $config);
 

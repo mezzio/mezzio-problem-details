@@ -11,8 +11,7 @@ declare(strict_types=1);
 namespace MezzioTest\ProblemDetails;
 
 use PHPUnit\Framework\Assert;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Http\Message\StreamInterface;
 use Throwable;
 
@@ -26,7 +25,7 @@ use function var_export;
 
 trait ProblemDetailsAssertionsTrait
 {
-    public function assertProblemDetails(array $expected, array $details) : void
+    public function assertProblemDetails(array $expected, array $details): void
     {
         foreach ($expected as $key => $value) {
             $this->assertArrayHasKey(
@@ -44,7 +43,7 @@ trait ProblemDetailsAssertionsTrait
         }
     }
 
-    public function assertExceptionDetails(Throwable $e, array $details) : void
+    public function assertExceptionDetails(Throwable $e, array $details): void
     {
         $this->assertArrayHasKey('class', $details);
         $this->assertSame(get_class($e), $details['class']);
@@ -65,13 +64,13 @@ trait ProblemDetailsAssertionsTrait
     }
 
     /**
-     * @param StreamInterface|ObjectProphecy $stream
+     * @param StreamInterface|MockObject $stream
      */
     public function prepareResponsePayloadAssertions(
         string $contentType,
-        ObjectProphecy $stream,
+        MockObject $stream,
         callable $assertion
-    ) : void {
+    ): void {
         if ('application/problem+json' === $contentType) {
             $this->preparePayloadForJsonResponse($stream, $assertion);
             return;
@@ -84,39 +83,41 @@ trait ProblemDetailsAssertionsTrait
     }
 
     /**
-     * @param StreamInterface|ObjectProphecy $stream
+     * @param StreamInterface|MockObject $stream
      */
-    public function preparePayloadForJsonResponse(ObjectProphecy $stream, callable $assertion) : void
+    public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion): void
     {
         $stream
-            ->write(Argument::that(function ($body) use ($assertion) {
-                Assert::assertInternalType('string', $body);
+            ->expects($this->any())
+            ->method('write')
+            ->with($this->callback(function ($body) use ($assertion) {
+                Assert::assertIsString($body);
                 $data = json_decode($body, true);
                 $assertion($data);
-                return $body;
-            }))
-            ->shouldBeCalled();
+                return true;
+            }));
     }
 
     /**
-     * @param StreamInterface|ObjectProphecy $stream
+     * @param StreamInterface|MockObject $stream
      */
-    public function preparePayloadForXmlResponse(ObjectProphecy $stream, callable $assertion) : void
+    public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion): void
     {
         $stream
-            ->write(Argument::that(function ($body) use ($assertion) {
-                Assert::assertInternalType('string', $body);
+            ->expects($this->any())
+            ->method('write')
+            ->with($this->callback(function ($body) use ($assertion) {
+                Assert::assertIsString($body);
                 $data = $this->deserializeXmlPayload($body);
                 $assertion($data);
-                return $body;
-            }))
-            ->shouldBeCalled();
+                return true;
+            }));
     }
 
-    public function deserializeXmlPayload(string $xml) : array
+    public function deserializeXmlPayload(string $xml): array
     {
-        $xml = simplexml_load_string($xml);
-        $json = json_encode($xml);
+        $xml     = simplexml_load_string($xml);
+        $json    = json_encode($xml);
         $payload = json_decode($json, true);
 
         // Ensure ints and floats are properly represented

@@ -15,37 +15,43 @@ use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandlerFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionObject;
 use RuntimeException;
 
 class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
-        $this->factory = new ProblemDetailsNotFoundHandlerFactory();
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->factory   = new ProblemDetailsNotFoundHandlerFactory();
     }
 
     public function testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable()
     {
         $e = new RuntimeException();
-        $this->container->get(ProblemDetailsResponseFactory::class)->willThrow($e);
+        $this->container
+            ->method('get')
+            ->with(ProblemDetailsResponseFactory::class)
+            ->willThrowException($e);
 
         $this->expectException(RuntimeException::class);
-        $this->factory->__invoke($this->container->reveal());
+        $this->factory->__invoke($this->container);
     }
 
-    public function testCreatesNotFoundHandlerUsingResponseFactoryService() : void
+    public function testCreatesNotFoundHandlerUsingResponseFactoryService(): void
     {
-        $responseFactory = $this->prophesize(ProblemDetailsResponseFactory::class)->reveal();
-        $this->container->get(ProblemDetailsResponseFactory::class)->willReturn($responseFactory);
+        $responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
+        $this->container
+            ->method('get')
+            ->with(ProblemDetailsResponseFactory::class)
+            ->willReturn($responseFactory);
 
-        $notFoundHandler = ($this->factory)($this->container->reveal());
+        $notFoundHandler = ($this->factory)($this->container);
+
+        $r = (new ReflectionObject($notFoundHandler))->getProperty('responseFactory');
+        $r->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsNotFoundHandler::class, $notFoundHandler);
-        $this->assertAttributeSame(
-            $responseFactory,
-            'responseFactory',
-            $notFoundHandler
-        );
+        $this->assertSame($responseFactory, $r->getValue($notFoundHandler));
     }
 }

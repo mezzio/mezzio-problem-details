@@ -25,52 +25,42 @@ use function array_merge;
  */
 trait CommonProblemDetailsExceptionTrait
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $status;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $detail;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $title;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $type;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $additional = [];
 
-    public function getStatus() : int
+    public function getStatus(): int
     {
         return $this->status;
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getTitle() : string
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getDetail() : string
+    public function getDetail(): string
     {
         return $this->detail;
     }
 
-    public function getAdditionalData() : array
+    public function getAdditionalData(): array
     {
         return $this->additional;
     }
@@ -81,7 +71,7 @@ trait CommonProblemDetailsExceptionTrait
      * Likely useful for the JsonSerializable implementation, but also
      * for cases where the XML variant is desired.
      */
-    public function toArray() : array
+    public function toArray(): array
     {
         $problem = [
             'status' => $this->status,

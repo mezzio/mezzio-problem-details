@@ -13,39 +13,50 @@ namespace MezzioTest\ProblemDetails;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsMiddlewareFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use ReflectionObject;
 use RuntimeException;
 
 class ProblemDetailsMiddlewareFactoryTest extends TestCase
 {
-    protected function setUp() : void
+    /** @var ContainerInterface|MockObject */
+    private $container;
+
+    protected function setUp(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
-        $this->factory = new ProblemDetailsMiddlewareFactory();
+        $this->container = $this->createMock(ContainerInterface::class);
+        $this->factory   = new ProblemDetailsMiddlewareFactory();
     }
 
     public function testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable()
     {
         $e = new RuntimeException();
-        $this->container->get(ProblemDetailsResponseFactory::class)->willThrow($e);
+        $this->container
+            ->method('get')
+            ->with(ProblemDetailsResponseFactory::class)
+            ->willThrowException($e);
 
         $this->expectException(RuntimeException::class);
-        $this->factory->__invoke($this->container->reveal());
+        $this->factory->__invoke($this->container);
     }
 
-    public function testCreatesMiddlewareUsingResponseFactoryService() : void
+    public function testCreatesMiddlewareUsingResponseFactoryService(): void
     {
-        $responseFactory = $this->prophesize(ProblemDetailsResponseFactory::class)->reveal();
-        $this->container->get(ProblemDetailsResponseFactory::class)->willReturn($responseFactory);
+        $responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
 
-        $middleware = ($this->factory)($this->container->reveal());
+        $this->container
+            ->method('get')
+            ->with(ProblemDetailsResponseFactory::class)
+            ->willReturn($responseFactory);
+
+        $middleware = ($this->factory)($this->container);
+
+        $r = (new ReflectionObject($middleware))->getProperty('responseFactory');
+        $r->setAccessible(true);
 
         $this->assertInstanceOf(ProblemDetailsMiddleware::class, $middleware);
-        $this->assertAttributeSame(
-            $responseFactory,
-            'responseFactory',
-            $middleware
-        );
+        $this->assertSame($responseFactory, $r->getValue($middleware));
     }
 }

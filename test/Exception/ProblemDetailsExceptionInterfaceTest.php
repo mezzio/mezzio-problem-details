@@ -18,17 +18,22 @@ use PHPUnit\Framework\TestCase;
 use function json_decode;
 use function json_encode;
 
-class ProblemDetailsExceptionTest extends TestCase
+class ProblemDetailsExceptionInterfaceTest extends TestCase
 {
+    /** @var int */
     protected $status = 403;
+    /** @var string */
     protected $detail = 'You are not authorized to do that';
+    /** @var string */
     protected $title = 'Unauthorized';
+    /** @var string */
     protected $type = 'https://httpstatus.es/403';
+    /** @var string[] */
     protected $additional = [
         'foo' => 'bar',
     ];
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->exception = new class (
             $this->status,
@@ -41,16 +46,16 @@ class ProblemDetailsExceptionTest extends TestCase
 
             public function __construct(int $status, string $detail, string $title, string $type, array $additional)
             {
-                $this->status = $status;
-                $this->detail = $detail;
-                $this->title = $title;
-                $this->type = $type;
+                $this->status     = $status;
+                $this->detail     = $detail;
+                $this->title      = $title;
+                $this->type       = $type;
                 $this->additional = $additional;
             }
         };
     }
 
-    public function testCanPullDetailsIndividually() : void
+    public function testCanPullDetailsIndividually(): void
     {
         $this->assertEquals($this->status, $this->exception->getStatus());
         $this->assertEquals($this->detail, $this->exception->getDetail());
@@ -59,7 +64,7 @@ class ProblemDetailsExceptionTest extends TestCase
         $this->assertEquals($this->additional, $this->exception->getAdditionalData());
     }
 
-    public function testCanCastDetailsToArray() : void
+    public function testCanCastDetailsToArray(): void
     {
         $this->assertEquals([
             'status' => $this->status,
@@ -70,7 +75,7 @@ class ProblemDetailsExceptionTest extends TestCase
         ], $this->exception->toArray());
     }
 
-    public function testIsJsonSerializable() : void
+    public function testIsJsonSerializable(): void
     {
         $problem = json_decode(json_encode($this->exception), true);
 
