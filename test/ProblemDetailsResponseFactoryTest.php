@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace MezzioTest\ProblemDetails;
 
 use Exception;
+use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\Assert;
@@ -197,15 +198,31 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->assertSame($this->response, $response);
     }
 
+    private function createProblemDetailsExceptionWithAdditional(array $additional): ProblemDetailsExceptionInterface
+    {
+        return new class (
+            400,
+            'Exception details',
+            'Invalid client request',
+            'https://example.com/api/doc/invalid-client-request',
+            $additional
+        ) extends Exception implements ProblemDetailsExceptionInterface {
+            use CommonProblemDetailsExceptionTrait;
+
+            public function __construct(int $status, string $detail, string $title, string $type, array $additional)
+            {
+                $this->status     = $status;
+                $this->detail     = $detail;
+                $this->title      = $title;
+                $this->type       = $type;
+                $this->additional = $additional;
+            }
+        };
+    }
+
     public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface(): void
     {
-        $e = $this->createMock(ProblemDetailsExceptionInterface::class);
-        $e->method('getStatus')->willReturn(400);
-        $e->method('getDetail')->willReturn('Exception details');
-        $e->method('getTitle')->willReturn('Invalid client request');
-        $e->method('getType')->willReturn('https://example.com/api/doc/invalid-client-request');
-        $e->method('getAdditionalData')->willReturn(['foo' => 'bar']);
-
+        $e      = $this->createProblemDetailsExceptionWithAdditional(['foo' => 'bar']);
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
@@ -462,12 +479,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
     public function testRenderWithMalformedUtf8Sequences(): void
     {
-        $e = $this->createMock(ProblemDetailsExceptionInterface::class);
-        $e->method('getStatus')->willReturn(400);
-        $e->method('getDetail')->willReturn('Exception details');
-        $e->method('getTitle')->willReturn('Invalid client request');
-        $e->method('getType')->willReturn('https://example.com/api/doc/invalid-client-request');
-        $e->method('getAdditionalData')->willReturn([
+        $e = $this->createProblemDetailsExceptionWithAdditional([
             'malformed-utf8' => self::UTF_8_INVALID_2_OCTET_SEQUENCE,
         ]);
 
