@@ -235,7 +235,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -311,7 +311,6 @@
 <p>To install this package in your application, use
 <a href="https://getcomposer.org">Composer</a>:</p>
 <pre class="highlight"><code class="language-bash">$ composer require mezzio/mezzio-problem-details</code></pre>
-
 <h2 id="usage">Usage</h2>
 <p>This package provides three primary mechanisms for creating and returning
 Problem Details responses:</p>
@@ -365,7 +364,6 @@ class DomainTransactionMiddleware implements MiddlewareInterface
         }
     }
 }</code></pre>
-
 <p>The factory for the above might look like:</p>
 <pre class="highlight"><code class="language-php">use Psr\Container\ContainerInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
@@ -380,7 +378,6 @@ class DomainTransactionMiddlewareFactory
         );
     }
 }</code></pre>
-
 <p>Another way to use the factory is to provide PHP primitives to the factory. As
 an example, validation failure is an expected condition, but should likely
 result in problem details to the end user.</p>
@@ -434,7 +431,6 @@ class DomainTransactionMiddleware implements MiddlewareInterface
         }
     }
 }</code></pre>
-
 <p>The above modifies the original example to add validation and, on failed
 validation, return a custom response that includes the validation failure
 messages.</p>
@@ -460,7 +456,6 @@ interface ProblemDetailsExceptionInterface extends JsonSerializable
     public function getAdditionalData() : array;
     public function toArray() : array;
 }</code></pre>
-
 <p>We also provide the trait <code>CommonProblemDetailsExceptionTrait</code>, which implements each
 of the above, the <code>jsonSerialize()</code> method, and also defines the following
 instance properties:</p>
@@ -488,7 +483,6 @@ private $type;
  * @var array
  */
 private $additional = [];</code></pre>
-
 <p>By composing this trait, you can easily define custom exception types:</p>
 <pre class="highlight"><code class="language-php">namespace Api;
 
@@ -511,7 +505,6 @@ class DomainException extends PhpDomainException implements ProblemDetailsExcept
         return $e;
     }
 }</code></pre>
-
 <p>The data present in the generated exception will then be used by the
 <code>ProblemDetailsResponseFactory</code> to generate full Problem Details.</p>
 <h3>Error handling</h3>
@@ -536,17 +529,14 @@ ensures the <code>ProblemDetailsResponseFactory</code> is composed. As such, you
 it into your workflow in several ways.</p>
 <p>First, you can have it intercept every request:</p>
 <pre class="highlight"><code class="language-php">$app-&gt;pipe(ProblemDetailsMiddleware::class);</code></pre>
-
 <p>With Mezzio, you can also segregate this to a subpath:</p>
 <pre class="highlight"><code class="language-php">$app-&gt;pipe('/api', ProblemDetailsMiddleware::class);</code></pre>
-
 <p>Finally, you can include it in a route-specific pipeline:</p>
 <pre class="highlight"><code class="language-php">$app-&gt;post('/api/domain/transaction', [
     ProblemDetailsMiddleware::class,
     BodyParamsMiddleware::class,
     DomainTransactionMiddleware::class,
 ]);</code></pre>
-
 <h3>Not Found handling</h3>
 <p>When writing APIs you may also want 404 responses be in the accepted content-type.
 This package provides <code>ProblemDetailsNotFoundHandler</code> which will return a
@@ -703,6 +693,7 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
         </ul>
     </div>
 
+                    
                 
             </div>
         </div>
@@ -775,7 +766,7 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                         <p>
                             <!--Built with love by the Laminas team with the help of our
                             <a href="https://github.com/mezzio/mezzio-problem-details/graphs/contributors">contributors</a>.<br>-->
-                            &copy; 2020 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
+                            &copy; 2021 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
                         </p>
                     </div>
                 </div>

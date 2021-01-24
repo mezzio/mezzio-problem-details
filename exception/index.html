@@ -235,7 +235,7 @@
             </div>
 
             
-            <div class="col-4 text-sm-right">
+            <div class="col-4 text-right">
                 
                     
 
@@ -324,7 +324,6 @@ interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
 
     public function toArray() : array;
 }</code></pre>
-
 <p>You may create exceptions that implement this interface. When such exceptions
 are passed to <code>ProblemDetailsResponseFactory::createResponseFromThrowable()</code>,
 these will pull the relevant details in order to create a Problem Details
@@ -373,10 +372,8 @@ class TransactionException extends DomainException implements ProblemDetailsExce
         return $e;
     }
 }</code></pre>
-
 <p>You might then raise the exception as follows:</p>
 <pre class="highlight"><code class="language-php">throw TransactionException::create($price, $balance, $accountUri);</code></pre>
-
 <p>And it might result in the following:</p>
 <pre class="highlight"><code class="language-json">{
     "status": 403,
@@ -386,7 +383,6 @@ class TransactionException extends DomainException implements ProblemDetailsExce
     "account": "https://example.com/api/accounts/12345",
     "balance": 1.37
 }</code></pre>
-
 <p>The benefit to this approach is that you can easily provide domain-specific
 exceptions throughout your application that can, as a side-effect, be
 re-purposed immediately to provide problem details in your application.</p>
@@ -537,6 +533,7 @@ re-purposed immediately to provide problem details in your application.</p>
         </ul>
     </div>
 
+                    
                 
             </div>
         </div>
@@ -609,7 +606,7 @@ re-purposed immediately to provide problem details in your application.</p>
                         <p>
                             <!--Built with love by the Laminas team with the help of our
                             <a href="https://github.com/mezzio/mezzio-problem-details/graphs/contributors">contributors</a>.<br>-->
-                            &copy; 2020 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
+                            &copy; 2021 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
                         </p>
                     </div>
                 </div>
