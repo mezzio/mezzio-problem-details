@@ -1,6 +1,6 @@
 # Problem Details for PSR-7 Applications
 
-[![Build Status](https://github.com/mezzio/mezzio-problem-details/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-problem-details/actions/workflows/continuous-integration.yml)
+[![Build Status](https://github.com/mezzio/mezzio-problem-details/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-problem-details/actions/workflows/continuous-integration.yml)
 
 This library provides a factory for generating Problem Details
 responses, error handling middleware for automatically generating Problem
