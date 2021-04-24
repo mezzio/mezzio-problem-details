@@ -1,7 +1,6 @@
 # Problem Details for PSR-7 Applications
 
-[![Build Status](https://travis-ci.com/mezzio/mezzio-problem-details.svg?branch=master)](https://travis-ci.com/mezzio/mezzio-problem-details)
-[![Coverage Status](https://coveralls.io/repos/github/mezzio/mezzio-problem-details/badge.svg?branch=master)](https://coveralls.io/github/mezzio/mezzio-problem-details?branch=master)
+[![Build Status](https://github.com/mezzio/mezzio-problem-details/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-problem-details/actions/workflows/continuous-integration.yml)
 
 This library provides a factory for generating Problem Details
 responses, error handling middleware for automatically generating Problem
