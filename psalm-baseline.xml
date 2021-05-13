@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="3.18.2@19aa905f7c3c7350569999a93c40ae91ae4e1626">
+  <file src="src/ProblemDetailsMiddleware.php">
+    <MissingClosureParamType occurrences="1">
+      <code>$listener</code>
+    </MissingClosureParamType>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$this-&gt;createErrorHandler()</code>
+    </MixedArgumentTypeCoercion>
+    <MixedFunctionCall occurrences="1">
+      <code>$listener($error, $request, $response)</code>
+    </MixedFunctionCall>
+    <MixedPropertyTypeCoercion occurrences="1">
+      <code>$this-&gt;listeners</code>
+    </MixedPropertyTypeCoercion>
+  </file>
+  <file src="src/ProblemDetailsMiddlewareFactory.php">
+    <MixedArgument occurrences="1">
+      <code>$container-&gt;get(ProblemDetailsResponseFactory::class)</code>
+    </MixedArgument>
+  </file>
+  <file src="src/ProblemDetailsNotFoundHandlerFactory.php">
+    <MixedArgument occurrences="1">
+      <code>$container-&gt;get(ProblemDetailsResponseFactory::class)</code>
+    </MixedArgument>
+  </file>
+  <file src="src/ProblemDetailsResponseFactory.php">
+    <MissingClosureParamType occurrences="1">
+      <code>$value</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="4">
+      <code>$content</code>
+      <code>$mediaType-&gt;getValue()</code>
+      <code>$payload['status']</code>
+      <code>$payload['status']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="4">
+      <code>$content</code>
+      <code>$response</code>
+      <code>$return[$key]</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="4">
+      <code>ResponseInterface</code>
+      <code>ResponseInterface</code>
+      <code>ResponseInterface</code>
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedMethodCall occurrences="4">
+      <code>getBody</code>
+      <code>withHeader</code>
+      <code>withStatus</code>
+      <code>write</code>
+    </MixedMethodCall>
+    <MixedReturnStatement occurrences="4">
+      <code>$responseFactory()</code>
+      <code>$this-&gt;defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status)</code>
+      <code>$this-&gt;getResponseGenerator($request)($payload)</code>
+    </MixedReturnStatement>
+    <PossiblyNullReference occurrences="1">
+      <code>setAttribute</code>
+    </PossiblyNullReference>
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getValue</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMethod occurrences="1">
+      <code>setAttribute</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/ProblemDetailsResponseFactoryFactory.php">
+    <MixedArgument occurrences="5">
+      <code>$container-&gt;get(ResponseInterface::class)</code>
+      <code>$defaultTypesMap</code>
+      <code>$includeThrowableDetail</code>
+      <code>$includeThrowableDetail</code>
+      <code>$jsonFlags</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="5">
+      <code>$config</code>
+      <code>$defaultTypesMap</code>
+      <code>$includeThrowableDetail</code>
+      <code>$jsonFlags</code>
+      <code>$problemDetailsConfig</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/ConfigProviderTest.php">
+    <MixedArgument occurrences="4">
+      <code>$dependencies</code>
+      <code>$factories</code>
+      <code>$factories</code>
+      <code>$factories</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="3">
+      <code>$dependencies['factories']</code>
+      <code>$factories[ProblemDetailsMiddleware::class]</code>
+      <code>$factories[ProblemDetailsResponseFactory::class]</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="2">
+      <code>$dependencies</code>
+      <code>$factories</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/Exception/ProblemDetailsExceptionInterfaceTest.php">
+    <MixedAssignment occurrences="1">
+      <code>$problem</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="6">
+      <code>getAdditionalData</code>
+      <code>getDetail</code>
+      <code>getStatus</code>
+      <code>getTitle</code>
+      <code>getType</code>
+      <code>toArray</code>
+    </MixedMethodCall>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;exception</code>
+    </UndefinedThisPropertyAssignment>
+    <UndefinedThisPropertyFetch occurrences="3">
+      <code>$this-&gt;exception</code>
+      <code>$this-&gt;exception</code>
+      <code>$this-&gt;exception</code>
+    </UndefinedThisPropertyFetch>
+  </file>
+  <file src="test/ProblemDetailsAssertionsTrait.php">
+    <MissingClosureParamType occurrences="3">
+      <code>$body</code>
+      <code>$body</code>
+      <code>$item</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="1">
+      <code>$payload</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$data</code>
+      <code>$payload</code>
+      <code>$value</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/ProblemDetailsMiddlewareFactoryTest.php">
+    <MissingReturnType occurrences="1">
+      <code>testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/ProblemDetailsMiddlewareTest.php">
+    <MissingClosureParamType occurrences="4">
+      <code>$e</code>
+      <code>$error</code>
+      <code>$request</code>
+      <code>$response</code>
+    </MissingClosureParamType>
+    <MissingClosureReturnType occurrences="1">
+      <code>function ($error, $request, $response) use ($exception, $expected) {</code>
+    </MissingClosureReturnType>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="test/ProblemDetailsNotFoundHandlerFactoryTest.php">
+    <MissingReturnType occurrences="1">
+      <code>testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/ProblemDetailsNotFoundHandlerTest.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="test/ProblemDetailsResponseFactoryFactoryTest.php">
+    <MissingReturnType occurrences="3">
+      <code>assertResponseFactoryReturns</code>
+      <code>testLackOfResponseServiceResultsInException</code>
+      <code>testNonCallableResponseServiceResultsInException</code>
+    </MissingReturnType>
+    <MixedAssignment occurrences="1">
+      <code>$responseFactory</code>
+    </MixedAssignment>
+    <MixedFunctionCall occurrences="1">
+      <code>$responseFactory()</code>
+    </MixedFunctionCall>
+    <MixedOperand occurrences="1">
+      <code>$jsonFlags-&gt;getValue($factory)</code>
+    </MixedOperand>
+  </file>
+  <file src="test/ProblemDetailsResponseFactoryTest.php">
+    <MissingClosureParamType occurrences="1">
+      <code>$body</code>
+    </MissingClosureParamType>
+    <MissingReturnType occurrences="4">
+      <code>testCustomDetailMessageShouldBeVisible</code>
+      <code>testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode</code>
+      <code>testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode</code>
+      <code>testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="2">
+      <code>$payload['exception']</code>
+      <code>$payload['foo']</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="6">
+      <code>$payload['exception']['code']</code>
+      <code>$payload['exception']['message']</code>
+      <code>$payload['exception']['stack']</code>
+      <code>$payload['exception']['stack'][0]['code']</code>
+      <code>$payload['exception']['stack'][0]['message']</code>
+      <code>$payload['type']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="1">
+      <code>$payload</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="2">
+      <code>array</code>
+      <code>array</code>
+    </MixedInferredReturnType>
+    <TooManyArguments occurrences="1">
+      <code>Assert::arrayHasKey('malformed-utf8', $payload)</code>
+    </TooManyArguments>
+  </file>
+  <file src="test/TestAsset/RuntimeException.php">
+    <MixedAssignment occurrences="1">
+      <code>$this-&gt;code</code>
+    </MixedAssignment>
+  </file>
+</files>
