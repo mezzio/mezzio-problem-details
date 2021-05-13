@@ -12,6 +12,7 @@ namespace MezzioTest\ProblemDetails;
 
 use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,6 +21,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ProblemDetailsNotFoundHandlerTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
+
+    /** @var ProblemDetailsResponseFactory&MockObject */
+    private $responseFactory;
 
     protected function setUp(): void
     {

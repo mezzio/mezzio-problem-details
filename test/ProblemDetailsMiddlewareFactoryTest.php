@@ -21,8 +21,11 @@ use RuntimeException;
 
 class ProblemDetailsMiddlewareFactoryTest extends TestCase
 {
-    /** @var ContainerInterface|MockObject */
+    /** @var ContainerInterface&MockObject */
     private $container;
+
+    /** @var ProblemDetailsMiddlewareFactory */
+    private $factory;
 
     protected function setUp(): void
     {

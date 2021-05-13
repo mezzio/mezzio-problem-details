@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.16@d03e5ef057d6adc656c0ff7e166c50b73b4f48f3">
+<files psalm-version="3.18.2@19aa905f7c3c7350569999a93c40ae91ae4e1626">
   <file src="src/ProblemDetailsMiddleware.php">
     <MissingClosureParamType occurrences="1">
       <code>$listener</code>
@@ -34,9 +34,6 @@
       <code>$payload['status']</code>
       <code>$payload['status']</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$key</code>
-    </MixedArgumentTypeCoercion>
     <MixedAssignment occurrences="4">
       <code>$content</code>
       <code>$response</code>
@@ -104,20 +101,6 @@
     </MixedAssignment>
   </file>
   <file src="test/Exception/ProblemDetailsExceptionInterfaceTest.php">
-    <MissingPropertyType occurrences="5">
-      <code>$additional</code>
-      <code>$detail</code>
-      <code>$status</code>
-      <code>$title</code>
-      <code>$type</code>
-    </MissingPropertyType>
-    <MixedArgument occurrences="5">
-      <code>$this-&gt;additional</code>
-      <code>$this-&gt;detail</code>
-      <code>$this-&gt;status</code>
-      <code>$this-&gt;title</code>
-      <code>$this-&gt;type</code>
-    </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$problem</code>
     </MixedAssignment>
@@ -139,71 +122,24 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsAssertionsTrait.php">
-    <DeprecatedMethod occurrences="3">
-      <code>Assert::assertInternalType('string', $body)</code>
-      <code>Assert::assertInternalType('string', $body)</code>
-      <code>assertInternalType</code>
-    </DeprecatedMethod>
-    <ImplicitToStringCast occurrences="2"/>
-    <InvalidScalarArgument occurrences="1"/>
-    <MismatchingDocblockParamType occurrences="3">
-      <code>StreamInterface|ObjectProphecy</code>
-      <code>StreamInterface|ObjectProphecy</code>
-      <code>StreamInterface|ObjectProphecy</code>
-    </MismatchingDocblockParamType>
     <MissingClosureParamType occurrences="3">
       <code>$body</code>
       <code>$body</code>
       <code>$item</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="1">
-      <code>function ($body) use ($assertion) {</code>
-    </MissingClosureReturnType>
-    <MixedArgument occurrences="3">
-      <code>$body</code>
-      <code>$body</code>
+    <MixedArgument occurrences="1">
       <code>$payload</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1"/>
     <MixedAssignment occurrences="3">
       <code>$data</code>
       <code>$payload</code>
       <code>$value</code>
     </MixedAssignment>
-    <PossiblyInvalidMethodCall occurrences="2">
-      <code>shouldBeCalled</code>
-      <code>shouldBeCalled</code>
-    </PossiblyInvalidMethodCall>
   </file>
   <file src="test/ProblemDetailsMiddlewareFactoryTest.php">
-    <DeprecatedMethod occurrences="1">
-      <code>assertAttributeSame</code>
-    </DeprecatedMethod>
     <MissingReturnType occurrences="1">
       <code>testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable</code>
     </MissingReturnType>
-    <MixedFunctionCall occurrences="1">
-      <code>($this-&gt;factory)($this-&gt;container-&gt;reveal())</code>
-    </MixedFunctionCall>
-    <MixedMethodCall occurrences="7">
-      <code>__invoke</code>
-      <code>get</code>
-      <code>get</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>willReturn</code>
-      <code>willThrow</code>
-    </MixedMethodCall>
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;factory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;factory</code>
-      <code>$this-&gt;factory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsMiddlewareTest.php">
     <MissingClosureParamType occurrences="4">
@@ -218,421 +154,65 @@
     <MixedInferredReturnType occurrences="1">
       <code>array</code>
     </MixedInferredReturnType>
-    <MixedMethodCall occurrences="30">
-      <code>attachListener</code>
-      <code>attachListener</code>
-      <code>createResponseFromThrowable</code>
-      <code>createResponseFromThrowable</code>
-      <code>createResponseFromThrowable</code>
-      <code>getHeaderLine</code>
-      <code>getHeaderLine</code>
-      <code>getHeaderLine</code>
-      <code>getHeaderLine</code>
-      <code>process</code>
-      <code>process</code>
-      <code>process</code>
-      <code>process</code>
-      <code>process</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-    </MixedMethodCall>
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;middleware</code>
-      <code>$this-&gt;request</code>
-      <code>$this-&gt;responseFactory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="13">
-      <code>$this-&gt;middleware</code>
-      <code>$this-&gt;middleware</code>
-      <code>$this-&gt;middleware</code>
-      <code>$this-&gt;middleware</code>
-      <code>$this-&gt;middleware</code>
-      <code>$this-&gt;request</code>
-      <code>$this-&gt;request</code>
-      <code>$this-&gt;request</code>
-      <code>$this-&gt;request</code>
-      <code>$this-&gt;request</code>
-      <code>$this-&gt;responseFactory</code>
-      <code>$this-&gt;responseFactory</code>
-      <code>$this-&gt;responseFactory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsNotFoundHandlerFactoryTest.php">
-    <DeprecatedMethod occurrences="1">
-      <code>assertAttributeSame</code>
-    </DeprecatedMethod>
     <MissingReturnType occurrences="1">
       <code>testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable</code>
     </MissingReturnType>
-    <MixedFunctionCall occurrences="1">
-      <code>($this-&gt;factory)($this-&gt;container-&gt;reveal())</code>
-    </MixedFunctionCall>
-    <MixedMethodCall occurrences="7">
-      <code>__invoke</code>
-      <code>get</code>
-      <code>get</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>willReturn</code>
-      <code>willThrow</code>
-    </MixedMethodCall>
-    <UndefinedThisPropertyAssignment occurrences="2">
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;factory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;factory</code>
-      <code>$this-&gt;factory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsNotFoundHandlerTest.php">
-    <MissingReturnType occurrences="1">
-      <code>setUp</code>
-    </MissingReturnType>
-    <MixedArgument occurrences="2">
-      <code>$this-&gt;responseFactory-&gt;reveal()</code>
-      <code>$this-&gt;responseFactory-&gt;reveal()</code>
-    </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>[$request, 'reveal']</code>
-    </MixedArgumentTypeCoercion>
     <MixedInferredReturnType occurrences="1">
       <code>array</code>
     </MixedInferredReturnType>
-    <MixedMethodCall occurrences="4">
-      <code>createResponse</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>will</code>
-    </MixedMethodCall>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;responseFactory</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;responseFactory</code>
-      <code>$this-&gt;responseFactory</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsResponseFactoryFactoryTest.php">
-    <DeprecatedMethod occurrences="8">
-      <code>Assert::readAttribute($factory, 'jsonFlags')</code>
-      <code>assertAttributeInstanceOf</code>
-      <code>assertAttributeSame</code>
-      <code>assertAttributeSame</code>
-      <code>assertAttributeSame</code>
-      <code>assertAttributeSame</code>
-      <code>assertAttributeSame</code>
-      <code>assertAttributeSame</code>
-    </DeprecatedMethod>
     <MissingReturnType occurrences="3">
       <code>assertResponseFactoryReturns</code>
       <code>testLackOfResponseServiceResultsInException</code>
       <code>testNonCallableResponseServiceResultsInException</code>
     </MissingReturnType>
-    <MixedArgument occurrences="7">
-      <code>$this-&gt;container-&gt;reveal()</code>
-      <code>$this-&gt;container-&gt;reveal()</code>
-      <code>$this-&gt;container-&gt;reveal()</code>
-      <code>$this-&gt;container-&gt;reveal()</code>
-      <code>$this-&gt;container-&gt;reveal()</code>
-      <code>$this-&gt;container-&gt;reveal()</code>
-      <code>$this-&gt;container-&gt;reveal()</code>
-    </MixedArgument>
     <MixedAssignment occurrences="1">
       <code>$responseFactory</code>
     </MixedAssignment>
     <MixedFunctionCall occurrences="1">
       <code>$responseFactory()</code>
     </MixedFunctionCall>
-    <MixedMethodCall occurrences="47">
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>get</code>
-      <code>has</code>
-      <code>has</code>
-      <code>has</code>
-      <code>has</code>
-      <code>has</code>
-      <code>has</code>
-      <code>has</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>shouldNotBeCalled</code>
-      <code>shouldNotBeCalled</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willThrow</code>
-    </MixedMethodCall>
     <MixedOperand occurrences="1">
-      <code>Assert::readAttribute($factory, 'jsonFlags')</code>
+      <code>$jsonFlags-&gt;getValue($factory)</code>
     </MixedOperand>
-    <RedundantCondition occurrences="4">
-      <code>assertInstanceOf</code>
-      <code>assertInstanceOf</code>
-      <code>assertInstanceOf</code>
-      <code>assertInstanceOf</code>
-    </RedundantCondition>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;container</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="7">
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-      <code>$this-&gt;container</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsResponseFactoryTest.php">
-    <DeprecatedMethod occurrences="1">
-      <code>Assert::assertInternalType('array', $payload['exception']['stack'])</code>
-    </DeprecatedMethod>
-    <InvalidScalarArgument occurrences="1"/>
-    <MissingClosureParamType occurrences="2">
-      <code>$body</code>
+    <MissingClosureParamType occurrences="1">
       <code>$body</code>
     </MissingClosureParamType>
-    <MissingClosureReturnType occurrences="10">
-      <code>function ($body) use ($fragileMessage) {</code>
-      <code>function ($body) {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-      <code>function () {</code>
-    </MissingClosureReturnType>
     <MissingReturnType occurrences="4">
       <code>testCustomDetailMessageShouldBeVisible</code>
       <code>testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode</code>
       <code>testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode</code>
       <code>testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag</code>
     </MissingReturnType>
-    <MixedArgument occurrences="29">
+    <MixedArgument occurrences="2">
       <code>$payload['exception']</code>
       <code>$payload['foo']</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;request-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
-      <code>$this-&gt;response-&gt;reveal()</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="2"/>
     <MixedArrayAccess occurrences="6">
       <code>$payload['exception']['code']</code>
       <code>$payload['exception']['message']</code>
       <code>$payload['exception']['stack']</code>
-      <code>$payload['exception']['stack']</code>
-      <code>$payload['exception']['stack']</code>
+      <code>$payload['exception']['stack'][0]['code']</code>
+      <code>$payload['exception']['stack'][0]['message']</code>
       <code>$payload['type']</code>
     </MixedArrayAccess>
-    <MixedAssignment occurrences="2">
+    <MixedAssignment occurrences="1">
       <code>$payload</code>
-      <code>$withStatus</code>
     </MixedAssignment>
     <MixedInferredReturnType occurrences="2">
       <code>array</code>
       <code>array</code>
     </MixedInferredReturnType>
-    <MixedMethodCall occurrences="1">
-      <code>shouldHaveBeenCalled</code>
-    </MixedMethodCall>
-    <PossiblyInvalidMethodCall occurrences="10">
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-      <code>willReturn</code>
-    </PossiblyInvalidMethodCall>
-    <PossiblyUndefinedMethod occurrences="77">
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>reveal</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-      <code>will</code>
-    </PossiblyUndefinedMethod>
     <TooManyArguments occurrences="1">
       <code>Assert::arrayHasKey('malformed-utf8', $payload)</code>
     </TooManyArguments>
-    <UndefinedMethod occurrences="28">
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-      <code>[$this-&gt;response, 'reveal']</code>
-    </UndefinedMethod>
   </file>
   <file src="test/TestAsset/RuntimeException.php">
     <MixedAssignment occurrences="1">

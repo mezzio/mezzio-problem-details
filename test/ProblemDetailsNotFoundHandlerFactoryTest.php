@@ -13,6 +13,7 @@ namespace MezzioTest\ProblemDetails;
 use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandlerFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use ReflectionObject;
@@ -20,6 +21,12 @@ use RuntimeException;
 
 class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
 {
+    /** @var ContainerInterface&MockObject */
+    private $container;
+
+    /** @var ProblemDetailsNotFoundHandlerFactory */
+    private $factory;
+
     protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);

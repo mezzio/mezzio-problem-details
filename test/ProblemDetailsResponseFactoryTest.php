@@ -33,10 +33,10 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    /** @var ServerRequestInterface|MockObject */
+    /** @var ServerRequestInterface&MockObject */
     private $request;
 
-    /** @var ResponseInterface|MockObject */
+    /** @var ResponseInterface&MockObject */
     private $response;
 
     /** @var ProblemDetailsResponseFactory */
@@ -367,7 +367,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream
             ->expects($this->atLeastOnce())
             ->method('write')
-            ->with($this->callback(function ($body) use ($fragileMessage) {
+            ->with($this->callback(function (string $body) use ($fragileMessage) {
                 Assert::assertStringNotContainsString($fragileMessage, $body);
                 Assert::assertStringContainsString(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
                 return true;

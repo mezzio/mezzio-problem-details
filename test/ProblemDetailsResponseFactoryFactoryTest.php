@@ -14,6 +14,7 @@ use Closure;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -31,6 +32,9 @@ use const JSON_UNESCAPED_UNICODE;
 
 class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 {
+    /** @var ContainerInterface&MockObject */
+    private $container;
+
     protected function setUp(): void
     {
         $this->container = $this->createMock(ContainerInterface::class);

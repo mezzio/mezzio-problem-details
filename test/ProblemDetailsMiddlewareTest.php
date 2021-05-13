@@ -13,6 +13,7 @@ namespace MezzioTest\ProblemDetails;
 use ErrorException;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,6 +26,15 @@ use const E_USER_ERROR;
 class ProblemDetailsMiddlewareTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
+
+    /** @var ProblemDetailsMiddleware */
+    private $middleware;
+
+    /** @var ServerRequestInterface&MockObject */
+    private $request;
+
+    /** @var ProblemDetailsResponseFactory&MockObject */
+    private $responseFactory;
 
     protected function setUp(): void
     {

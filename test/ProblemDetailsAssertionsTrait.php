@@ -60,11 +60,11 @@ trait ProblemDetailsAssertionsTrait
         // may be objects, but once copied, they are arrays. This makes direct
         // comparison impossible; thus, only testing for correct type.
         $this->assertArrayHasKey('trace', $details);
-        $this->assertInternalType('array', $details['trace']);
+        $this->assertIsArray($details['trace']);
     }
 
     /**
-     * @param StreamInterface|MockObject $stream
+     * @param StreamInterface&MockObject $stream
      */
     public function prepareResponsePayloadAssertions(
         string $contentType,
@@ -83,7 +83,7 @@ trait ProblemDetailsAssertionsTrait
     }
 
     /**
-     * @param StreamInterface|MockObject $stream
+     * @param StreamInterface&MockObject $stream
      */
     public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion): void
     {
@@ -99,7 +99,7 @@ trait ProblemDetailsAssertionsTrait
     }
 
     /**
-     * @param StreamInterface|MockObject $stream
+     * @param StreamInterface&MockObject $stream
      */
     public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion): void
     {
