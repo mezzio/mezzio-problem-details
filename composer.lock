@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e27412b250eb477d9d44a5eeab174eaa",
+    "content-hash": "dda9edb3a4c1bac26407b96dcdea344a",
     "packages": [
         {
             "name": "fig/http-message-util",
@@ -1124,21 +1124,20 @@
         },
         {
             "name": "laminas/laminas-coding-standard",
-            "version": "2.1.4",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-coding-standard.git",
-                "reference": "d75f1acf615232e108da2d2cf5a7df3e527b8f38"
+                "reference": "af23a4ceca36b887415585040c6afaff081ccc33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-coding-standard/zipball/d75f1acf615232e108da2d2cf5a7df3e527b8f38",
-                "reference": "d75f1acf615232e108da2d2cf5a7df3e527b8f38",
+                "url": "https://api.github.com/repos/laminas/laminas-coding-standard/zipball/af23a4ceca36b887415585040c6afaff081ccc33",
+                "reference": "af23a4ceca36b887415585040c6afaff081ccc33",
                 "shasum": ""
             },
             "require": {
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2 || ^0.7",
-                "laminas/laminas-zendframework-bridge": "^1.0",
                 "php": "^7.3 || ~8.0.0",
                 "slevomat/coding-standard": "^6.4.1",
                 "squizlabs/php_codesniffer": "^3.5.8",
@@ -1174,7 +1173,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-10-26T07:33:05+00:00"
+            "time": "2021-05-15T09:20:49+00:00"
         },
         {
             "name": "myclabs/deep-copy",
