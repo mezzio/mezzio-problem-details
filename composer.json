@@ -1,7 +1,6 @@
 {
     "name": "mezzio/mezzio-problem-details",
     "description": "Problem Details for PSR-7 HTTP APIs",
-    "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "mezzio",
@@ -10,22 +9,7 @@
         "problem-details"
     ],
     "homepage": "https://mezzio.dev",
-    "support": {
-        "docs": "https://docs.mezzio.dev/mezzio-problem-details/",
-        "issues": "https://github.com/mezzio/mezzio-problem-details/issues",
-        "source": "https://github.com/mezzio/mezzio-problem-details",
-        "rss": "https://github.com/mezzio/mezzio-problem-details/releases.atom",
-        "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "extra": {
-        "laminas": {
-            "config-provider": "Mezzio\\ProblemDetails\\ConfigProvider"
-        }
-    },
+    "license": "BSD-3-Clause",
     "require": {
         "php": "^7.3 || ~8.0.0",
         "ext-json": "*",
@@ -37,11 +21,22 @@
         "spatie/array-to-xml": "^2.3 || ^3.0",
         "willdurand/negotiation": "^3.0"
     },
+    "replace": {
+        "zendframework/zend-problem-details": "^1.1.0"
+    },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.1.0",
         "phpunit/phpunit": "^9.3",
         "psalm/plugin-phpunit": "^0.12.2",
         "vimeo/psalm": "^3.16"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laminas": {
+            "config-provider": "Mezzio\\ProblemDetails\\ConfigProvider"
+        }
     },
     "autoload": {
         "psr-4": {
@@ -64,7 +59,12 @@
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
-    "replace": {
-        "zendframework/zend-problem-details": "^1.1.0"
+    "support": {
+        "issues": "https://github.com/mezzio/mezzio-problem-details/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/mezzio/mezzio-problem-details",
+        "docs": "https://docs.mezzio.dev/mezzio-problem-details/",
+        "rss": "https://github.com/mezzio/mezzio-problem-details/releases.atom"
     }
 }
