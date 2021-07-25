@@ -19,6 +19,7 @@
             <errorLevel type="suppress">
                 <referencedMethod name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator::createResponse"/>
                 <referencedMethod name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator::getResponseFromCallable"/>
+                <referencedMethod name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator::__construct"/>
             </errorLevel>
         </InternalMethod>
         <DeprecatedClass>
