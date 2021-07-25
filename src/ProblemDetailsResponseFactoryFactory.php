@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Mezzio\ProblemDetails;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class ProblemDetailsResponseFactoryFactory
 {
+    use Psr17ResponseFactoryTrait;
+
     public function __invoke(ContainerInterface $container): ProblemDetailsResponseFactory
     {
         $config                 = $container->has('config') ? $container->get('config') : [];
@@ -19,7 +20,7 @@ class ProblemDetailsResponseFactoryFactory
         $defaultTypesMap      = $problemDetailsConfig['default_types_map'] ?? [];
 
         return new ProblemDetailsResponseFactory(
-            $container->get(ResponseInterface::class),
+            $this->detectResponseFactory($container),
             $includeThrowableDetail,
             $jsonFlags,
             $includeThrowableDetail,

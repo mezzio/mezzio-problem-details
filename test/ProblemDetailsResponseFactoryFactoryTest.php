@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace MezzioTest\ProblemDetails;
 
-use Closure;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionObject;
 use ReflectionProperty;
@@ -39,8 +38,8 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $r = new ReflectionProperty($factory, 'responseFactory');
         $r->setAccessible(true);
         $responseFactory = $r->getValue($factory);
-
-        Assert::assertSame($expected, $responseFactory());
+        self::assertInstanceOf(ResponseFactoryInterface::class, $responseFactory);
+        self::assertSame($expected, $responseFactory->createResponse());
     }
 
     public function testLackOfResponseServiceResultsInException()
@@ -48,8 +47,15 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $factory = new ProblemDetailsResponseFactoryFactory();
         $e       = new RuntimeException();
 
-        $this->container->method('has')->with('config')->willReturn(false);
-        $this->container->method('get')->with(ResponseInterface::class)->willThrowException($e);
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturn(false);
+
+        $this->container
+            ->method('get')
+            ->with(ResponseInterface::class)
+            ->willThrowException($e);
 
         $this->expectException(RuntimeException::class);
         $factory($this->container);
@@ -59,8 +65,15 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     {
         $factory = new ProblemDetailsResponseFactoryFactory();
 
-        $this->container->method('has')->with('config')->willReturn(false);
-        $this->container->method('get')->with(ResponseInterface::class)->willReturn(new stdClass());
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturn(false);
+
+        $this->container
+            ->method('get')
+            ->with(ResponseInterface::class)
+            ->willReturn(new stdClass());
 
         $this->expectException(TypeError::class);
         $factory($this->container);
@@ -68,13 +81,17 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 
     public function testLackOfConfigServiceResultsInFactoryUsingDefaults(): void
     {
-        $this->container->method('has')->with('config')->willReturn(false);
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturn(false);
 
         $response = $this->createMock(ResponseInterface::class);
+        $response->method('withStatus')->willReturnSelf();
         $this->container
             ->method('get')
             ->with(ResponseInterface::class)
-            ->willReturn(function () use ($response) {
+            ->willReturn(function () use ($response): ResponseInterface {
                 return $response;
             });
 
@@ -87,12 +104,8 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
         $jsonFlags->setAccessible(true);
 
-        $responseFactory = (new ReflectionObject($factory))->getProperty('responseFactory');
-        $responseFactory->setAccessible(true);
-
-        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
-        $this->assertSame(
+        self::assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        self::assertSame(
             JSON_UNESCAPED_SLASHES
             | JSON_UNESCAPED_UNICODE
             | JSON_PRESERVE_ZERO_FRACTION
@@ -100,13 +113,15 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
             $jsonFlags->getValue($factory)
         );
 
-        $this->assertInstanceOf(Closure::class, $responseFactory->getValue($factory));
         $this->assertResponseFactoryReturns($response, $factory);
     }
 
     public function testUsesPrettyPrintFlagOnEnabledDebugMode(): void
     {
-        $this->container->method('has')->with('config')->willReturn(true);
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturnOnConsecutiveCalls(true, false);
 
         $this->container
             ->method('get')
@@ -125,12 +140,15 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
         $jsonFlags->setAccessible(true);
 
-        $this->assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory) & JSON_PRETTY_PRINT);
+        self::assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory) & JSON_PRETTY_PRINT);
     }
 
     public function testUsesDebugSettingFromConfigWhenPresent(): void
     {
-        $this->container->method('has')->with('config')->willReturn(true);
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturnOnConsecutiveCalls(true, false);
 
         $this->container
             ->method('get')
@@ -152,14 +170,16 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $exceptionDetailsInResponse = (new ReflectionObject($factory))->getProperty('exceptionDetailsInResponse');
         $exceptionDetailsInResponse->setAccessible(true);
 
-        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertSame(ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
-        $this->assertSame(true, $exceptionDetailsInResponse->getValue($factory));
+        self::assertSame(ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        self::assertSame(true, $exceptionDetailsInResponse->getValue($factory));
     }
 
     public function testUsesJsonFlagsSettingFromConfigWhenPresent(): void
     {
-        $this->container->method('has')->with('config')->willReturn(true);
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturnOnConsecutiveCalls(true, false);
 
         $this->container
             ->method('get')
@@ -178,8 +198,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
         $jsonFlags->setAccessible(true);
 
-        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory));
+        self::assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory));
     }
 
     public function testUsesDefaultTypesSettingFromConfigWhenPresent(): void
@@ -188,7 +207,10 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
             404 => 'https://example.com/problem-details/error/not-found',
         ];
 
-        $this->container->method('has')->with('config')->willReturn(true);
+        $this->container
+            ->method('has')
+            ->withConsecutive(['config'], [ResponseFactoryInterface::class])
+            ->willReturnOnConsecutiveCalls(true, false);
 
         $this->container
             ->method('get')
@@ -207,7 +229,6 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $defaultTypesMap = (new ReflectionObject($factory))->getProperty('defaultTypesMap');
         $defaultTypesMap->setAccessible(true);
 
-        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $factory);
-        $this->assertSame($expectedDefaultTypes, $defaultTypesMap->getValue($factory));
+        self::assertSame($expectedDefaultTypes, $defaultTypesMap->getValue($factory));
     }
 }
