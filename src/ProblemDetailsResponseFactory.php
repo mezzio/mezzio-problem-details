@@ -352,7 +352,7 @@ class ProblemDetailsResponseFactory
         // ensure all keys are valid XML can be json_encoded
         $cleanedContent = $this->cleanKeysForXml($content);
 
-        $converter = new ArrayToXml($cleanedContent, 'problem');
+        $converter = new ArrayToXml($cleanedContent, 'problem', true, 'UTF-8');
         $dom       = $converter->toDom();
         $root      = $dom->firstChild;
         $root->setAttribute('xmlns', 'urn:ietf:rfc:7807');
