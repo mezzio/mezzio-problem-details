@@ -2,7 +2,7 @@
 
 - **Since 1.1.0.**
 
-When you raise your own exceptions implementing `Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface` 
+When you raise your own exceptions implementing `Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface`
 you will always be in control of all the properties returned as part of the
 response payload, including the `status`, `type`, `title`, `detail`, etc.
 items.

@@ -141,16 +141,16 @@ This package also provides a factory for generating the
 - Pulls the `Psr\Http\Message\ResponseInterface` service to provide as the
   `$responseFactory` parameter.
 - If a `config` service is present:
-    - If the service contains a `debug` key with a boolean value, that value is
-      provided as the `$isDebug` parameter.
-    - If the service contains a `problem-details` key with an array value
-      containing a `json_flags` key, and that value is an integer, that value is
-      provided as the `$jsonFlags` parameter.
-    - If the service contains a `problem-details` key with an array value
-      containing a `default_types_map` key, and that value is an array, that
-      value is provided as the `$defaultTypesMap` parameter; see the
-      [default types documentation](default-types.md) for details on defining
-      this map. (Since 1.1.0.)
+  - If the service contains a `debug` key with a boolean value, that value is
+    provided as the `$isDebug` parameter.
+  - If the service contains a `problem-details` key with an array value
+    containing a `json_flags` key, and that value is an integer, that value is
+    provided as the `$jsonFlags` parameter.
+  - If the service contains a `problem-details` key with an array value
+    containing a `default_types_map` key, and that value is an array, that
+    value is provided as the `$defaultTypesMap` parameter; see the
+    [default types documentation](default-types.md) for details on defining
+    this map. (Since 1.1.0.)
 
 If any of the above config values are not present, a `null` value will be
 passed, allowing the default value to be used.
