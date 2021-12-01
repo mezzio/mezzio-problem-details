@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.18.2@19aa905f7c3c7350569999a93c40ae91ae4e1626">
+<files psalm-version="4.8.1@f73f2299dbc59a3e6c4d66cff4605176e728ee69">
   <file src="src/ProblemDetailsMiddleware.php">
     <MissingClosureParamType occurrences="1">
       <code>$listener</code>
@@ -34,26 +34,18 @@
       <code>$payload['status']</code>
       <code>$payload['status']</code>
     </MixedArgument>
-    <MixedAssignment occurrences="4">
+    <MixedAssignment occurrences="3">
       <code>$content</code>
-      <code>$response</code>
       <code>$return[$key]</code>
       <code>$value</code>
     </MixedAssignment>
-    <MixedInferredReturnType occurrences="4">
+    <MixedInferredReturnType occurrences="2">
       <code>ResponseInterface</code>
       <code>ResponseInterface</code>
       <code>ResponseInterface</code>
       <code>string</code>
     </MixedInferredReturnType>
-    <MixedMethodCall occurrences="4">
-      <code>getBody</code>
-      <code>withHeader</code>
-      <code>withStatus</code>
-      <code>write</code>
-    </MixedMethodCall>
-    <MixedReturnStatement occurrences="4">
-      <code>$responseFactory()</code>
+    <MixedReturnStatement occurrences="2">
       <code>$this-&gt;defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status)</code>
       <code>$this-&gt;getResponseGenerator($request)($payload)</code>
     </MixedReturnStatement>
@@ -68,19 +60,16 @@
     </UndefinedMethod>
   </file>
   <file src="src/ProblemDetailsResponseFactoryFactory.php">
-    <MixedArgument occurrences="5">
-      <code>$container-&gt;get(ResponseInterface::class)</code>
+    <MixedArgument occurrences="4">
       <code>$defaultTypesMap</code>
       <code>$includeThrowableDetail</code>
       <code>$includeThrowableDetail</code>
       <code>$jsonFlags</code>
     </MixedArgument>
-    <MixedAssignment occurrences="5">
-      <code>$config</code>
+    <MixedAssignment occurrences="3">
       <code>$defaultTypesMap</code>
       <code>$includeThrowableDetail</code>
       <code>$jsonFlags</code>
-      <code>$problemDetailsConfig</code>
     </MixedAssignment>
   </file>
   <file src="test/ConfigProviderTest.php">
@@ -171,12 +160,6 @@
       <code>testLackOfResponseServiceResultsInException</code>
       <code>testNonCallableResponseServiceResultsInException</code>
     </MissingReturnType>
-    <MixedAssignment occurrences="1">
-      <code>$responseFactory</code>
-    </MixedAssignment>
-    <MixedFunctionCall occurrences="1">
-      <code>$responseFactory()</code>
-    </MixedFunctionCall>
     <MixedOperand occurrences="1">
       <code>$jsonFlags-&gt;getValue($factory)</code>
     </MixedOperand>

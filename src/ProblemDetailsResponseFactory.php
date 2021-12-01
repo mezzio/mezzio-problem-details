@@ -6,7 +6,9 @@ namespace Mezzio\ProblemDetails;
 
 use Closure;
 use Fig\Http\Message\StatusCodeInterface as StatusCode;
+use Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator;
 use Negotiation\Negotiator;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Spatie\ArrayToXml\ArrayToXml;
@@ -17,6 +19,7 @@ use function array_walk_recursive;
 use function get_class;
 use function get_resource_type;
 use function is_array;
+use function is_callable;
 use function is_int;
 use function is_resource;
 use function json_decode;
@@ -177,7 +180,7 @@ class ProblemDetailsResponseFactory
      * Factory to use to generate prototype response used when generating a
      * problem details response.
      *
-     * @var callable
+     * @var ResponseFactoryInterface
      */
     private $responseFactory;
 
@@ -209,18 +212,26 @@ class ProblemDetailsResponseFactory
      */
     private $defaultTypesMap;
 
+    /**
+     * @param (callable():ResponseInterface)|ResponseFactoryInterface $responseFactory
+     */
     public function __construct(
-        callable $responseFactory,
+        $responseFactory,
         bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
         ?int $jsonFlags = null,
         bool $exceptionDetailsInResponse = false,
         string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE,
         array $defaultTypesMap = []
     ) {
+        if (is_callable($responseFactory)) {
+            $responseFactory = new CallableResponseFactoryDecorator(
+                static function () use ($responseFactory): ResponseInterface {
+                    return $responseFactory();
+                }
+            );
+        }
         // Ensures type safety of the composed factory
-        $this->responseFactory = function () use ($responseFactory): ResponseInterface {
-            return $responseFactory();
-        };
+        $this->responseFactory = $responseFactory;
         $this->isDebug         = $isDebug;
         if (! $jsonFlags) {
             $jsonFlags = JSON_UNESCAPED_SLASHES
@@ -366,11 +377,10 @@ class ProblemDetailsResponseFactory
 
     protected function generateResponse(int $status, string $contentType, string $payload): ResponseInterface
     {
-        $response = ($this->responseFactory)();
+        $response = $this->responseFactory->createResponse($status);
         $response->getBody()->write($payload);
 
         return $response
-            ->withStatus($status)
             ->withHeader('Content-Type', $contentType);
     }
 

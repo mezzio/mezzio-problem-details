@@ -17,15 +17,32 @@
     <issueHandlers>
         <InternalMethod>
             <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method"/>
-            </errorLevel>
-            <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn"/>
-            </errorLevel>
-            <errorLevel type="suppress">
-                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with"/>
+                <referencedMethod name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator::createResponse"/>
+                <referencedMethod name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator::getResponseFromCallable"/>
+                <referencedMethod name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator::__construct"/>
             </errorLevel>
         </InternalMethod>
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator"/>
+            </errorLevel>
+        </DeprecatedClass>
+        <InternalClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator"/>
+            </errorLevel>
+        </InternalClass>
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <referencedClass name="Mezzio\Container\ResponseFactoryFactory"/>
+            </errorLevel>
+        </UndefinedClass>
+        <DeprecatedTrait>
+            <errorLevel type="suppress">
+                <file name="src/ProblemDetailsResponseFactoryFactory.php"/>
+                <file name="test/TestAsset/Psr17ResponseFactoryTraitImplementation.php"/>
+            </errorLevel>
+        </DeprecatedTrait>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
