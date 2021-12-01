@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mezzio\ProblemDetails\Exception;
 
+// phpcs:ignore SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse
+use ReturnTypeWillChange;
+
 use function array_merge;
 
 /**
@@ -86,6 +89,7 @@ trait CommonProblemDetailsExceptionTrait
      *
      * @return array
      */
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();

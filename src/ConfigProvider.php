@@ -27,6 +27,8 @@ class ConfigProvider
 
     /**
      * Returns the container dependencies.
+     *
+     * @psalm-suppress UndefinedClass
      */
     public function getDependencies(): array
     {
