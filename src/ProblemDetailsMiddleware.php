@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\ProblemDetails;
 
 use ErrorException;
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Negotiation\Negotiator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,10 +26,9 @@ use function set_error_handler;
 class ProblemDetailsMiddleware implements MiddlewareInterface
 {
     /** @var callable[] */
-    private $listeners = [];
+    private array $listeners = [];
 
-    /** @var ProblemDetailsResponseFactory */
-    private $responseFactory;
+    private ProblemDetailsResponseFactory $responseFactory;
 
     public function __construct(ProblemDetailsResponseFactory $responseFactory)
     {

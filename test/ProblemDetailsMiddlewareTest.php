@@ -21,8 +21,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    /** @var ProblemDetailsMiddleware */
-    private $middleware;
+    private ProblemDetailsMiddleware $middleware;
 
     /** @var ServerRequestInterface&MockObject */
     private $request;

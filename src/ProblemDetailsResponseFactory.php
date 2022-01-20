@@ -156,10 +156,8 @@ class ProblemDetailsResponseFactory
      * Debug details are only included for responses created from throwables,
      * and include full exception details and previous exceptions and their
      * details.
-     *
-     * @var bool
      */
-    private $isDebug;
+    private bool $isDebug;
 
     /**
      * JSON flags to use when generating JSON response payload.
@@ -171,46 +169,36 @@ class ProblemDetailsResponseFactory
      * On debug mode:
      * defaults to JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION
      * | JSON_PARTIAL_OUTPUT_ON_ERROR
-     *
-     * @var int
      */
-    private $jsonFlags;
+    private int $jsonFlags;
 
     /**
      * Factory to use to generate prototype response used when generating a
      * problem details response.
-     *
-     * @var ResponseFactoryInterface
      */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     /**
      * Flag to enable show exception details in detail field.
      *
      * Disabled by default for security reasons.
-     *
-     * @var bool
      */
-    private $exceptionDetailsInResponse;
+    private bool $exceptionDetailsInResponse;
 
     /**
      * Default detail field value. Will be visible when
      * $exceptionDetailsInResponse disabled.
      *
      * Empty string by default
-     *
-     * @var string
      */
-    private $defaultDetailMessage;
+    private string $defaultDetailMessage;
 
     /**
      * A map used to infer the "type" property based on the status code.
      *
      * Defaults to an empty map.
-     *
-     * @var array
      */
-    private $defaultTypesMap;
+    private array $defaultTypesMap;
 
     /**
      * @param (callable():ResponseInterface)|ResponseFactoryInterface $responseFactory
@@ -225,9 +213,7 @@ class ProblemDetailsResponseFactory
     ) {
         if (is_callable($responseFactory)) {
             $responseFactory = new CallableResponseFactoryDecorator(
-                static function () use ($responseFactory): ResponseInterface {
-                    return $responseFactory();
-                }
+                static fn(): ResponseInterface => $responseFactory()
             );
         }
         // Ensures type safety of the composed factory

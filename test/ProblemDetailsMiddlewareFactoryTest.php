@@ -18,8 +18,7 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
     /** @var ContainerInterface&MockObject */
     private $container;
 
-    /** @var ProblemDetailsMiddlewareFactory */
-    private $factory;
+    private ProblemDetailsMiddlewareFactory $factory;
 
     protected function setUp(): void
     {
