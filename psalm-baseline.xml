@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.8.1@f73f2299dbc59a3e6c4d66cff4605176e728ee69">
+<files psalm-version="4.17.0@6f4707aa41c9174353a6434bba3fc8840f981d9c">
   <file src="src/ProblemDetailsMiddleware.php">
     <MissingClosureParamType occurrences="1">
       <code>$listener</code>
@@ -25,6 +25,7 @@
     </MixedArgument>
   </file>
   <file src="src/ProblemDetailsResponseFactory.php">
+    <LessSpecificReturnStatement occurrences="1"/>
     <MissingClosureParamType occurrences="1">
       <code>$value</code>
     </MissingClosureParamType>
@@ -34,6 +35,9 @@
       <code>$payload['status']</code>
       <code>$payload['status']</code>
     </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$cleanedContent</code>
+    </MixedArgumentTypeCoercion>
     <MixedAssignment occurrences="3">
       <code>$content</code>
       <code>$return[$key]</code>
@@ -41,17 +45,21 @@
     </MixedAssignment>
     <MixedInferredReturnType occurrences="2">
       <code>ResponseInterface</code>
-      <code>ResponseInterface</code>
-      <code>ResponseInterface</code>
       <code>string</code>
     </MixedInferredReturnType>
     <MixedReturnStatement occurrences="2">
       <code>$this-&gt;defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status)</code>
       <code>$this-&gt;getResponseGenerator($request)($payload)</code>
     </MixedReturnStatement>
+    <MoreSpecificReturnType occurrences="1">
+      <code>ResponseInterface</code>
+    </MoreSpecificReturnType>
     <PossiblyNullReference occurrences="1">
       <code>setAttribute</code>
     </PossiblyNullReference>
+    <TooManyArguments occurrences="1">
+      <code>new ArrayToXml($cleanedContent, 'problem', true, 'UTF-8')</code>
+    </TooManyArguments>
     <UndefinedInterfaceMethod occurrences="1">
       <code>getValue</code>
     </UndefinedInterfaceMethod>
@@ -111,9 +119,7 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="test/ProblemDetailsAssertionsTrait.php">
-    <MissingClosureParamType occurrences="3">
-      <code>$body</code>
-      <code>$body</code>
+    <MissingClosureParamType occurrences="1">
       <code>$item</code>
     </MissingClosureParamType>
     <MixedArgument occurrences="1">
@@ -131,8 +137,7 @@
     </MissingReturnType>
   </file>
   <file src="test/ProblemDetailsMiddlewareTest.php">
-    <MissingClosureParamType occurrences="4">
-      <code>$e</code>
+    <MissingClosureParamType occurrences="3">
       <code>$error</code>
       <code>$request</code>
       <code>$response</code>
@@ -165,9 +170,6 @@
     </MixedOperand>
   </file>
   <file src="test/ProblemDetailsResponseFactoryTest.php">
-    <MissingClosureParamType occurrences="1">
-      <code>$body</code>
-    </MissingClosureParamType>
     <MissingReturnType occurrences="4">
       <code>testCustomDetailMessageShouldBeVisible</code>
       <code>testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode</code>
