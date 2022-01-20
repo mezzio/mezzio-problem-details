@@ -33,8 +33,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     /** @var ResponseInterface&MockObject */
     private $response;
 
-    /** @var ProblemDetailsResponseFactory */
-    private $factory;
+    private ProblemDetailsResponseFactory $factory;
 
     private const UTF_8_INVALID_2_OCTET_SEQUENCE = "\xc3\x28";
 
@@ -42,9 +41,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     {
         $this->request  = $this->createMock(ServerRequestInterface::class);
         $this->response = $this->createMock(ResponseInterface::class);
-        $this->factory  = new ProblemDetailsResponseFactory(function () {
-            return $this->response;
-        });
+        $this->factory  = new ProblemDetailsResponseFactory(fn() => $this->response);
     }
 
     public function acceptHeaders(): array
@@ -123,9 +120,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            function () {
-                return $this->response;
-            },
+            fn() => $this->response,
             ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
         );
 
@@ -236,9 +231,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with('Content-Type', 'application/problem+json')
             ->willReturn($this->response);
 
-        $factory = new ProblemDetailsResponseFactory(function () {
-            return $this->response;
-        });
+        $factory = new ProblemDetailsResponseFactory(fn() => $this->response);
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
@@ -338,9 +331,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $second = new RuntimeException('second', 101011, $first);
 
         $factory = new ProblemDetailsResponseFactory(
-            function () {
-                return $this->response;
-            },
+            fn() => $this->response,
             ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
         );
 
@@ -424,9 +415,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            function () {
-                return $this->response;
-            },
+            fn() => $this->response,
             false,
             null,
             true
@@ -457,9 +446,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            function () {
-                return $this->response;
-            },
+            fn() => $this->response,
             false,
             null,
             false,
@@ -494,9 +481,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with('Content-Type', 'application/problem+json')
             ->willReturn($this->response);
 
-        $factory = new ProblemDetailsResponseFactory(function () {
-            return $this->response;
-        });
+        $factory = new ProblemDetailsResponseFactory(fn() => $this->response);
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
@@ -550,9 +535,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            function () {
-                return $this->response;
-            },
+            fn() => $this->response,
             false,
             null,
             false,

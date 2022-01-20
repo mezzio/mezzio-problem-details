@@ -18,8 +18,7 @@ class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
     /** @var ContainerInterface&MockObject */
     private $container;
 
-    /** @var ProblemDetailsNotFoundHandlerFactory */
-    private $factory;
+    private ProblemDetailsNotFoundHandlerFactory $factory;
 
     protected function setUp(): void
     {

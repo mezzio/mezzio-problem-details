@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Mezzio\ProblemDetails;
 
+use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Negotiation\Negotiator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -14,8 +15,7 @@ use function sprintf;
 
 class ProblemDetailsNotFoundHandler implements MiddlewareInterface
 {
-    /** @var ProblemDetailsResponseFactory */
-    private $responseFactory;
+    private ProblemDetailsResponseFactory $responseFactory;
 
     /**
      * @param ProblemDetailsResponseFactory $responseFactory Factory to create a response to

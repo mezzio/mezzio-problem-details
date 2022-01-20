@@ -91,9 +91,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $this->container
             ->method('get')
             ->with(ResponseInterface::class)
-            ->willReturn(function () use ($response): ResponseInterface {
-                return $response;
-            });
+            ->willReturn(static fn(): ResponseInterface => $response);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory        = $factoryFactory($this->container);
