@@ -1,11 +1,11 @@
-# Problem Details for PSR-7 Applications
+# Problem Details for PSR-7 Applications (RFC 7807)
 
 [![Build Status](https://github.com/mezzio/mezzio-problem-details/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/mezzio/mezzio-problem-details/actions/workflows/continuous-integration.yml)
 
 This library provides a factory for generating Problem Details
 responses, error handling middleware for automatically generating Problem
 Details responses from errors and exceptions, and custom exception types for
-[PSR-7](http://www.php-fig.org/psr/psr-7/) applications.
+[PSR-7](http://www.php-fig.org/psr/psr-7/) applications. All responses are [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) compliant.
 
 ## Installation
 
