@@ -11,7 +11,7 @@ nav:
         - "Not Found Handler": not-found-handler.md
         - "Default Types": default-types.md
 site_name: mezzio-problem-details
-site_description: 'PSR-7 Problem Details for HTTP API responses and middleware'
+site_description: 'Problem Details for PSR-7 HTTP APIs addressing the RFC 7807 standard'
 repo_url: 'https://github.com/mezzio/mezzio-problem-details'
 extra:
     project: Mezzio
