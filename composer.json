@@ -1,13 +1,15 @@
 {
     "name": "mezzio/mezzio-problem-details",
-    "description": "Problem Details for PSR-7 HTTP APIs",
+    "description": "Problem Details for PSR-7 HTTP APIs addressing the RFC 7807 standard",
     "license": "BSD-3-Clause",
     "keywords": [
         "laminas",
         "mezzio",
         "api",
         "rest",
-        "problem-details"
+        "problem-details",
+        "rfc 7807",
+        "rfc7807"
     ],
     "homepage": "https://mezzio.dev",
     "support": {
