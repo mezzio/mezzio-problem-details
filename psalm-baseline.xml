@@ -25,7 +25,6 @@
     </MixedArgument>
   </file>
   <file src="src/ProblemDetailsResponseFactory.php">
-    <LessSpecificReturnStatement occurrences="1"/>
     <MissingClosureParamType occurrences="1">
       <code>$value</code>
     </MissingClosureParamType>
@@ -35,9 +34,6 @@
       <code>$payload['status']</code>
       <code>$payload['status']</code>
     </MixedArgument>
-    <MixedArgumentTypeCoercion occurrences="1">
-      <code>$cleanedContent</code>
-    </MixedArgumentTypeCoercion>
     <MixedAssignment occurrences="3">
       <code>$content</code>
       <code>$return[$key]</code>
@@ -51,15 +47,9 @@
       <code>$this-&gt;defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status)</code>
       <code>$this-&gt;getResponseGenerator($request)($payload)</code>
     </MixedReturnStatement>
-    <MoreSpecificReturnType occurrences="1">
-      <code>ResponseInterface</code>
-    </MoreSpecificReturnType>
     <PossiblyNullReference occurrences="1">
       <code>setAttribute</code>
     </PossiblyNullReference>
-    <TooManyArguments occurrences="1">
-      <code>new ArrayToXml($cleanedContent, 'problem', true, 'UTF-8')</code>
-    </TooManyArguments>
     <UndefinedInterfaceMethod occurrences="1">
       <code>getValue</code>
     </UndefinedInterfaceMethod>
