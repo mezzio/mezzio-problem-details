@@ -16,7 +16,6 @@ use Throwable;
 
 use function array_merge;
 use function array_walk_recursive;
-use function get_class;
 use function get_resource_type;
 use function is_array;
 use function is_callable;
@@ -402,7 +401,7 @@ class ProblemDetailsResponseFactory
     private function createThrowableDetail(Throwable $e): array
     {
         $detail = [
-            'class'   => get_class($e),
+            'class'   => $e::class,
             'code'    => $e->getCode(),
             'message' => $e->getMessage(),
             'file'    => $e->getFile(),
@@ -413,7 +412,7 @@ class ProblemDetailsResponseFactory
         $previous = [];
         while ($e = $e->getPrevious()) {
             $previous[] = [
-                'class'   => get_class($e),
+                'class'   => $e::class,
                 'code'    => $e->getCode(),
                 'message' => $e->getMessage(),
                 'file'    => $e->getFile(),
