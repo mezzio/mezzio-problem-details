@@ -27,7 +27,7 @@
             "composer/package-versions-deprecated": true
         },
         "platform": {
-            "php": "7.4.99"
+            "php": "8.0.99"
         }
     },
     "extra": {
@@ -36,7 +36,7 @@
         }
     },
     "require": {
-        "php": "^7.4 || ~8.0.0 || ~8.1.0",
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "ext-json": "*",
         "fig/http-message-util": "^1.1.2",
         "psr/container": "^1.0 || ^2.0",
@@ -49,9 +49,9 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.4.0",
-        "phpunit/phpunit": "^9.5.11",
+        "phpunit/phpunit": "^9.5.25",
         "psalm/plugin-phpunit": "^0.17.0",
-        "vimeo/psalm": "^4.17"
+        "vimeo/psalm": "^4.29"
     },
     "autoload": {
         "psr-4": {

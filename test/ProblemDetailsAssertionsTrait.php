@@ -10,7 +10,6 @@ use Psr\Http\Message\StreamInterface;
 use Throwable;
 
 use function array_walk_recursive;
-use function get_class;
 use function json_decode;
 use function json_encode;
 use function simplexml_load_string;
@@ -40,7 +39,7 @@ trait ProblemDetailsAssertionsTrait
     public function assertExceptionDetails(Throwable $e, array $details): void
     {
         $this->assertArrayHasKey('class', $details);
-        $this->assertSame(get_class($e), $details['class']);
+        $this->assertSame($e::class, $details['class']);
         $this->assertArrayHasKey('code', $details);
         $this->assertSame($e->getCode(), (int) $details['code']);
         $this->assertArrayHasKey('message', $details);
