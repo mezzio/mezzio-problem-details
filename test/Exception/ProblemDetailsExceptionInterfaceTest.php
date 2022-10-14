@@ -12,20 +12,17 @@ use PHPUnit\Framework\TestCase;
 use function json_decode;
 use function json_encode;
 
-class ProblemDetailsExceptionInterfaceTest extends TestCase
+final class ProblemDetailsExceptionInterfaceTest extends TestCase
 {
-    /** @var int */
-    protected $status = 403;
-    /** @var string */
-    protected $detail = 'You are not authorized to do that';
-    /** @var string */
-    protected $title = 'Unauthorized';
-    /** @var string */
-    protected $type = 'https://httpstatus.es/403';
+    private int $status    = 403;
+    private string $detail = 'You are not authorized to do that';
+    private string $title  = 'Unauthorized';
+    private string $type   = 'https://httpstatus.es/403';
     /** @var string[] */
-    protected $additional = [
+    private array $additional = [
         'foo' => 'bar',
     ];
+    private ProblemDetailsExceptionInterface $exception;
 
     protected function setUp(): void
     {
