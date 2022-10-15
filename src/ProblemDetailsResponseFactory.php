@@ -26,8 +26,8 @@ use function json_encode;
 use function preg_replace;
 use function print_r;
 use function sprintf;
+use function str_contains;
 use function str_replace;
-use function strpos;
 
 use const JSON_PARTIAL_OUTPUT_ON_ERROR;
 use const JSON_PRESERVE_ZERO_FRACTION;
@@ -150,15 +150,6 @@ class ProblemDetailsResponseFactory
     ];
 
     /**
-     * Whether or not to include debug details.
-     *
-     * Debug details are only included for responses created from throwables,
-     * and include full exception details and previous exceptions and their
-     * details.
-     */
-    private bool $isDebug;
-
-    /**
      * JSON flags to use when generating JSON response payload.
      *
      * On non-debug mode:
@@ -178,37 +169,38 @@ class ProblemDetailsResponseFactory
     private ResponseFactoryInterface $responseFactory;
 
     /**
-     * Flag to enable show exception details in detail field.
-     *
-     * Disabled by default for security reasons.
-     */
-    private bool $exceptionDetailsInResponse;
-
-    /**
-     * Default detail field value. Will be visible when
-     * $exceptionDetailsInResponse disabled.
-     *
-     * Empty string by default
-     */
-    private string $defaultDetailMessage;
-
-    /**
-     * A map used to infer the "type" property based on the status code.
-     *
-     * Defaults to an empty map.
-     */
-    private array $defaultTypesMap;
-
-    /**
      * @param (callable():ResponseInterface)|ResponseFactoryInterface $responseFactory
      */
     public function __construct(
         $responseFactory,
-        bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
+        /**
+         * Whether or not to include debug details.
+         *
+         * Debug details are only included for responses created from throwables,
+         * and include full exception details and previous exceptions and their
+         * details.
+         */
+        private bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
         ?int $jsonFlags = null,
-        bool $exceptionDetailsInResponse = false,
-        string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE,
-        array $defaultTypesMap = []
+        /**
+         * Flag to enable show exception details in detail field.
+         *
+         * Disabled by default for security reasons.
+         */
+        private bool $exceptionDetailsInResponse = false,
+        /**
+         * Default detail field value. Will be visible when
+         * $exceptionDetailsInResponse disabled.
+         *
+         * Empty string by default
+         */
+        private string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE,
+        /**
+         * A map used to infer the "type" property based on the status code.
+         *
+         * Defaults to an empty map.
+         */
+        private array $defaultTypesMap = []
     ) {
         if (is_callable($responseFactory)) {
             $responseFactory = new CallableResponseFactoryDecorator(
@@ -217,7 +209,6 @@ class ProblemDetailsResponseFactory
         }
         // Ensures type safety of the composed factory
         $this->responseFactory = $responseFactory;
-        $this->isDebug         = $isDebug;
         if (! $jsonFlags) {
             $jsonFlags = JSON_UNESCAPED_SLASHES
                 | JSON_UNESCAPED_UNICODE
@@ -227,10 +218,7 @@ class ProblemDetailsResponseFactory
                 $jsonFlags = JSON_PRETTY_PRINT | $jsonFlags;
             }
         }
-        $this->jsonFlags                  = $jsonFlags;
-        $this->exceptionDetailsInResponse = $exceptionDetailsInResponse;
-        $this->defaultDetailMessage       = $defaultDetailMessage;
-        $this->defaultTypesMap            = $defaultTypesMap;
+        $this->jsonFlags = $jsonFlags;
     }
 
     public function createResponse(
@@ -254,7 +242,7 @@ class ProblemDetailsResponseFactory
 
         if ($additional) {
             // ensure payload can be json_encoded
-            array_walk_recursive($additional, function (&$value) {
+            array_walk_recursive($additional, static function (&$value): void {
                 if (is_resource($value)) {
                     $value = print_r($value, true) . ' of type ' . get_resource_type($value);
                 }
@@ -374,7 +362,7 @@ class ProblemDetailsResponseFactory
         $accept    = $request->getHeaderLine('Accept') ?: '*/*';
         $mediaType = (new Negotiator())->getBest($accept, self::NEGOTIATION_PRIORITIES);
 
-        return ! $mediaType || false === strpos($mediaType->getValue(), 'json')
+        return ! $mediaType || ! str_contains($mediaType->getValue(), 'json')
             ? Closure::fromCallable([$this, 'generateXmlResponse'])
             : Closure::fromCallable([$this, 'generateJsonResponse']);
     }

@@ -41,7 +41,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     {
         $this->request  = $this->createMock(ServerRequestInterface::class);
         $this->response = $this->createMock(ResponseInterface::class);
-        $this->factory  = new ProblemDetailsResponseFactory(fn() => $this->response);
+        $this->factory  = new ProblemDetailsResponseFactory(fn(): MockObject => $this->response);
     }
 
     public function acceptHeaders(): array
@@ -111,7 +111,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $this->prepareResponsePayloadAssertions($expectedType, $stream, function (array $payload) {
+        $this->prepareResponsePayloadAssertions($expectedType, $stream, static function (array $payload): void {
             Assert::assertArrayHasKey('exception', $payload);
         });
 
@@ -120,7 +120,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            fn() => $this->response,
+            fn(): MockObject => $this->response,
             ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
         );
 
@@ -166,7 +166,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->prepareResponsePayloadAssertions(
             $expectedType,
             $stream,
-            function (array $payload) use ($expectedKeyNames) {
+            static function (array $payload) use ($expectedKeyNames): void {
                 Assert::assertEquals($expectedKeyNames, array_keys($payload['foo']));
             }
         );
@@ -215,7 +215,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            function (array $payload) {
+            static function (array $payload): void {
                 Assert::assertSame(400, $payload['status']);
                 Assert::assertSame('Exception details', $payload['detail']);
                 Assert::assertSame('Invalid client request', $payload['title']);
@@ -231,7 +231,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with('Content-Type', 'application/problem+json')
             ->willReturn($this->response);
 
-        $factory = new ProblemDetailsResponseFactory(fn() => $this->response);
+        $factory = new ProblemDetailsResponseFactory(fn(): MockObject => $this->response);
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
@@ -252,7 +252,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream
             ->expects($this->atLeastOnce())
             ->method('write')
-            ->with($this->callback(function ($body) {
+            ->with($this->callback(static function ($body): bool {
                 Assert::assertNotEmpty($body);
                 return true;
             }));
@@ -309,7 +309,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            function (array $payload) {
+            static function (array $payload): void {
                 Assert::assertArrayHasKey('exception', $payload);
                 Assert::assertEquals(101011, $payload['exception']['code']);
                 Assert::assertEquals('second', $payload['exception']['message']);
@@ -331,7 +331,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $second = new RuntimeException('second', 101011, $first);
 
         $factory = new ProblemDetailsResponseFactory(
-            fn() => $this->response,
+            fn(): MockObject => $this->response,
             ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
         );
 
@@ -352,7 +352,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream
             ->expects($this->atLeastOnce())
             ->method('write')
-            ->with($this->callback(function (string $body) use ($fragileMessage) {
+            ->with($this->callback(static function (string $body) use ($fragileMessage): bool {
                 Assert::assertStringNotContainsString($fragileMessage, $body);
                 Assert::assertStringContainsString(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
                 return true;
@@ -377,7 +377,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            function (array $payload) {
+            static function (array $payload): void {
                 Assert::assertSame(500, $payload['status']);
             }
         );
@@ -402,7 +402,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            function (array $payload) use ($fragileMessage) {
+            static function (array $payload) use ($fragileMessage): void {
                 Assert::assertSame($fragileMessage, $payload['detail']);
             }
         );
@@ -415,7 +415,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            fn() => $this->response,
+            fn(): MockObject => $this->response,
             false,
             null,
             true
@@ -433,7 +433,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            function (array $payload) use ($detailMessage) {
+            static function (array $payload) use ($detailMessage): void {
                 Assert::assertSame($detailMessage, $payload['detail']);
             }
         );
@@ -446,7 +446,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            fn() => $this->response,
+            fn(): MockObject => $this->response,
             false,
             null,
             false,
@@ -469,8 +469,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            function (array $payload) {
-                Assert::arrayHasKey('malformed-utf8', $payload);
+            static function (array $payload): void {
+                Assert::assertArrayHasKey('malformed-utf8', $payload);
             }
         );
 
@@ -481,7 +481,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->with('Content-Type', 'application/problem+json')
             ->willReturn($this->response);
 
-        $factory = new ProblemDetailsResponseFactory(fn() => $this->response);
+        $factory = new ProblemDetailsResponseFactory(fn(): MockObject => $this->response);
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
@@ -517,7 +517,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream
             ->expects($this->atLeastOnce())
             ->method('write')
-            ->with($this->callback(function (string $body) use ($expectedType) {
+            ->with($this->callback(static function (string $body) use ($expectedType): bool {
                 $payload = json_decode($body, true);
                 Assert::assertEquals($expectedType, $payload['type']);
                 return true;
@@ -535,7 +535,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->willReturn($this->response);
 
         $factory = new ProblemDetailsResponseFactory(
-            fn() => $this->response,
+            fn(): MockObject => $this->response,
             false,
             null,
             false,

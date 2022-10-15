@@ -28,11 +28,8 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
     /** @var callable[] */
     private array $listeners = [];
 
-    private ProblemDetailsResponseFactory $responseFactory;
-
-    public function __construct(ProblemDetailsResponseFactory $responseFactory)
+    public function __construct(private ProblemDetailsResponseFactory $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
     /**
@@ -107,7 +104,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
          * @param int $errline
          * @throws ErrorException if error is not within the error_reporting mask.
          */
-        return function (int $errno, string $errstr, string $errfile, int $errline): void {
+        return static function (int $errno, string $errstr, string $errfile, int $errline): void {
             if (! (error_reporting() & $errno)) {
                 // error_reporting does not include this error
                 return;
@@ -125,7 +122,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         ResponseInterface $response
     ): void {
-        array_walk($this->listeners, function ($listener) use ($error, $request, $response) {
+        array_walk($this->listeners, static function ($listener) use ($error, $request, $response): void {
             $listener($error, $request, $response);
         });
     }

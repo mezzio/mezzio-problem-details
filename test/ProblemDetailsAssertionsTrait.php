@@ -83,7 +83,7 @@ trait ProblemDetailsAssertionsTrait
         $stream
             ->expects($this->any())
             ->method('write')
-            ->with($this->callback(function ($body) use ($assertion) {
+            ->with($this->callback(static function ($body) use ($assertion): bool {
                 Assert::assertIsString($body);
                 $data = json_decode($body, true);
                 $assertion($data);
@@ -99,7 +99,7 @@ trait ProblemDetailsAssertionsTrait
         $stream
             ->expects($this->any())
             ->method('write')
-            ->with($this->callback(function ($body) use ($assertion) {
+            ->with($this->callback(function ($body) use ($assertion): bool {
                 Assert::assertIsString($body);
                 $data = $this->deserializeXmlPayload($body);
                 $assertion($data);
@@ -114,7 +114,7 @@ trait ProblemDetailsAssertionsTrait
         $payload = json_decode($json, true);
 
         // Ensure ints and floats are properly represented
-        array_walk_recursive($payload, function (&$item) {
+        array_walk_recursive($payload, static function (&$item): void {
             if ((string) (int) $item === $item) {
                 $item = (int) $item;
                 return;
