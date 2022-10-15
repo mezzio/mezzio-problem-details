@@ -104,14 +104,14 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $handler
             ->method('handle')
             ->with($this->request)
-            ->willReturnCallback(function () {
+            ->willReturnCallback(static function (): void {
                 trigger_error('Triggered error!', E_USER_ERROR);
             });
 
         $expected = $this->createMock(ResponseInterface::class);
         $this->responseFactory
             ->method('createResponseFromThrowable')
-            ->with($this->request, $this->callback(function ($e) {
+            ->with($this->request, $this->callback(function ($e): bool {
                 $this->assertInstanceOf(ErrorException::class, $e);
                 $this->assertEquals(E_USER_ERROR, $e->getSeverity());
                 $this->assertEquals('Triggered error!', $e->getMessage());
@@ -168,7 +168,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->with($this->request, $exception)
             ->willReturn($expected);
 
-        $listener  = function ($error, $request, $response) use ($exception, $expected) {
+        $listener  = function ($error, $request, $response) use ($exception, $expected): void {
             $this->assertSame($exception, $error, 'Listener did not receive same exception as was raised');
             $this->assertSame($this->request, $request, 'Listener did not receive same request');
             $this->assertSame($expected, $response, 'Listener did not receive same response');

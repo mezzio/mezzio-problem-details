@@ -12,7 +12,7 @@ class RuntimeException extends BaseRuntimeException
     /**
      * @param mixed $code Mimic PHP internal exceptions, and allow any code.
      */
-    public function __construct(string $message, $code = 0, ?Throwable $previous = null)
+    public function __construct(string $message, mixed $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
         $this->code = $code;

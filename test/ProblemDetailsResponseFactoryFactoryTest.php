@@ -127,7 +127,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
                 ['config', ['debug' => true]],
                 [
                     ResponseInterface::class,
-                    function () {
+                    static function (): void {
                     },
                 ],
             ]);
@@ -154,7 +154,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
                 ['config', ['debug' => true]],
                 [
                     ResponseInterface::class,
-                    function () {
+                    static function (): void {
                     },
                 ],
             ]);
@@ -185,7 +185,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
                 ['config', ['problem-details' => ['json_flags' => JSON_PRETTY_PRINT]]],
                 [
                     ResponseInterface::class,
-                    function () {
+                    static function (): void {
                     },
                 ],
             ]);
@@ -216,7 +216,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
                 ['config', ['problem-details' => ['default_types_map' => $expectedDefaultTypes]]],
                 [
                     ResponseInterface::class,
-                    function () {
+                    static function (): void {
                     },
                 ],
             ]);

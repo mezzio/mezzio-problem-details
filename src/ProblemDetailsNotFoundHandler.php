@@ -15,15 +15,12 @@ use function sprintf;
 
 class ProblemDetailsNotFoundHandler implements MiddlewareInterface
 {
-    private ProblemDetailsResponseFactory $responseFactory;
-
     /**
      * @param ProblemDetailsResponseFactory $responseFactory Factory to create a response to
      *     update and return when returning an 404 response.
      */
-    public function __construct(ProblemDetailsResponseFactory $responseFactory)
+    public function __construct(private ProblemDetailsResponseFactory $responseFactory)
     {
-        $this->responseFactory = $responseFactory;
     }
 
     /**
