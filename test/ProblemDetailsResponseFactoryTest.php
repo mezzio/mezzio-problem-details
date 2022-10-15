@@ -469,8 +469,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
             $stream,
-            static function (): void {
-                Assert::arrayHasKey('malformed-utf8');
+            static function (array $payload): void {
+                Assert::assertArrayHasKey('malformed-utf8', $payload);
             }
         );
 
