@@ -170,6 +170,7 @@ class ProblemDetailsResponseFactory
 
     /**
      * @param (callable():ResponseInterface)|ResponseFactoryInterface $responseFactory
+     * @param array<int, string> $defaultTypesMap
      */
     public function __construct(
         $responseFactory,

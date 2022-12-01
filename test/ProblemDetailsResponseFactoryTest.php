@@ -28,10 +28,10 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     use ProblemDetailsAssertionsTrait;
 
     /** @var ServerRequestInterface&MockObject */
-    private $request;
+    private ServerRequestInterface $request;
 
     /** @var ResponseInterface&MockObject */
-    private $response;
+    private ResponseInterface $response;
 
     private ProblemDetailsResponseFactory $factory;
 
@@ -44,7 +44,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->factory  = new ProblemDetailsResponseFactory(fn(): MockObject => $this->response);
     }
 
-    public function acceptHeaders(): array
+    /** @return array<string, array{0: string, 1: string}> */
+    public static function acceptHeaders(): array
     {
         return [
             'empty'                    => ['', 'application/problem+json'],
@@ -63,7 +64,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects($this->atLeastOnce())->method('write')->with($this->isType('string'));
+        $stream->expects(self::atLeastOnce())->method('write')->with(self::isType('string'));
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -75,7 +76,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             'Unknown error occurred'
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     /**
@@ -86,7 +87,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects($this->atLeastOnce())->method('write')->with($this->isType('string'));
+        $stream->expects(self::atLeastOnce())->method('write')->with(self::isType('string'));
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -98,7 +99,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $exception
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     /**
@@ -130,7 +131,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $exception
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     /**
@@ -184,7 +185,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $additional
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     private function createProblemDetailsExceptionWithAdditional(array $additional): ProblemDetailsExceptionInterface
@@ -238,7 +239,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $e
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     /**
@@ -250,9 +251,9 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('write')
-            ->with($this->callback(static function ($body): bool {
+            ->with(self::callback(static function ($body): bool {
                 Assert::assertNotEmpty($body);
                 return true;
             }));
@@ -276,7 +277,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         );
         fclose($fh);
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     public function testFactoryGeneratesXmlResponseIfNegotiationFails(): void
@@ -284,7 +285,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('text/plain');
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects($this->atLeastOnce())->method('write')->with($this->isType('string'));
+        $stream->expects(self::atLeastOnce())->method('write')->with(self::isType('string'));
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -299,7 +300,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             'Unknown error occurred'
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     public function testFactoryRendersPreviousExceptionsInDebugMode(): void
@@ -340,19 +341,19 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $second
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
-    public function testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode()
+    public function testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode(): void
     {
         $fragileMessage = 'Your SQL or password here';
         $exception      = new Exception($fragileMessage);
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('write')
-            ->with($this->callback(static function (string $body) use ($fragileMessage): bool {
+            ->with(self::callback(static function (string $body) use ($fragileMessage): bool {
                 Assert::assertStringNotContainsString($fragileMessage, $body);
                 Assert::assertStringContainsString(ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE, $body);
                 return true;
@@ -367,10 +368,10 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $this->factory->createResponseFromThrowable($this->request, $exception);
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
-    public function testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode()
+    public function testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode(): void
     {
         $exception = new Exception('', 400);
 
@@ -391,10 +392,10 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $this->factory->createResponseFromThrowable($this->request, $exception);
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
-    public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag()
+    public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag(): void //phpcs:ignore
     {
         $fragileMessage = 'Your SQL or password here';
         $exception      = new Exception($fragileMessage);
@@ -423,10 +424,10 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $factory->createResponseFromThrowable($this->request, $exception);
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
-    public function testCustomDetailMessageShouldBeVisible()
+    public function testCustomDetailMessageShouldBeVisible(): void
     {
         $detailMessage = 'Custom detail message';
 
@@ -455,7 +456,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $factory->createResponseFromThrowable($this->request, new Exception());
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
     public function testRenderWithMalformedUtf8Sequences(): void
@@ -488,10 +489,11 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $e
         );
 
-        $this->assertSame($this->response, $response);
+        self::assertSame($this->response, $response);
     }
 
-    public function provideMappedStatuses(): array
+    /** @return list<array{0: array<int, string>, 1: int, 2: string}> */
+    public static function provideMappedStatuses(): array
     {
         $defaultTypesMap = [
             404 => 'https://example.com/problem-details/error/not-found',
@@ -508,6 +510,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
     /**
      * @dataProvider provideMappedStatuses
+     * @param array<int, string> $map
      */
     public function testTypeIsInferredFromDefaultTypesMap(array $map, int $status, string $expectedType): void
     {
@@ -515,9 +518,9 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('write')
-            ->with($this->callback(static function (string $body) use ($expectedType): bool {
+            ->with(self::callback(static function (string $body) use ($expectedType): bool {
                 $payload = json_decode($body, true);
                 Assert::assertEquals($expectedType, $payload['type']);
                 return true;
@@ -525,7 +528,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('withStatus')
             ->with($status)
             ->willReturn($this->response);
