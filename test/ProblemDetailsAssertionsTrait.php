@@ -21,13 +21,13 @@ trait ProblemDetailsAssertionsTrait
     public function assertProblemDetails(array $expected, array $details): void
     {
         foreach ($expected as $key => $value) {
-            $this->assertArrayHasKey(
+            self::assertArrayHasKey(
                 $key,
                 $details,
                 sprintf('Did not find key %s in problem details', $key)
             );
 
-            $this->assertEquals($value, $details[$key], sprintf(
+            self::assertEquals($value, $details[$key], sprintf(
                 'Did not find expected value for "%s" key of details; expected "%s", received "%s"',
                 $key,
                 var_export($value, true),
@@ -38,22 +38,22 @@ trait ProblemDetailsAssertionsTrait
 
     public function assertExceptionDetails(Throwable $e, array $details): void
     {
-        $this->assertArrayHasKey('class', $details);
-        $this->assertSame($e::class, $details['class']);
-        $this->assertArrayHasKey('code', $details);
-        $this->assertSame($e->getCode(), (int) $details['code']);
-        $this->assertArrayHasKey('message', $details);
-        $this->assertSame($e->getMessage(), $details['message']);
-        $this->assertArrayHasKey('file', $details);
-        $this->assertSame($e->getFile(), $details['file']);
-        $this->assertArrayHasKey('line', $details);
-        $this->assertSame($e->getLine(), (int) $details['line']);
+        self::assertArrayHasKey('class', $details);
+        self::assertSame($e::class, $details['class']);
+        self::assertArrayHasKey('code', $details);
+        self::assertSame($e->getCode(), (int) $details['code']);
+        self::assertArrayHasKey('message', $details);
+        self::assertSame($e->getMessage(), $details['message']);
+        self::assertArrayHasKey('file', $details);
+        self::assertSame($e->getFile(), $details['file']);
+        self::assertArrayHasKey('line', $details);
+        self::assertSame($e->getLine(), (int) $details['line']);
 
         // PHP does some odd things when creating the trace; individual items
         // may be objects, but once copied, they are arrays. This makes direct
         // comparison impossible; thus, only testing for correct type.
-        $this->assertArrayHasKey('trace', $details);
-        $this->assertIsArray($details['trace']);
+        self::assertArrayHasKey('trace', $details);
+        self::assertIsArray($details['trace']);
     }
 
     /**
@@ -81,9 +81,9 @@ trait ProblemDetailsAssertionsTrait
     public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion): void
     {
         $stream
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('write')
-            ->with($this->callback(static function ($body) use ($assertion): bool {
+            ->with(self::callback(static function ($body) use ($assertion): bool {
                 Assert::assertIsString($body);
                 $data = json_decode($body, true);
                 $assertion($data);
@@ -97,9 +97,9 @@ trait ProblemDetailsAssertionsTrait
     public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion): void
     {
         $stream
-            ->expects($this->any())
+            ->expects(self::any())
             ->method('write')
-            ->with($this->callback(function ($body) use ($assertion): bool {
+            ->with(self::callback(function ($body) use ($assertion): bool {
                 Assert::assertIsString($body);
                 $data = $this->deserializeXmlPayload($body);
                 $assertion($data);
