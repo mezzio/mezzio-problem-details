@@ -395,7 +395,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         self::assertSame($this->response, $response);
     }
 
-    public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag(): void
+    public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag(): void //phpcs:ignore
     {
         $fragileMessage = 'Your SQL or password here';
         $exception      = new Exception($fragileMessage);
