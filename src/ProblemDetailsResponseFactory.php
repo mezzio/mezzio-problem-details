@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Mezzio\ProblemDetails;
 
 use Closure;
+use DOMElement;
 use Fig\Http\Message\StatusCodeInterface as StatusCode;
 use Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator;
 use Negotiation\Negotiator;
@@ -16,6 +17,7 @@ use Throwable;
 
 use function array_merge;
 use function array_walk_recursive;
+use function assert;
 use function get_resource_type;
 use function is_array;
 use function is_callable;
@@ -340,6 +342,7 @@ class ProblemDetailsResponseFactory
         $converter = new ArrayToXml($cleanedContent, 'problem', true, 'UTF-8');
         $dom       = $converter->toDom();
         $root      = $dom->firstChild;
+        assert($root instanceof DOMElement);
         $root->setAttribute('xmlns', 'urn:ietf:rfc:7807');
 
         return $this->generateResponse(
