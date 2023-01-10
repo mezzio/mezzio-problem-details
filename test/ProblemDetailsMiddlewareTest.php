@@ -9,9 +9,11 @@ use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Throwable;
 
 use function trigger_error;
 
@@ -36,6 +38,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $this->middleware      = new ProblemDetailsMiddleware($this->responseFactory);
     }
 
+    /** @return array<string, array{0: string}> */
     public function acceptHeaders(): array
     {
         return [
@@ -58,7 +61,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 
         $result = $this->middleware->process($this->request, $handler);
 
-        $this->assertSame($response, $result);
+        self::assertSame($response, $result);
     }
 
     /**
@@ -87,7 +90,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 
         $result = $this->middleware->process($this->request, $handler);
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 
     /**
@@ -111,17 +114,17 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $expected = $this->createMock(ResponseInterface::class);
         $this->responseFactory
             ->method('createResponseFromThrowable')
-            ->with($this->request, $this->callback(function ($e): bool {
-                $this->assertInstanceOf(ErrorException::class, $e);
-                $this->assertEquals(E_USER_ERROR, $e->getSeverity());
-                $this->assertEquals('Triggered error!', $e->getMessage());
+            ->with($this->request, self::callback(function ($e): bool {
+                self::assertInstanceOf(ErrorException::class, $e);
+                self::assertEquals(E_USER_ERROR, $e->getSeverity());
+                self::assertEquals('Triggered error!', $e->getMessage());
                 return true;
             }))
             ->willReturn($expected);
 
         $result = $this->middleware->process($this->request, $handler);
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 
     public function testRethrowsCaughtExceptionIfUnableToNegotiateAcceptHeader(): void
@@ -168,10 +171,17 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->with($this->request, $exception)
             ->willReturn($expected);
 
-        $listener  = function ($error, $request, $response) use ($exception, $expected): void {
-            $this->assertSame($exception, $error, 'Listener did not receive same exception as was raised');
-            $this->assertSame($this->request, $request, 'Listener did not receive same request');
-            $this->assertSame($expected, $response, 'Listener did not receive same response');
+        $listener  = function (
+            Throwable $error,
+            RequestInterface $request,
+            ResponseInterface $response
+        ) use (
+            $exception,
+            $expected
+        ): void {
+            self::assertSame($exception, $error, 'Listener did not receive same exception as was raised');
+            self::assertSame($this->request, $request, 'Listener did not receive same request');
+            self::assertSame($expected, $response, 'Listener did not receive same response');
         };
         $listener2 = clone $listener;
         $this->middleware->attachListener($listener);
@@ -179,6 +189,6 @@ class ProblemDetailsMiddlewareTest extends TestCase
 
         $result = $this->middleware->process($this->request, $handler);
 
-        $this->assertSame($expected, $result);
+        self::assertSame($expected, $result);
     }
 }

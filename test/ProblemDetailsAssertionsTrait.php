@@ -10,6 +10,8 @@ use Psr\Http\Message\StreamInterface;
 use Throwable;
 
 use function array_walk_recursive;
+use function assert;
+use function is_array;
 use function json_decode;
 use function json_encode;
 use function simplexml_load_string;
@@ -18,20 +20,25 @@ use function var_export;
 
 trait ProblemDetailsAssertionsTrait
 {
+    /**
+     * @param array<string, mixed> $expected
+     * @param array<array-key, mixed> $details
+     */
     public function assertProblemDetails(array $expected, array $details): void
     {
+        /** @psalm-var mixed $value */
         foreach ($expected as $key => $value) {
             self::assertArrayHasKey(
                 $key,
                 $details,
-                sprintf('Did not find key %s in problem details', $key)
+                sprintf('Did not find key %s in problem details', $key),
             );
 
             self::assertEquals($value, $details[$key], sprintf(
                 'Did not find expected value for "%s" key of details; expected "%s", received "%s"',
                 $key,
                 var_export($value, true),
-                var_export($details[$key], true)
+                var_export($details[$key], true),
             ));
         }
     }
@@ -85,7 +92,9 @@ trait ProblemDetailsAssertionsTrait
             ->method('write')
             ->with(self::callback(static function ($body) use ($assertion): bool {
                 Assert::assertIsString($body);
+                Assert::assertJson($body);
                 $data = json_decode($body, true);
+                Assert::assertIsArray($data);
                 $assertion($data);
                 return true;
             }));
@@ -112,9 +121,10 @@ trait ProblemDetailsAssertionsTrait
         $xml     = simplexml_load_string($xml);
         $json    = json_encode($xml);
         $payload = json_decode($json, true);
+        assert(is_array($payload));
 
         // Ensure ints and floats are properly represented
-        array_walk_recursive($payload, static function (&$item): void {
+        array_walk_recursive($payload, static function (mixed &$item): void {
             if ((string) (int) $item === $item) {
                 $item = (int) $item;
                 return;

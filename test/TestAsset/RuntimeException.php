@@ -15,6 +15,7 @@ class RuntimeException extends BaseRuntimeException
     public function __construct(string $message, mixed $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
+        /** @psalm-suppress MixedAssignment // Assigning mixed to $this->code is by-design */
         $this->code = $code;
     }
 }

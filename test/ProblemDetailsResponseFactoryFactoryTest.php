@@ -33,8 +33,10 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $this->container = $this->createMock(ContainerInterface::class);
     }
 
-    public function assertResponseFactoryReturns(ResponseInterface $expected, ProblemDetailsResponseFactory $factory)
-    {
+    public function assertResponseFactoryReturns(
+        ResponseInterface $expected,
+        ProblemDetailsResponseFactory $factory
+    ): void {
         $r = new ReflectionProperty($factory, 'responseFactory');
         $r->setAccessible(true);
         $responseFactory = $r->getValue($factory);
@@ -42,7 +44,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         self::assertSame($expected, $responseFactory->createResponse());
     }
 
-    public function testLackOfResponseServiceResultsInException()
+    public function testLackOfResponseServiceResultsInException(): void
     {
         $factory = new ProblemDetailsResponseFactoryFactory();
         $e       = new RuntimeException();
@@ -61,7 +63,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $factory($this->container);
     }
 
-    public function testNonCallableResponseServiceResultsInException()
+    public function testNonCallableResponseServiceResultsInException(): void
     {
         $factory = new ProblemDetailsResponseFactoryFactory();
 
@@ -138,7 +140,9 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $jsonFlags = (new ReflectionObject($factory))->getProperty('jsonFlags');
         $jsonFlags->setAccessible(true);
 
-        self::assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory) & JSON_PRETTY_PRINT);
+        $value = $jsonFlags->getValue($factory);
+        self::assertIsInt($value);
+        self::assertSame(JSON_PRETTY_PRINT, $value & JSON_PRETTY_PRINT);
     }
 
     public function testUsesDebugSettingFromConfigWhenPresent(): void

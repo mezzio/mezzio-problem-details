@@ -6,10 +6,15 @@ namespace Mezzio\ProblemDetails;
 
 use Psr\Container\ContainerInterface;
 
+use function assert;
+
 class ProblemDetailsMiddlewareFactory
 {
     public function __invoke(ContainerInterface $container): ProblemDetailsMiddleware
     {
-        return new ProblemDetailsMiddleware($container->get(ProblemDetailsResponseFactory::class));
+        $responseFactory = $container->get(ProblemDetailsResponseFactory::class);
+        assert($responseFactory instanceof ProblemDetailsResponseFactory);
+
+        return new ProblemDetailsMiddleware($responseFactory);
     }
 }

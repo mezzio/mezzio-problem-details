@@ -18,7 +18,7 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
     private string $detail = 'You are not authorized to do that';
     private string $title  = 'Unauthorized';
     private string $type   = 'https://httpstatus.es/403';
-    /** @var string[] */
+    /** @var array<string, string> */
     private array $additional = [
         'foo' => 'bar',
     ];
@@ -35,6 +35,7 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
         ) extends Exception implements ProblemDetailsExceptionInterface {
             use CommonProblemDetailsExceptionTrait;
 
+            /** @param array<string, mixed> $additional */
             public function __construct(int $status, string $detail, string $title, string $type, array $additional)
             {
                 $this->status     = $status;
@@ -48,16 +49,16 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
 
     public function testCanPullDetailsIndividually(): void
     {
-        $this->assertEquals($this->status, $this->exception->getStatus());
-        $this->assertEquals($this->detail, $this->exception->getDetail());
-        $this->assertEquals($this->title, $this->exception->getTitle());
-        $this->assertEquals($this->type, $this->exception->getType());
-        $this->assertEquals($this->additional, $this->exception->getAdditionalData());
+        self::assertEquals($this->status, $this->exception->getStatus());
+        self::assertEquals($this->detail, $this->exception->getDetail());
+        self::assertEquals($this->title, $this->exception->getTitle());
+        self::assertEquals($this->type, $this->exception->getType());
+        self::assertEquals($this->additional, $this->exception->getAdditionalData());
     }
 
     public function testCanCastDetailsToArray(): void
     {
-        $this->assertEquals([
+        self::assertEquals([
             'status' => $this->status,
             'detail' => $this->detail,
             'title'  => $this->title,
@@ -69,8 +70,9 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
     public function testIsJsonSerializable(): void
     {
         $problem = json_decode(json_encode($this->exception), true);
+        self::assertIsArray($problem);
 
-        $this->assertEquals([
+        self::assertEquals([
             'status' => $this->status,
             'detail' => $this->detail,
             'title'  => $this->title,
