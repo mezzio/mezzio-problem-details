@@ -54,6 +54,14 @@ use const JSON_UNESCAPED_UNICODE;
  *
  * If no type is provided, a URI to httpstatus.es based on the specified status
  * will be used.
+ *
+ * @psalm-type ProblemDetails = array{
+ *     title: string,
+ *     type: string,
+ *     status: int,
+ *     detail: string,
+ *     ...
+ * }
  */
 class ProblemDetailsResponseFactory
 {
@@ -224,6 +232,7 @@ class ProblemDetailsResponseFactory
         $this->jsonFlags = $jsonFlags;
     }
 
+    /** @param array<string, mixed> $additional */
     public function createResponse(
         ServerRequestInterface $request,
         int $status,
@@ -245,7 +254,7 @@ class ProblemDetailsResponseFactory
 
         if ($additional) {
             // ensure payload can be json_encoded
-            array_walk_recursive($additional, static function (&$value): void {
+            array_walk_recursive($additional, static function (mixed &$value): void {
                 if (is_resource($value)) {
                     $value = print_r($value, true) . ' of type ' . get_resource_type($value);
                 }
@@ -270,7 +279,7 @@ class ProblemDetailsResponseFactory
                 $e->getDetail(),
                 $e->getTitle(),
                 $e->getType(),
-                $e->getAdditionalData()
+                $e->getAdditionalData(),
             );
         }
 
@@ -285,7 +294,7 @@ class ProblemDetailsResponseFactory
             $detail,
             '',
             '',
-            $additionalDetails
+            $additionalDetails,
         );
     }
 
@@ -296,22 +305,27 @@ class ProblemDetailsResponseFactory
         return is_int($code) ? $code : 0;
     }
 
+    /** @param ProblemDetails $payload */
     protected function generateJsonResponse(array $payload): ResponseInterface
     {
         return $this->generateResponse(
             $payload['status'],
             self::CONTENT_TYPE_JSON,
-            json_encode($payload, $this->jsonFlags)
+            json_encode($payload, $this->jsonFlags),
         );
     }
 
     /**
      * Ensure all keys in this associative array are valid XML tag names by replacing invalid
      * characters with an `_`.
+     *
+     * @param array<array-key, mixed> $input
+     * @return array<string, mixed>
      */
     private function cleanKeysForXml(array $input): array
     {
         $return = [];
+        /** @psalm-var mixed $value */
         foreach ($input as $key => $value) {
             $key                   = str_replace("\n", '_', (string) $key);
             $startCharacterPattern =
@@ -326,14 +340,17 @@ class ProblemDetailsResponseFactory
             if (is_array($value)) {
                 $value = $this->cleanKeysForXml($value);
             }
+            /** @psalm-var mixed */
             $return[$key] = $value;
         }
         return $return;
     }
 
+    /** @param ProblemDetails $payload */
     protected function generateXmlResponse(array $payload): ResponseInterface
     {
         // Ensure any objects are flattened to arrays first
+        /** @psalm-var array $content */
         $content = json_decode(json_encode($payload), true);
 
         // ensure all keys are valid XML can be json_encoded
@@ -348,7 +365,7 @@ class ProblemDetailsResponseFactory
         return $this->generateResponse(
             $payload['status'],
             self::CONTENT_TYPE_XML,
-            $dom->saveXML()
+            $dom->saveXML(),
         );
     }
 
@@ -361,6 +378,7 @@ class ProblemDetailsResponseFactory
             ->withHeader('Content-Type', $contentType);
     }
 
+    /** @return callable(ProblemDetails): ResponseInterface */
     private function getResponseGenerator(ServerRequestInterface $request): callable
     {
         $accept    = $request->getHeaderLine('Accept') ?: '*/*';
@@ -371,6 +389,7 @@ class ProblemDetailsResponseFactory
             : Closure::fromCallable([$this, 'generateJsonResponse']);
     }
 
+    /** @return int<400, 599> */
     private function normalizeStatus(int $status): int
     {
         if ($status < 400 || $status > 599) {
@@ -390,6 +409,7 @@ class ProblemDetailsResponseFactory
         return $this->defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status);
     }
 
+    /** @return array<string, mixed> */
     private function createThrowableDetail(Throwable $e): array
     {
         $detail = [

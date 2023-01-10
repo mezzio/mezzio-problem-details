@@ -168,6 +168,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $expectedType,
             $stream,
             static function (array $payload) use ($expectedKeyNames): void {
+                Assert::assertIsArray($payload['foo']);
                 Assert::assertEquals($expectedKeyNames, array_keys($payload['foo']));
             }
         );
@@ -188,6 +189,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         self::assertSame($this->response, $response);
     }
 
+    /** @param array<string, mixed> $additional */
     private function createProblemDetailsExceptionWithAdditional(array $additional): ProblemDetailsExceptionInterface
     {
         return new class (
@@ -199,6 +201,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         ) extends Exception implements ProblemDetailsExceptionInterface {
             use CommonProblemDetailsExceptionTrait;
 
+            /** @param array<string, mixed> $additional */
             public function __construct(int $status, string $detail, string $title, string $type, array $additional)
             {
                 $this->status     = $status;
@@ -312,10 +315,13 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             $stream,
             static function (array $payload): void {
                 Assert::assertArrayHasKey('exception', $payload);
+                Assert::assertIsArray($payload['exception']);
                 Assert::assertEquals(101011, $payload['exception']['code']);
                 Assert::assertEquals('second', $payload['exception']['message']);
                 Assert::assertArrayHasKey('stack', $payload['exception']);
                 Assert::assertIsArray($payload['exception']['stack']);
+                Assert::assertArrayHasKey(0, $payload['exception']['stack']);
+                Assert::assertIsArray($payload['exception']['stack'][0]);
                 Assert::assertEquals(101010, $payload['exception']['stack'][0]['code']);
                 Assert::assertEquals('first', $payload['exception']['stack'][0]['message']);
             }
@@ -522,6 +528,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ->method('write')
             ->with(self::callback(static function (string $body) use ($expectedType): bool {
                 $payload = json_decode($body, true);
+                Assert::assertIsArray($payload);
+                Assert::assertArrayHasKey('type', $payload);
                 Assert::assertEquals($expectedType, $payload['type']);
                 return true;
             }));

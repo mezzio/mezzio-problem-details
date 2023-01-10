@@ -20,6 +20,7 @@ interface ProblemDetailsExceptionInterface extends JsonSerializable, Throwable
 
     public function getDetail(): string;
 
+    /** @return array<string, mixed> */
     public function getAdditionalData(): array;
 
     /**

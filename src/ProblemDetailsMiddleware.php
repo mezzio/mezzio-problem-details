@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Mezzio\ProblemDetails;
 
 use ErrorException;
-use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Negotiation\Negotiator;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Throwable;
 
-use function array_walk;
 use function error_reporting;
 use function in_array;
 use function restore_error_handler;
@@ -25,7 +24,7 @@ use function set_error_handler;
  */
 class ProblemDetailsMiddleware implements MiddlewareInterface
 {
-    /** @var callable[] */
+    /** @var list<callable(Throwable, RequestInterface, ResponseInterface): void> */
     private array $listeners = [];
 
     public function __construct(private ProblemDetailsResponseFactory $responseFactory)
@@ -67,6 +66,8 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
      * These instances are all immutable, and the return values of
      * listeners are ignored; use listeners for reporting purposes
      * only.
+     *
+     * @param callable(Throwable, RequestInterface, ResponseInterface): void $listener
      */
     public function attachListener(callable $listener): void
     {
@@ -94,6 +95,8 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
      * Creates and returns a callable error handler that raises exceptions.
      *
      * Only raises exceptions for errors that are within the error_reporting mask.
+     *
+     * @return callable(int, string, string, int): void
      */
     private function createErrorHandler(): callable
     {
@@ -122,8 +125,8 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
         ServerRequestInterface $request,
         ResponseInterface $response
     ): void {
-        array_walk($this->listeners, static function ($listener) use ($error, $request, $response): void {
+        foreach ($this->listeners as $listener) {
             $listener($error, $request, $response);
-        });
+        }
     }
 }

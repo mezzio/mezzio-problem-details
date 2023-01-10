@@ -24,6 +24,7 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
         $this->responseFactory = $this->createMock(ProblemDetailsResponseFactory::class);
     }
 
+    /** @return array<string, array{0: string, 1: string}> */
     public function acceptHeaders(): array
     {
         return [

@@ -16,7 +16,7 @@ use RuntimeException;
 class ProblemDetailsMiddlewareFactoryTest extends TestCase
 {
     /** @var ContainerInterface&MockObject */
-    private $container;
+    private ContainerInterface $container;
 
     private ProblemDetailsMiddlewareFactory $factory;
 
@@ -26,7 +26,7 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
         $this->factory   = new ProblemDetailsMiddlewareFactory();
     }
 
-    public function testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable()
+    public function testRaisesExceptionWhenProblemDetailsResponseFactoryServiceIsNotAvailable(): void
     {
         $e = new RuntimeException();
         $this->container
@@ -52,7 +52,7 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
         $r = (new ReflectionObject($middleware))->getProperty('responseFactory');
         $r->setAccessible(true);
 
-        $this->assertInstanceOf(ProblemDetailsMiddleware::class, $middleware);
-        $this->assertSame($responseFactory, $r->getValue($middleware));
+        self::assertInstanceOf(ProblemDetailsMiddleware::class, $middleware);
+        self::assertSame($responseFactory, $r->getValue($middleware));
     }
 }

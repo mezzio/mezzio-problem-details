@@ -34,7 +34,7 @@ trait CommonProblemDetailsExceptionTrait
     /** @var string */
     private $type;
 
-    /** @var array */
+    /** @var array<string, mixed> */
     private $additional = [];
 
     public function getStatus(): int
@@ -57,6 +57,7 @@ trait CommonProblemDetailsExceptionTrait
         return $this->detail;
     }
 
+    /** @return array<string, mixed> */
     public function getAdditionalData(): array
     {
         return $this->additional;
