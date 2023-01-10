@@ -7,8 +7,10 @@ namespace Mezzio\ProblemDetails;
 use Psr\Container\ContainerInterface;
 use Webmozart\Assert\Assert;
 
-use function array_keys;
+use function assert;
 use function is_bool;
+use function is_int;
+use function is_string;
 
 class ProblemDetailsResponseFactoryFactory
 {
@@ -24,11 +26,14 @@ class ProblemDetailsResponseFactoryFactory
         $problemDetailsConfig = $config['problem-details'] ?? [];
         Assert::isArrayAccessible($problemDetailsConfig);
         $jsonFlags = $problemDetailsConfig['json_flags'] ?? null;
-        Assert::nullOrInteger($jsonFlags);
+        assert($jsonFlags === null || is_int($jsonFlags));
         $defaultTypesMap = $problemDetailsConfig['default_types_map'] ?? [];
         Assert::isArray($defaultTypesMap);
-        Assert::allInteger(array_keys($defaultTypesMap));
-        Assert::allString($defaultTypesMap);
+        foreach ($defaultTypesMap as $key => $value) {
+            assert(is_int($key));
+            assert(is_string($value));
+        }
+
         /** @psalm-var array<int, string> $defaultTypesMap */
 
         return new ProblemDetailsResponseFactory(
