@@ -21,4 +21,25 @@
       <code>getValue</code>
     </UndefinedInterfaceMethod>
   </file>
+  <file src="test/ProblemDetailsMiddlewareTest.php">
+    <PossiblyUnusedMethod>
+      <code>acceptHeaders</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/ProblemDetailsNotFoundHandlerTest.php">
+    <PossiblyUnusedMethod>
+      <code>acceptHeaders</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/ProblemDetailsResponseFactoryTest.php">
+    <PossiblyUnusedMethod>
+      <code>acceptHeaders</code>
+      <code>provideMappedStatuses</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/Psr17ResponseFactoryTraitTest.php">
+    <PossiblyUnusedMethod>
+      <code>configurationsWithOverriddenResponseInterfaceFactory</code>
+    </PossiblyUnusedMethod>
+  </file>
 </files>

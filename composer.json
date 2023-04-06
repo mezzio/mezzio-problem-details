@@ -49,7 +49,8 @@
     },
     "require-dev": {
         "laminas/laminas-coding-standard": "~2.5.0",
-        "phpunit/phpunit": "^9.6.6",
+        "laminas/laminas-diactoros": "^2.24",
+        "phpunit/phpunit": "^10.0.19",
         "psalm/plugin-phpunit": "^0.18.4",
         "vimeo/psalm": "^5.9"
     },

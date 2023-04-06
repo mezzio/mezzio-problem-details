@@ -6,9 +6,7 @@ namespace MezzioTest\ProblemDetails;
 
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionObject;
@@ -95,7 +93,6 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 
     public function testUsesDebugSettingFromConfigWhenPresent(): void
     {
-
         $this->container->set('config', ['debug' => true]);
         $this->container->set(ResponseInterface::class, static fn() => null);
 
