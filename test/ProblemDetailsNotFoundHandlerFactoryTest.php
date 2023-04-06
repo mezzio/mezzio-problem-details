@@ -49,7 +49,6 @@ class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
         $notFoundHandler = ($this->factory)($this->container);
 
         $r = (new ReflectionObject($notFoundHandler))->getProperty('responseFactory');
-        $r->setAccessible(true);
 
         self::assertInstanceOf(ProblemDetailsNotFoundHandler::class, $notFoundHandler);
         self::assertSame($responseFactory, $r->getValue($notFoundHandler));

@@ -50,7 +50,6 @@ class ProblemDetailsMiddlewareFactoryTest extends TestCase
         $middleware = ($this->factory)($this->container);
 
         $r = (new ReflectionObject($middleware))->getProperty('responseFactory');
-        $r->setAccessible(true);
 
         self::assertInstanceOf(ProblemDetailsMiddleware::class, $middleware);
         self::assertSame($responseFactory, $r->getValue($middleware));

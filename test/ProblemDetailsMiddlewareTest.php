@@ -7,6 +7,7 @@ namespace MezzioTest\ProblemDetails;
 use ErrorException;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -39,7 +40,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
     }
 
     /** @return array<string, array{0: string}> */
-    public function acceptHeaders(): array
+    public static function acceptHeaders(): array
     {
         return [
             'empty'                    => [''],
@@ -64,9 +65,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         self::assertSame($response, $result);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testThrowableRaisedByHandlerResultsInProblemDetails(string $accept): void
     {
         $this->request
@@ -93,9 +92,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         self::assertSame($expected, $result);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testMiddlewareRegistersErrorHandlerToConvertErrorsToProblemDetails(string $accept): void
     {
         $this->request
@@ -147,9 +144,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $this->middleware->process($this->request, $handler);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testErrorHandlingTriggersListeners(string $accept): void
     {
         $this->request

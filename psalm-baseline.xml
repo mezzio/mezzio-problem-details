@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.2.0@fb685a16df3050d4c18d8a4100fe83abe6458cba">
+<files psalm-version="5.9.0@8b9ad1eb9e8b7d3101f949291da2b9f7767cd163">
+  <file src="src/Exception/InvalidResponseBodyException.php">
+    <UnusedClass>
+      <code>InvalidResponseBodyException</code>
+    </UnusedClass>
+  </file>
   <file src="src/ProblemDetailsMiddleware.php">
-    <InvalidArgument occurrences="1">
-      <code>$this-&gt;createErrorHandler()</code>
+    <InvalidArgument>
+      <code><![CDATA[$this->createErrorHandler()]]></code>
     </InvalidArgument>
   </file>
   <file src="src/ProblemDetailsResponseFactory.php">
-    <MixedArgument occurrences="1">
-      <code>$mediaType-&gt;getValue()</code>
+    <MixedArgument>
+      <code><![CDATA[$mediaType->getValue()]]></code>
     </MixedArgument>
-    <UndefinedInterfaceMethod occurrences="1">
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[! str_contains($mediaType->getValue(), 'json')]]></code>
+    </RedundantConditionGivenDocblockType>
+    <UndefinedInterfaceMethod>
       <code>getValue</code>
     </UndefinedInterfaceMethod>
+  </file>
+  <file src="test/ProblemDetailsMiddlewareTest.php">
+    <PossiblyUnusedMethod>
+      <code>acceptHeaders</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/ProblemDetailsNotFoundHandlerTest.php">
+    <PossiblyUnusedMethod>
+      <code>acceptHeaders</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/ProblemDetailsResponseFactoryTest.php">
+    <PossiblyUnusedMethod>
+      <code>acceptHeaders</code>
+      <code>provideMappedStatuses</code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="test/Psr17ResponseFactoryTraitTest.php">
+    <PossiblyUnusedMethod>
+      <code>configurationsWithOverriddenResponseInterfaceFactory</code>
+    </PossiblyUnusedMethod>
   </file>
 </files>

@@ -9,6 +9,7 @@ use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -56,9 +57,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testCreateResponseCreatesExpectedType(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
@@ -79,9 +78,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         self::assertSame($this->response, $response);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testCreateResponseFromThrowableCreatesExpectedType(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
@@ -102,9 +99,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         self::assertSame($this->response, $response);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testCreateResponseFromThrowableCreatesExpectedTypeWithExtraInformation(
         string $header,
         string $expectedType
@@ -134,9 +129,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         self::assertSame($this->response, $response);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testCreateResponseRemovesInvalidCharactersFromXmlKeys(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
@@ -245,9 +238,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         self::assertSame($this->response, $response);
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testCreateResponseRemovesResourcesFromInputData(string $header, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
@@ -515,9 +506,9 @@ class ProblemDetailsResponseFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider provideMappedStatuses
      * @param array<int, string> $map
      */
+    #[DataProvider('provideMappedStatuses')]
     public function testTypeIsInferredFromDefaultTypesMap(array $map, int $status, string $expectedType): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');

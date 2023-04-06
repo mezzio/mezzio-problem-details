@@ -6,6 +6,7 @@ namespace MezzioTest\ProblemDetails;
 
 use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -25,7 +26,7 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
     }
 
     /** @return array<string, array{0: string, 1: string}> */
-    public function acceptHeaders(): array
+    public static function acceptHeaders(): array
     {
         return [
             'application/json' => ['application/json', 'application/problem+json'],
@@ -33,9 +34,7 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider acceptHeaders
-     */
+    #[DataProvider('acceptHeaders')]
     public function testResponseFactoryPassedInConstructorGeneratesTheReturnedResponse(string $acceptHeader): void
     {
         $request = $this->createMock(ServerRequestInterface::class);
