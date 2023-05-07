@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace MezzioTest\ProblemDetails;
 
+use Laminas\Diactoros\ServerRequest;
+use Laminas\Diactoros\Stream;
+use Laminas\Diactoros\Uri;
 use Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class ProblemDetailsNotFoundHandlerTest extends TestCase
@@ -37,10 +39,14 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
     #[DataProvider('acceptHeaders')]
     public function testResponseFactoryPassedInConstructorGeneratesTheReturnedResponse(string $acceptHeader): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getMethod')->willReturn('POST');
-        $request->method('getHeaderLine')->with('Accept')->willReturn($acceptHeader);
-        $request->method('getUri')->willReturn('https://example.com/foo');
+        $request = new ServerRequest(
+            [],
+            [],
+            new Uri('https://example.com/foo'),
+            'POST',
+            new Stream('php://memory'),
+            ['Accept' => $acceptHeader]
+        );
 
         $response = $this->createMock(ResponseInterface::class);
 
@@ -62,10 +68,14 @@ class ProblemDetailsNotFoundHandlerTest extends TestCase
 
     public function testHandlerIsCalledIfAcceptHeaderIsUnacceptable(): void
     {
-        $request = $this->createMock(ServerRequestInterface::class);
-        $request->method('getMethod')->willReturn('POST');
-        $request->method('getHeaderLine')->with('Accept')->willReturn('text/html');
-        $request->method('getUri')->willReturn('https://example.com/foo');
+        $request = new ServerRequest(
+            [],
+            [],
+            new Uri('https://example.com/foo'),
+            'POST',
+            new Stream('php://memory'),
+            ['Accept' => 'text/html']
+        );
 
         $response = $this->createMock(ResponseInterface::class);
 
