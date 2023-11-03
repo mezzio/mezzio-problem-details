@@ -9,7 +9,7 @@ details response.
 This library provides a factory named `Mezzio\ProblemDetails\ProblemDetailsResponseFactory`.
 
 The factory has one _required_ argument: a _response factory_ capable of
-producing an mepty PSR-7 `ResponseInterface`. This may be an PHP callable.
+producing an empty PSR-7 `ResponseInterface`. This may be an PHP callable.
 
 The class defines two static methods, `createResponse()` and
 `createResponseFromThrowable()`.  Each accepts a PSR-7
