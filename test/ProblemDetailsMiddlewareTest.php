@@ -8,6 +8,7 @@ use ErrorException;
 use Mezzio\ProblemDetails\ProblemDetailsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\WithoutErrorHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
@@ -92,6 +93,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         self::assertSame($expected, $result);
     }
 
+    #[WithoutErrorHandler]
     #[DataProvider('acceptHeaders')]
     public function testMiddlewareRegistersErrorHandlerToConvertErrorsToProblemDetails(string $accept): void
     {
