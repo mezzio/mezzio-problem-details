@@ -14,6 +14,7 @@ nav:
 site_name: mezzio-problem-details
 site_description: 'Problem Details for PSR-7 HTTP APIs addressing the RFC 7807 standard'
 repo_url: 'https://github.com/mezzio/mezzio-problem-details'
+site_url: https://docs.mezzio.dev/mezzio-problem-details/
 extra:
     project: Mezzio
     installation:
