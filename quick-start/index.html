@@ -5,7 +5,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="PSR-7 Problem Details for HTTP API responses and middleware">  
+    <meta name="description" content="Problem Details for PSR-7 HTTP APIs addressing the RFC 7807 standard"> 
+
+    
+    
+    <meta name="docsearch:version" content="latest">
+    <meta name="docsearch:language" content="en">
+    <meta name="docsearch:component" content="mezzio-problem-details">
+
     <link rel="canonical" href="https://docs.mezzio.dev/mezzio-problem-details/quick-start/">
     <link rel="shortcut icon" href="https://docs.laminas.dev/img/trademark-laminas-foundation-rgb.svg">
 
@@ -143,6 +150,20 @@
                     
                     
                         
+                            <li class="subnavigation__list-item ">
+                                <a href="../installation/" class="subnavigation__link">Installation</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
                             <li class="subnavigation__list-item subnavigation__list-item--active">
                                 <a href="./" class="subnavigation__link">Quick Start</a>
                             </li>
@@ -242,8 +263,8 @@
                     <a href="#" class="header__link header__link--search" data-toggle="modal" data-target="#mkdocs_search_modal" title="Open search">
                         <i class="fa fa-search"></i> Search
                     </a>
-                    <a href="https://github.com/mezzio/mezzio-problem-details/" class="header__link header__link--github" title="Go to repository of mezzio-problem-details">
-                        <i class="fa fa-github"></i> GitHub
+                    <a href="https://github.com/mezzio/mezzio-problem-details" class="header__link header__link--github" title="Go to repository of mezzio-problem-details">
+                        <i class="fab fa-github"></i> GitHub
                     </a>
                 
             </div>
@@ -267,11 +288,19 @@
             <ul class="toc__list">
                 
                     <li class="toc__entry">
-                        <a href="#installation" class="toc__link nav-link">Installation</a>
+                        <a href="#problemdetailsresponsefactory" class="toc__link nav-link">ProblemDetailsResponseFactory</a>
                     </li>
                 
                     <li class="toc__entry">
-                        <a href="#usage" class="toc__link nav-link">Usage</a>
+                        <a href="#custom-exceptions" class="toc__link nav-link">Custom Exceptions</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#error-handling" class="toc__link nav-link">Error handling</a>
+                    </li>
+                
+                    <li class="toc__entry">
+                        <a href="#not-found-handling" class="toc__link nav-link">Not Found handling</a>
                     </li>
                 
             </ul>
@@ -307,11 +336,6 @@
     
 
     <h1 id="quick-start">Quick Start</h1>
-<h2 id="installation">Installation</h2>
-<p>To install this package in your application, use
-<a href="https://getcomposer.org">Composer</a>:</p>
-<pre class="highlight"><code class="language-bash">$ composer require mezzio/mezzio-problem-details</code></pre>
-<h2 id="usage">Usage</h2>
 <p>This package provides three primary mechanisms for creating and returning
 Problem Details responses:</p>
 <ul>
@@ -324,7 +348,7 @@ Problem Details responses:</p>
   exceptions as problem details responses using the
   <code>ProblemDetailsResponseFactory</code>.</li>
 </ul>
-<h3>ProblemDetailsResponseFactory</h3>
+<h2 id="problemdetailsresponsefactory">ProblemDetailsResponseFactory</h2>
 <p>If you are using <a href="https://docs.mezzio.dev/mezzio/">Mezzio</a>
 and have installed <a href="https://docs.laminas.dev/laminas-component-installer">laminas-component-installer</a>
 (which is installed by default in v2.0 and above), you can write middleware that
@@ -434,7 +458,7 @@ class DomainTransactionMiddleware implements MiddlewareInterface
 <p>The above modifies the original example to add validation and, on failed
 validation, return a custom response that includes the validation failure
 messages.</p>
-<h3>Custom Exceptions</h3>
+<h2 id="custom-exceptions">Custom Exceptions</h2>
 <p>In the above examples, we have a <code>DomainException</code> that is used to create a
 Problem Details response. By default, in production mode, the factory will use
 the exception message as the Problem Details description, and the exception code
@@ -507,7 +531,7 @@ class DomainException extends PhpDomainException implements ProblemDetailsExcept
 }</code></pre>
 <p>The data present in the generated exception will then be used by the
 <code>ProblemDetailsResponseFactory</code> to generate full Problem Details.</p>
-<h3>Error handling</h3>
+<h2 id="error-handling">Error handling</h2>
 <p>When writing APIs, you may not want to handle every error or exception manually,
 or may not be aware of problems in your code that might lead to them. In such
 cases, having error handling middleware that can generate problem details can be
@@ -537,7 +561,7 @@ it into your workflow in several ways.</p>
     BodyParamsMiddleware::class,
     DomainTransactionMiddleware::class,
 ]);</code></pre>
-<h3>Not Found handling</h3>
+<h2 id="not-found-handling">Not Found handling</h2>
 <p>When writing APIs you may also want 404 responses be in the accepted content-type.
 This package provides <code>ProblemDetailsNotFoundHandler</code> which will return a
 problem details <code>Response</code> with a <code>404</code> status if the request can accept either
@@ -556,8 +580,10 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
         
         <li class="page-nav__item">
             
-                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../intro/">
-                    <i class="fa fa-chevron-left"></i> Previous
+                <a rel="prev" class="page-nav__link page-nav__link--prev" href="../installation/">
+                    <small class="page-nav__label">Previous</small>
+                    <i class="fa fa-chevron-left"></i>
+                    Installation
                 </a>
             
         </li>
@@ -566,7 +592,9 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
         <li class="page-nav__item">
             
                 <a rel="next" class="page-nav__link page-nav__link--next" href="../response/">
-                    Next <i class="fa fa-chevron-right"></i>
+                    <small class="page-nav__label">Next</small>
+                    Generating Responses
+                    <i class="fa fa-chevron-right"></i>
                 </a>
             
         </li>
@@ -574,16 +602,6 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
 </nav>
 
 
-
-
-    <div class="help-wanted">
-        <p>
-            Found a mistake or want to contribute to the documentation?
-            <a href="https://github.com/mezzio/mezzio-problem-details/edit/master/docs/book/quick-start.md" target="_blank" class="help-wanted__link">
-                Edit this page on GitHub!
-            </a>
-        </p>
-    </div>
 
                 
             </div>
@@ -624,6 +642,20 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                         
                             <li class="subnavigation__list-item ">
                                 <a href="../intro/" class="subnavigation__link">Introduction</a>
+                            </li>
+                        
+                    
+                
+            
+
+                
+                
+
+                    
+                    
+                        
+                            <li class="subnavigation__list-item ">
+                                <a href="../installation/" class="subnavigation__link">Installation</a>
                             </li>
                         
                     
@@ -734,13 +766,13 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                                 <a href="https://discourse.laminas.dev" class="support__link" title="Forum"><i class="fa fa-comments"></i></a>
                             </li>
                             <li class="support__list-item">
-                                <a href="https://laminas.dev/chat" class="support__link" title="Chat"><i class="fa fa-slack"></i></a>
+                                <a href="https://laminas.dev/chat" class="support__link" title="Chat"><i class="fab fa-slack"></i></a>
                             </li>
                             <li class="support__list-item">
-                                <a href="https://github.com/laminas" class="support__link" title="Github"><i class="fa fa-github"></i></a>
+                                <a href="https://github.com/laminas" class="support__link" title="Github"><i class="fab fa-github"></i></a>
                             </li>
                             <li class="support__list-item">
-                                <a href="https://twitter.com/getlaminas" class="support__link" title="Twitter"><i class="fa fa-twitter"></i></a>
+                                <a href="https://phpc.social/@getlaminas" class="support__link" title="Mastodon"><i class="fab fa-mastodon"></i></a>
                             </li>
                             <li class="support__list-item">
                                 <a href="https://getlaminas.org/blog/rss.xml" class="support__link" title="Blog feed"><i class="fa fa-rss"></i></a>
@@ -756,7 +788,7 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                         <h4 class="footer__headline">License</h4>
                         <p>
                             Code licensed under <a
-                                href="https://github.com/mezzio/mezzio-problem-details/blob/master/LICENSE.md">BSD 3-Clause</a>.
+                                href="https://github.com/mezzio/mezzio-problem-details/blob/-/LICENSE.md">BSD 3-Clause</a>.
                         </p>
                     </div>
 
@@ -766,7 +798,7 @@ $app-&gt;pipe(NotFoundHandler::class);</code></pre>
                         <p>
                             <!--Built with love by the Laminas team with the help of our
                             <a href="https://github.com/mezzio/mezzio-problem-details/graphs/contributors">contributors</a>.<br>-->
-                            &copy; 2021 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
+                            &copy; 2024 <a href="https://getlaminas.org/">Laminas Project</a> a Series of LF Projects, LLC.
                         </p>
                     </div>
                 </div>
