@@ -1,16 +1,5 @@
 # Quick Start
 
-## Installation
-
-To install this package in your application, use
-[Composer](https://getcomposer.org):
-
-```bash
-$ composer require mezzio/mezzio-problem-details
-```
-
-## Usage
-
 This package provides three primary mechanisms for creating and returning
 Problem Details responses:
 
@@ -23,7 +12,7 @@ Problem Details responses:
   exceptions as problem details responses using the
   `ProblemDetailsResponseFactory`.
 
-### ProblemDetailsResponseFactory
+## ProblemDetailsResponseFactory
 
 If you are using [Mezzio](https://docs.mezzio.dev/mezzio/)
 and have installed [laminas-component-installer](https://docs.laminas.dev/laminas-component-installer)
@@ -148,7 +137,7 @@ The above modifies the original example to add validation and, on failed
 validation, return a custom response that includes the validation failure
 messages.
 
-### Custom Exceptions
+## Custom Exceptions
 
 In the above examples, we have a `DomainException` that is used to create a
 Problem Details response. By default, in production mode, the factory will use
@@ -236,7 +225,7 @@ class DomainException extends PhpDomainException implements ProblemDetailsExcept
 The data present in the generated exception will then be used by the
 `ProblemDetailsResponseFactory` to generate full Problem Details.
 
-### Error handling
+## Error handling
 
 When writing APIs, you may not want to handle every error or exception manually,
 or may not be aware of problems in your code that might lead to them. In such
@@ -281,7 +270,7 @@ $app->post('/api/domain/transaction', [
 ]);
 ```
 
-### Not Found handling
+## Not Found handling
 
 When writing APIs you may also want 404 responses be in the accepted content-type.
 This package provides `ProblemDetailsNotFoundHandler` which will return a
