@@ -3,6 +3,7 @@ site_dir: docs/html
 nav:
     - Home: index.md
     - Introduction: intro.md
+    - Installation: installation.md
     - "Quick Start": quick-start.md
     - Reference:
         - "Generating Responses": response.md
@@ -15,3 +16,5 @@ site_description: 'Problem Details for PSR-7 HTTP APIs addressing the RFC 7807 s
 repo_url: 'https://github.com/mezzio/mezzio-problem-details'
 extra:
     project: Mezzio
+    installation:
+        config_provider_class: 'Mezzio\ProblemDetails\ConfigProvider'
