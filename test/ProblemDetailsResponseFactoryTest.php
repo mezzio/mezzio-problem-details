@@ -144,7 +144,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
             ],
         ];
 
-        if (stripos($expectedType, 'xml')) {
+        if (stripos($expectedType, 'xml') !== false) {
             $expectedKeyNames = [
                 'A_-',
                 '_A-',

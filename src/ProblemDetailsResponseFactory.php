@@ -220,7 +220,7 @@ class ProblemDetailsResponseFactory
         }
         // Ensures type safety of the composed factory
         $this->responseFactory = $responseFactory;
-        if (! $jsonFlags) {
+        if ($jsonFlags === null) {
             $jsonFlags = JSON_UNESCAPED_SLASHES
                 | JSON_UNESCAPED_UNICODE
                 | JSON_PRESERVE_ZERO_FRACTION
