@@ -20,15 +20,22 @@ class ProblemDetailsResponseFactoryFactory
     {
         $config = $container->has('config') ? $container->get('config') : [];
         Assert::isArrayAccessible($config);
-        $debug                  = isset($config['debug']) && is_bool($config['debug']) ? $config['debug'] : null;
-        $includeThrowableDetail = $debug ?? ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS;
+        $debug   = isset($config['debug']) && is_bool($config['debug']) ? $config['debug'] : null;
+        $debug ??= ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS;
 
         $problemDetailsConfig = $config['problem-details'] ?? [];
         Assert::isArrayAccessible($problemDetailsConfig);
+
+        $includeThrowableDetail   = isset($problemDetailsConfig['include-throwable-details'])
+            && is_bool($problemDetailsConfig['include-throwable-details'])
+            ? $problemDetailsConfig['include-throwable-details'] : null;
+        $includeThrowableDetail ??= $debug;
+
         $jsonFlags = $problemDetailsConfig['json_flags'] ?? null;
         assert($jsonFlags === null || is_int($jsonFlags));
         $defaultTypesMap = $problemDetailsConfig['default_types_map'] ?? [];
         Assert::isArray($defaultTypesMap);
+
         foreach ($defaultTypesMap as $key => $value) {
             assert(is_int($key));
             assert(is_string($value));
@@ -38,7 +45,7 @@ class ProblemDetailsResponseFactoryFactory
 
         return new ProblemDetailsResponseFactory(
             $this->detectResponseFactory($container),
-            $includeThrowableDetail,
+            $debug,
             $jsonFlags,
             $includeThrowableDetail,
             ProblemDetailsResponseFactory::DEFAULT_DETAIL_MESSAGE,
