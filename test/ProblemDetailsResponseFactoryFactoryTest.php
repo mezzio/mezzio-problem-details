@@ -59,7 +59,7 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->method('withStatus')->willReturnSelf();
-        $this->container->set(ResponseInterface::class, static fn () => $response);
+        $this->container->set(ResponseInterface::class, static fn() => $response);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory        = $factoryFactory($this->container);
@@ -131,5 +131,26 @@ class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $defaultTypesMap = (new ReflectionObject($factory))->getProperty('defaultTypesMap');
 
         self::assertSame($expectedDefaultTypes, $defaultTypesMap->getValue($factory));
+    }
+
+    public function testUsesIncludeThrowableDetailsSettingFromConfigWhenPresent(): void
+    {
+        $this->container->set(
+            'config',
+            [
+                'problem-details' => [
+                    'include-throwable-details' => ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS,
+                ],
+            ]
+        );
+        $this->container->set(ResponseInterface::class, static fn() => null);
+
+        $factoryFactory             = new ProblemDetailsResponseFactoryFactory();
+        $factory                    = $factoryFactory($this->container);
+        $isDebug                    = (new ReflectionObject($factory))->getProperty('isDebug');
+        $exceptionDetailsInResponse = (new ReflectionObject($factory))->getProperty('exceptionDetailsInResponse');
+
+        self::assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        self::assertSame(true, $exceptionDetailsInResponse->getValue($factory));
     }
 }
