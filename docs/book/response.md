@@ -157,6 +157,17 @@ This package also provides a factory for generating the
     that value is used instead of global `debug` value for the `$includeThrowableDetail` parameter.
     (Since 1.14.0.)
 
+### Example configuration
+```php
+[
+    'debug' => true,
+    'problem-details' => [
+        'json_flags' => JSON_PRETTY_PRINT,
+        'include-throwable-details' => true,
+    ]
+]
+```
+
 If any of the above config values are not present, a `null` value will be
 passed, allowing the default value to be used.
 
