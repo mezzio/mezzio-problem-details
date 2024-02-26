@@ -470,7 +470,20 @@ public function __construct(
     value is provided as the <code>$defaultTypesMap</code> parameter; see the
     <a href="../default-types/">default types documentation</a> for details on defining
     this map. (Since 1.1.0.)</li>
+<li>If the service contains a <code>problem-details</code> key with an array value
+    containing a <code>include-throwable-details</code> key,
+    and that value is a boolean,
+    that value is used instead of global <code>debug</code> value for the <code>$includeThrowableDetail</code> parameter.
+    (Since 1.14.0.)</li>
 </ul>
+<h3 id="example-configuration">Example configuration</h3>
+<pre class="highlight"><code class="language-php">[
+    'debug' =&gt; true,
+    'problem-details' =&gt; [
+        'json_flags' =&gt; JSON_PRETTY_PRINT,
+        'include-throwable-details' =&gt; true,
+    ]
+]</code></pre>
 <p>If any of the above config values are not present, a <code>null</code> value will be
 passed, allowing the default value to be used.</p>
 <p>If you are using <a href="https://docs.mezzio.dev/mezzio/">Mezzio</a>
