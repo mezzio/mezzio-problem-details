@@ -151,6 +151,23 @@ This package also provides a factory for generating the
     value is provided as the `$defaultTypesMap` parameter; see the
     [default types documentation](default-types.md) for details on defining
     this map. (Since 1.1.0.)
+  - If the service contains a `problem-details` key with an array value
+    containing a `include-throwable-details` key,
+    and that value is a boolean,
+    that value is used instead of global `debug` value for the `$includeThrowableDetail` parameter.
+    (Since 1.14.0.)
+
+### Example configuration
+
+```php
+[
+    'debug' => true,
+    'problem-details' => [
+        'json_flags' => JSON_PRETTY_PRINT,
+        'include-throwable-details' => true,
+    ]
+]
+```
 
 If any of the above config values are not present, a `null` value will be
 passed, allowing the default value to be used.
