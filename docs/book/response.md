@@ -158,6 +158,7 @@ This package also provides a factory for generating the
     (Since 1.14.0.)
 
 ### Example configuration
+
 ```php
 [
     'debug' => true,
