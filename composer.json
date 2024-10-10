@@ -43,7 +43,7 @@
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0 || ^2.0",
         "psr/http-server-middleware": "^1.0",
-        "spatie/array-to-xml": "^2.3 || ^3.0",
+        "spatie/array-to-xml": "^2.3 || ^3.3.0",
         "webmozart/assert": "^1.10",
         "willdurand/negotiation": "^3.0"
     },
