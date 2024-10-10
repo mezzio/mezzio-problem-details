@@ -19,7 +19,7 @@ use Throwable;
 
 use function trigger_error;
 
-use const E_USER_ERROR;
+use const E_USER_WARNING;
 
 class ProblemDetailsMiddlewareTest extends TestCase
 {
@@ -107,7 +107,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->method('handle')
             ->with($this->request)
             ->willReturnCallback(static function (): void {
-                trigger_error('Triggered error!', E_USER_ERROR);
+                trigger_error('Triggered error!', E_USER_WARNING);
             });
 
         $expected = $this->createMock(ResponseInterface::class);
@@ -115,7 +115,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
             ->method('createResponseFromThrowable')
             ->with($this->request, self::callback(function ($e): bool {
                 self::assertInstanceOf(ErrorException::class, $e);
-                self::assertEquals(E_USER_ERROR, $e->getSeverity());
+                self::assertEquals(E_USER_WARNING, $e->getSeverity());
                 self::assertEquals('Triggered error!', $e->getMessage());
                 return true;
             }))
