@@ -82,17 +82,6 @@
                                     </div>
                                 </div>
                             </a>
-                            <a href="https://api-tools.getlaminas.org/documentation" class="dropdown-item">
-                                <div class="row align-items-center">
-                                    <div class="col-md-4 col-sm-12">
-                                        <img src="https://docs.laminas.dev/img/laminas-api-tools-rgb.svg">
-                                    </div>
-                                    <div class="col-md-8 col-sm-12">
-                                        <strong>API Tools</strong><br>
-                                        Build RESTful APIs in Minutes
-                                    </div>
-                                </div>
-                            </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item dropdown-item--secondardy" href="https://docs.laminas.dev/migration/">
                                 <div class="row align-items-center">
@@ -356,15 +345,17 @@ APIs. In particular, it specifies the following:</p>
 <li>Error responses will be of the <code>Content-Type</code> <code>application/problem</code>,
   appending a serialization format of either <code>json</code> or <code>xml</code>:
   <code>application/problem+json</code>, <code>application/problem+xml</code>.</li>
-<li>Error responses will have each of the following keys:</li>
+<li>Error responses will have each of the following keys:<ul>
 <li><code>detail</code>, a human-readable description of the specific error.</li>
 <li><code>type</code>, a unique URI for the general error type, generally pointing to
-    human-readable documentation of that given type.</li>
+  human-readable documentation of that given type.</li>
 <li><code>title</code>, a short, human-readable title for the general error type; the title
-    should not change for given <code>type</code>s.</li>
+  should not change for given <code>type</code>s.</li>
 <li><code>status</code>, conveying the HTTP status code; this is so that all information
-    is in one place, but also to correct for changes in the status code due to
-    usage of proxy servers.</li>
+  is in one place, but also to correct for changes in the status code due to
+  usage of proxy servers.</li>
+</ul>
+</li>
 </ul>
 <p>Optionally, an <code>instance</code> key may be present, with a unique URI for the specific
 error; this will often point to an error log for that specific response.</p>
@@ -583,7 +574,7 @@ details responses.</p>
                     <li>Laminas Project <a href="https://getlaminas.org/">The new foundation for the community-supported, open source continuation of Zend Framework</a></li>
                     <li>Laminas Components and MVC <a href="https://docs.laminas.dev/">Components and MVC for enterprise applications</a></li>
                     <li>Mezzio <a href="https://docs.mezzio.dev/">PSR-15 middleware in minutes</a></li>
-                    <li>Laminas API Tools <a href="https://api-tools.getlaminas.org/">Build RESTful APIs in minutes</a></li>
+                    <li>Maintenance Overview <a href="https://getlaminas.org/packages-maintenance-status/">Current maintenance status of Laminas &amp; Mezzio packages</a></li>
                 </ul>
             </div>
         </div>
