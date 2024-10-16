@@ -11,6 +11,10 @@
         displayDetailsOnTestsThatTriggerErrors="true"
         displayDetailsOnTestsThatTriggerNotices="true"
         displayDetailsOnTestsThatTriggerWarnings="true"
+        failOnDeprecation="true"
+        failOnNotice="true"
+        failOnWarning="true"
+        failOnPhpunitDeprecation="true"
 >
     <source>
         <include>

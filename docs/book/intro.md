@@ -28,14 +28,14 @@ APIs. In particular, it specifies the following:
   appending a serialization format of either `json` or `xml`:
   `application/problem+json`, `application/problem+xml`.
 - Error responses will have each of the following keys:
-  - `detail`, a human-readable description of the specific error.
-  - `type`, a unique URI for the general error type, generally pointing to
-    human-readable documentation of that given type.
-  - `title`, a short, human-readable title for the general error type; the title
-    should not change for given `type`s.
-  - `status`, conveying the HTTP status code; this is so that all information
-    is in one place, but also to correct for changes in the status code due to
-    usage of proxy servers.
+    - `detail`, a human-readable description of the specific error.
+    - `type`, a unique URI for the general error type, generally pointing to
+      human-readable documentation of that given type.
+    - `title`, a short, human-readable title for the general error type; the title
+      should not change for given `type`s.
+    - `status`, conveying the HTTP status code; this is so that all information
+      is in one place, but also to correct for changes in the status code due to
+      usage of proxy servers.
 
 Optionally, an `instance` key may be present, with a unique URI for the specific
 error; this will often point to an error log for that specific response.
