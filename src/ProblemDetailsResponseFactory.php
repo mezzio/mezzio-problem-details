@@ -170,13 +170,13 @@ class ProblemDetailsResponseFactory
      * defaults to JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION
      * | JSON_PARTIAL_OUTPUT_ON_ERROR
      */
-    private int $jsonFlags;
+    private readonly int $jsonFlags;
 
     /**
      * Factory to use to generate prototype response used when generating a
      * problem details response.
      */
-    private ResponseFactoryInterface $responseFactory;
+    private readonly ResponseFactoryInterface $responseFactory;
 
     /**
      * @param (callable():ResponseInterface)|ResponseFactoryInterface $responseFactory
@@ -191,21 +191,21 @@ class ProblemDetailsResponseFactory
          * and include full exception details and previous exceptions and their
          * details.
          */
-        private bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
+        private readonly bool $isDebug = self::EXCLUDE_THROWABLE_DETAILS,
         ?int $jsonFlags = null,
         /**
          * Flag to enable show exception details in detail field.
          *
          * Disabled by default for security reasons.
          */
-        private bool $exceptionDetailsInResponse = false,
+        private readonly bool $exceptionDetailsInResponse = false,
         /**
          * Default detail field value. Will be visible when
          * $exceptionDetailsInResponse disabled.
          *
          * Empty string by default
          */
-        private string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE,
+        private readonly string $defaultDetailMessage = self::DEFAULT_DETAIL_MESSAGE,
         /**
          * A map used to infer the "type" property based on the status code.
          *
