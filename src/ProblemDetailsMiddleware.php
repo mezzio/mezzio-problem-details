@@ -27,7 +27,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
     /** @var list<callable(Throwable, RequestInterface, ResponseInterface): void> */
     private array $listeners = [];
 
-    public function __construct(private ProblemDetailsResponseFactory $responseFactory)
+    public function __construct(private readonly ProblemDetailsResponseFactory $responseFactory)
     {
     }
 

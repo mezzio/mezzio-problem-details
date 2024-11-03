@@ -19,7 +19,7 @@ class ProblemDetailsNotFoundHandler implements MiddlewareInterface
      * @param ProblemDetailsResponseFactory $responseFactory Factory to create a response to
      *     update and return when returning an 404 response.
      */
-    public function __construct(private ProblemDetailsResponseFactory $responseFactory)
+    public function __construct(private readonly ProblemDetailsResponseFactory $responseFactory)
     {
     }
 
