@@ -28,12 +28,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    /** @var ServerRequestInterface&MockObject */
-    private ServerRequestInterface $request;
-
-    /** @var ResponseInterface&MockObject */
-    private ResponseInterface $response;
-
+    private ServerRequestInterface&MockObject $request;
+    private ResponseInterface&MockObject $response;
     private ProblemDetailsResponseFactory $factory;
 
     private const UTF_8_INVALID_2_OCTET_SEQUENCE = "\xc3\x28";
@@ -256,7 +252,8 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
-        $fh       = fopen(__FILE__, 'r');
+        $fh = fopen(__FILE__, 'r');
+        self::assertNotFalse($fh);
         $response = $this->factory->createResponse(
             $this->request,
             500,

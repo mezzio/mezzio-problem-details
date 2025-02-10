@@ -15,6 +15,8 @@ use function json_decode;
 use function json_encode;
 use function simplexml_load_string;
 
+use const JSON_THROW_ON_ERROR;
+
 trait ProblemDetailsAssertionsTrait
 {
     /**
@@ -73,8 +75,8 @@ trait ProblemDetailsAssertionsTrait
     public function deserializeXmlPayload(string $xml): array
     {
         $xml     = simplexml_load_string($xml);
-        $json    = json_encode($xml);
-        $payload = json_decode($json, true);
+        $json    = json_encode($xml, JSON_THROW_ON_ERROR);
+        $payload = json_decode($json, true, JSON_THROW_ON_ERROR);
         assert(is_array($payload));
 
         // Ensure ints and floats are properly represented
