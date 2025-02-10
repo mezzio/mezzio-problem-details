@@ -12,6 +12,8 @@ use PHPUnit\Framework\TestCase;
 use function json_decode;
 use function json_encode;
 
+use const JSON_THROW_ON_ERROR;
+
 final class ProblemDetailsExceptionInterfaceTest extends TestCase
 {
     private int $status    = 403;
@@ -69,7 +71,7 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
 
     public function testIsJsonSerializable(): void
     {
-        $problem = json_decode(json_encode($this->exception), true);
+        $problem = json_decode(json_encode($this->exception, JSON_THROW_ON_ERROR), true, JSON_THROW_ON_ERROR);
         self::assertIsArray($problem);
 
         self::assertEquals([

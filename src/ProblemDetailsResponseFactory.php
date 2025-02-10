@@ -23,6 +23,7 @@ use function is_array;
 use function is_callable;
 use function is_int;
 use function is_resource;
+use function is_string;
 use function json_decode;
 use function json_encode;
 use function preg_replace;
@@ -34,6 +35,7 @@ use function str_replace;
 use const JSON_PARTIAL_OUTPUT_ON_ERROR;
 use const JSON_PRESERVE_ZERO_FRACTION;
 use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 
@@ -308,10 +310,13 @@ class ProblemDetailsResponseFactory
     /** @param ProblemDetails $payload */
     protected function generateJsonResponse(array $payload): ResponseInterface
     {
+        $encoded = json_encode($payload, $this->jsonFlags);
+        assert(is_string($encoded));
+
         return $this->generateResponse(
             $payload['status'],
             self::CONTENT_TYPE_JSON,
-            json_encode($payload, $this->jsonFlags),
+            $encoded,
         );
     }
 
@@ -335,11 +340,14 @@ class ProblemDetailsResponseFactory
             $characterPattern      = $startCharacterPattern . '|\-|\.|[0-9]|\xB7|[\x{300}-\x{36F}]|[\x{203F}-\x{2040}]';
 
             $key = preg_replace('/(?!' . $characterPattern . ')./u', '_', $key);
+            assert(is_string($key));
             $key = preg_replace('/^(?!' . $startCharacterPattern . ')./u', '_', $key);
+            assert(is_string($key));
 
             if (is_array($value)) {
                 $value = $this->cleanKeysForXml($value);
             }
+
             /** @psalm-var mixed */
             $return[$key] = $value;
         }
@@ -350,8 +358,8 @@ class ProblemDetailsResponseFactory
     protected function generateXmlResponse(array $payload): ResponseInterface
     {
         // Ensure any objects are flattened to arrays first
-        /** @psalm-var array $content */
-        $content = json_decode(json_encode($payload), true);
+        $content = json_decode(json_encode($payload, JSON_THROW_ON_ERROR), true, JSON_THROW_ON_ERROR);
+        assert(is_array($content));
 
         // ensure all keys are valid XML can be json_encoded
         $cleanedContent = $this->cleanKeysForXml($content);
