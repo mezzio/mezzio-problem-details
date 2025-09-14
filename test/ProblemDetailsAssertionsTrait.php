@@ -19,12 +19,9 @@ use const JSON_THROW_ON_ERROR;
 
 trait ProblemDetailsAssertionsTrait
 {
-    /**
-     * @param StreamInterface&MockObject $stream
-     */
     public function prepareResponsePayloadAssertions(
         string $contentType,
-        MockObject $stream,
+        StreamInterface&MockObject $stream,
         callable $assertion
     ): void {
         if ('application/problem+json' === $contentType) {
@@ -38,10 +35,7 @@ trait ProblemDetailsAssertionsTrait
         }
     }
 
-    /**
-     * @param StreamInterface&MockObject $stream
-     */
-    public function preparePayloadForJsonResponse(MockObject $stream, callable $assertion): void
+    public function preparePayloadForJsonResponse(StreamInterface&MockObject $stream, callable $assertion): void
     {
         $stream
             ->expects(self::any())
@@ -56,10 +50,7 @@ trait ProblemDetailsAssertionsTrait
             }));
     }
 
-    /**
-     * @param StreamInterface&MockObject $stream
-     */
-    public function preparePayloadForXmlResponse(MockObject $stream, callable $assertion): void
+    public function preparePayloadForXmlResponse(StreamInterface&MockObject $stream, callable $assertion): void
     {
         $stream
             ->expects(self::any())

@@ -15,8 +15,7 @@ use RuntimeException;
 
 final class ProblemDetailsMiddlewareFactoryTest extends TestCase
 {
-    /** @var ContainerInterface&MockObject */
-    private ContainerInterface $container;
+    private ContainerInterface&MockObject $container;
 
     private ProblemDetailsMiddlewareFactory $factory;
 

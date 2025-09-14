@@ -52,6 +52,7 @@
         "laminas/laminas-diactoros": "^3.6",
         "phpunit/phpunit": "^11.5.42",
         "psalm/plugin-phpunit": "^0.19.5",
+        "rector/rector": "^2.1",
         "vimeo/psalm": "^6.13.1"
     },
     "autoload": {
@@ -71,7 +72,11 @@
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
+        "rector": "rector -n -vv",
+        "rector:fix": "rector -vv",
         "static-analysis": "psalm --shepherd --stats",
+        "static-analysis:b": "psalm --update-baseline",
+        "static-analysis:clear": "psalm --clear-cache",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },

@@ -27,11 +27,9 @@ final class ProblemDetailsMiddlewareTest extends TestCase
 
     private ProblemDetailsMiddleware $middleware;
 
-    /** @var ServerRequestInterface&MockObject */
-    private $request;
+    private ServerRequestInterface&MockObject $request;
 
-    /** @var ProblemDetailsResponseFactory&MockObject */
-    private $responseFactory;
+    private ProblemDetailsResponseFactory&MockObject $responseFactory;
 
     protected function setUp(): void
     {

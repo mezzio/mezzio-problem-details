@@ -19,8 +19,7 @@ final class ProblemDetailsNotFoundHandlerTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
-    /** @var ProblemDetailsResponseFactory&MockObject */
-    private $responseFactory;
+    private ProblemDetailsResponseFactory&MockObject $responseFactory;
 
     protected function setUp(): void
     {
