@@ -5,18 +5,13 @@
         bootstrap="vendor/autoload.php"
         colors="true"
         cacheDirectory=".phpunit.cache"
-        displayDetailsOnIncompleteTests="true"
-        displayDetailsOnSkippedTests="true"
-        displayDetailsOnTestsThatTriggerDeprecations="true"
-        displayDetailsOnTestsThatTriggerErrors="true"
-        displayDetailsOnTestsThatTriggerNotices="true"
-        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnAllIssues="true"
         failOnDeprecation="true"
         failOnNotice="true"
         failOnWarning="true"
         failOnPhpunitDeprecation="true"
 >
-    <source>
+    <source ignoreIndirectDeprecations="true">
         <include>
             <directory suffix=".php">./src</directory>
         </include>
