@@ -8,6 +8,11 @@ use Psr\Container\ContainerInterface;
 
 use function assert;
 
+/**
+ * @final
+ * @psalm-internal Mezzio\ProblemDetails
+ * @psalm-internal MezzioTest\ProblemDetails
+ */
 class ProblemDetailsNotFoundHandlerFactory
 {
     public function __invoke(ContainerInterface $container): ProblemDetailsNotFoundHandler

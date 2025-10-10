@@ -6,6 +6,7 @@ namespace Mezzio\ProblemDetails\Exception;
 
 use RuntimeException;
 
+/** @final */
 class InvalidResponseBodyException extends RuntimeException implements ExceptionInterface
 {
 }

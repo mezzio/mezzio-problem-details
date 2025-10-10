@@ -8,6 +8,7 @@ use Psr\Container\ContainerInterface;
 
 use function assert;
 
+/** @final */
 class ProblemDetailsMiddlewareFactory
 {
     public function __invoke(ContainerInterface $container): ProblemDetailsMiddleware

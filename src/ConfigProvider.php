@@ -12,6 +12,8 @@ use Zend\ProblemDetails\ProblemDetailsResponseFactory as LegacyProblemDetailsRes
  * Configuration provider for the package.
  *
  * @see https://docs.laminas.dev/laminas-component-installer/
+ *
+ * @final
  */
 class ConfigProvider
 {

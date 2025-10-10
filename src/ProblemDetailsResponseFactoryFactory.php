@@ -12,6 +12,11 @@ use function is_bool;
 use function is_int;
 use function is_string;
 
+/**
+ * @final
+ * @psalm-internal Mezzio\ProblemDetails
+ * @psalm-internal MezzioTest\ProblemDetails
+ */
 class ProblemDetailsResponseFactoryFactory
 {
     use Psr17ResponseFactoryTrait;
