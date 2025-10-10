@@ -11,7 +11,7 @@ use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory;
 use PHPUnit\Framework\TestCase;
 
-class ConfigProviderTest extends TestCase
+final class ConfigProviderTest extends TestCase
 {
     public function testReturnsExpectedDependencies(): void
     {

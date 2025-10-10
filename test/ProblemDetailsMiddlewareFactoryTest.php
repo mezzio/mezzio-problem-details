@@ -13,7 +13,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionObject;
 use RuntimeException;
 
-class ProblemDetailsMiddlewareFactoryTest extends TestCase
+final class ProblemDetailsMiddlewareFactoryTest extends TestCase
 {
     /** @var ContainerInterface&MockObject */
     private ContainerInterface $container;

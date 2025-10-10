@@ -24,7 +24,7 @@ use function fopen;
 use function json_decode;
 use function stripos;
 
-class ProblemDetailsResponseFactoryTest extends TestCase
+final class ProblemDetailsResponseFactoryTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 
@@ -59,7 +59,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects(self::atLeastOnce())->method('write')->with(self::isType('string'));
+        $stream->expects(self::atLeastOnce())->method('write')->with(self::isString());
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -80,7 +80,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects(self::atLeastOnce())->method('write')->with(self::isType('string'));
+        $stream->expects(self::atLeastOnce())->method('write')->with(self::isString());
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -276,7 +276,7 @@ class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('text/plain');
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects(self::atLeastOnce())->method('write')->with(self::isType('string'));
+        $stream->expects(self::atLeastOnce())->method('write')->with(self::isString());
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);

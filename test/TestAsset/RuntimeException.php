@@ -7,7 +7,7 @@ namespace MezzioTest\ProblemDetails\TestAsset;
 use RuntimeException as BaseRuntimeException;
 use Throwable;
 
-class RuntimeException extends BaseRuntimeException
+final class RuntimeException extends BaseRuntimeException
 {
     /**
      * @param mixed $code Mimic PHP internal exceptions, and allow any code.
