@@ -21,6 +21,8 @@ use function set_error_handler;
 /**
  * Middleware that ensures a Problem Details response is returned
  * for all errors and Exceptions/Throwables.
+ *
+ * @final
  */
 class ProblemDetailsMiddleware implements MiddlewareInterface
 {

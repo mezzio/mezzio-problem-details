@@ -21,7 +21,7 @@ use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 
-class ProblemDetailsResponseFactoryFactoryTest extends TestCase
+final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
 {
     private InMemoryContainer $container;
 

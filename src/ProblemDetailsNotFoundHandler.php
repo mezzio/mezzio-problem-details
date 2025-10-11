@@ -13,6 +13,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 use function sprintf;
 
+/** @final */
 class ProblemDetailsNotFoundHandler implements MiddlewareInterface
 {
     /**

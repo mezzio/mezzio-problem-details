@@ -21,7 +21,7 @@ use function trigger_error;
 
 use const E_USER_WARNING;
 
-class ProblemDetailsMiddlewareTest extends TestCase
+final class ProblemDetailsMiddlewareTest extends TestCase
 {
     use ProblemDetailsAssertionsTrait;
 

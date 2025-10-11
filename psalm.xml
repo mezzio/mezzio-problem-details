@@ -46,6 +46,12 @@
                 <file name="test/TestAsset/Psr17ResponseFactoryTraitImplementation.php"/>
             </errorLevel>
         </DeprecatedTrait>
+        <MissingOverrideAttribute>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="test" />
+            </errorLevel>
+        </MissingOverrideAttribute>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>

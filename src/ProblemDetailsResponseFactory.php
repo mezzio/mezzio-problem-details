@@ -64,6 +64,7 @@ use const JSON_UNESCAPED_UNICODE;
  *     detail: string,
  *     ...
  * }
+ * @final
  */
 class ProblemDetailsResponseFactory
 {
