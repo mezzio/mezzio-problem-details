@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Run Rector on PHP
     steps:
-      - uses: actions/checkout@v4.2.2
-      - uses: shivammathur/setup-php@2.34.1
+      - uses: actions/checkout@v4.3.0
+      - uses: shivammathur/setup-php@2.35.5
         with:
           php-version: ${{ env.default_php }}
           tools: composer
