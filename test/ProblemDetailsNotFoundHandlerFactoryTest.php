@@ -15,8 +15,7 @@ use RuntimeException;
 
 final class ProblemDetailsNotFoundHandlerFactoryTest extends TestCase
 {
-    /** @var ContainerInterface&MockObject */
-    private ContainerInterface $container;
+    private ContainerInterface&MockObject $container;
 
     private ProblemDetailsNotFoundHandlerFactory $factory;
 

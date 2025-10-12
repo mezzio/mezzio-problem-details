@@ -6,6 +6,7 @@ namespace MezzioTest\ProblemDetails;
 
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactoryFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -59,7 +60,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     {
         $response = $this->createMock(ResponseInterface::class);
         $response->method('withStatus')->willReturnSelf();
-        $this->container->set(ResponseInterface::class, static fn() => $response);
+        $this->container->set(ResponseInterface::class, static fn(): MockObject&ResponseInterface => $response);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory        = $factoryFactory($this->container);
@@ -81,7 +82,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     public function testUsesPrettyPrintFlagOnEnabledDebugMode(): void
     {
         $this->container->set('config', ['debug' => true]);
-        $this->container->set(ResponseInterface::class, static fn() => null);
+        $this->container->set(ResponseInterface::class, static fn(): null => null);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory        = $factoryFactory($this->container);
@@ -94,7 +95,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     public function testUsesDebugSettingFromConfigWhenPresent(): void
     {
         $this->container->set('config', ['debug' => true]);
-        $this->container->set(ResponseInterface::class, static fn() => null);
+        $this->container->set(ResponseInterface::class, static fn(): null => null);
 
         $factoryFactory             = new ProblemDetailsResponseFactoryFactory();
         $factory                    = $factoryFactory($this->container);
@@ -108,7 +109,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     public function testUsesJsonFlagsSettingFromConfigWhenPresent(): void
     {
         $this->container->set('config', ['problem-details' => ['json_flags' => JSON_PRETTY_PRINT]]);
-        $this->container->set(ResponseInterface::class, static fn() => null);
+        $this->container->set(ResponseInterface::class, static fn(): null => null);
 
         $factoryFactory = new ProblemDetailsResponseFactoryFactory();
         $factory        = $factoryFactory($this->container);
@@ -124,7 +125,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         ];
 
         $this->container->set('config', ['problem-details' => ['default_types_map' => $expectedDefaultTypes]]);
-        $this->container->set(ResponseInterface::class, static fn() => null);
+        $this->container->set(ResponseInterface::class, static fn(): null => null);
 
         $factoryFactory  = new ProblemDetailsResponseFactoryFactory();
         $factory         = $factoryFactory($this->container);
@@ -143,7 +144,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
                 ],
             ]
         );
-        $this->container->set(ResponseInterface::class, static fn() => null);
+        $this->container->set(ResponseInterface::class, static fn(): null => null);
 
         $factoryFactory             = new ProblemDetailsResponseFactoryFactory();
         $factory                    = $factoryFactory($this->container);

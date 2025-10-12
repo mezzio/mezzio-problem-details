@@ -393,7 +393,7 @@ class ProblemDetailsResponseFactory
         $accept    = $request->getHeaderLine('Accept') ?: '*/*';
         $mediaType = (new Negotiator())->getBest($accept, self::NEGOTIATION_PRIORITIES);
 
-        return ! $mediaType || ! str_contains($mediaType->getValue(), 'json')
+        return ! $mediaType || ! str_contains((string) $mediaType->getValue(), 'json')
             ? Closure::fromCallable([$this, 'generateXmlResponse'])
             : Closure::fromCallable([$this, 'generateJsonResponse']);
     }

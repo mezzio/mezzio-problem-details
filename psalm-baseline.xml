@@ -11,14 +11,38 @@
     </InvalidArgument>
   </file>
   <file src="src/ProblemDetailsResponseFactory.php">
-    <MixedArgument>
-      <code><![CDATA[$mediaType->getValue()]]></code>
-    </MixedArgument>
-    <RedundantConditionGivenDocblockType>
-      <code><![CDATA[! str_contains($mediaType->getValue(), 'json')]]></code>
-    </RedundantConditionGivenDocblockType>
     <UndefinedInterfaceMethod>
       <code><![CDATA[getValue]]></code>
     </UndefinedInterfaceMethod>
+  </file>
+  <file src="test/ProblemDetailsMiddlewareTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->createMock(ProblemDetailsResponseFactory::class)]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MixedMethodCall>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[with]]></code>
+      <code><![CDATA[with]]></code>
+      <code><![CDATA[with]]></code>
+    </MixedMethodCall>
+  </file>
+  <file src="test/ProblemDetailsNotFoundHandlerTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->createMock(ProblemDetailsResponseFactory::class)]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MixedMethodCall>
+      <code><![CDATA[method]]></code>
+      <code><![CDATA[willReturn]]></code>
+      <code><![CDATA[with]]></code>
+    </MixedMethodCall>
+    <NoValue>
+      <code><![CDATA[$this->responseFactory]]></code>
+      <code><![CDATA[$this->responseFactory]]></code>
+    </NoValue>
   </file>
 </files>
