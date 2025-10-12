@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mezzio\ProblemDetails;
 
-use Mezzio\Container\ResponseFactoryFactory;
 use Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
@@ -68,6 +67,6 @@ trait Psr17ResponseFactoryTrait
         /** @psalm-suppress MixedAssignment */
         $deprecatedResponseFactory = $dependencies['factories'][ResponseInterface::class] ?? null;
 
-        return $deprecatedResponseFactory !== null && $deprecatedResponseFactory !== ResponseFactoryFactory::class;
+        return $deprecatedResponseFactory !== null;
     }
 }

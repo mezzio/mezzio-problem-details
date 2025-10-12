@@ -6,7 +6,6 @@ namespace MezzioTest\ProblemDetails;
 
 use Generator;
 use Laminas\Diactoros\Response\TextResponse;
-use Mezzio\Container\ResponseFactoryFactory;
 use Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator;
 use MezzioTest\ProblemDetails\TestAsset\Psr17ResponseFactoryTraitImplementation;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -67,13 +66,6 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
     {
         $responseFactory = $this->createMock(ResponseFactoryInterface::class);
         $container       = new InMemoryContainer();
-        $container->set('config', [
-            'dependencies' => [
-                'factories' => [
-                    ResponseInterface::class => ResponseFactoryFactory::class,
-                ],
-            ],
-        ]);
         $container->set(ResponseFactoryInterface::class, $responseFactory);
         $detectedResponseFactory = ($this->factory)($container);
         self::assertSame($responseFactory, $detectedResponseFactory);

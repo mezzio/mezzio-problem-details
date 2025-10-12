@@ -35,11 +35,6 @@
                 <referencedClass name="Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator"/>
             </errorLevel>
         </InternalClass>
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <referencedClass name="Mezzio\Container\ResponseFactoryFactory"/>
-            </errorLevel>
-        </UndefinedClass>
         <DeprecatedTrait>
             <errorLevel type="suppress">
                 <file name="src/ProblemDetailsResponseFactoryFactory.php"/>
