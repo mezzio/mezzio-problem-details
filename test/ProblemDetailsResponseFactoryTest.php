@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace MezzioTest\ProblemDetails;
 
 use Exception;
+use Laminas\Diactoros\ResponseFactory;
+use Laminas\Diactoros\ServerRequest;
 use Mezzio\ProblemDetails\Exception\CommonProblemDetailsExceptionTrait;
 use Mezzio\ProblemDetails\Exception\ProblemDetailsExceptionInterface;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
@@ -23,6 +25,8 @@ use function fclose;
 use function fopen;
 use function json_decode;
 use function stripos;
+
+use const JSON_THROW_ON_ERROR;
 
 final class ProblemDetailsResponseFactoryTest extends TestCase
 {
@@ -68,7 +72,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $response = $this->factory->createResponse(
             $this->request,
             500,
-            'Unknown error occurred'
+            'Unknown error occurred',
         );
 
         self::assertSame($this->response, $response);
@@ -89,7 +93,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $exception = new RuntimeException();
         $response  = $this->factory->createResponseFromThrowable(
             $this->request,
-            $exception
+            $exception,
         );
 
         self::assertSame($this->response, $response);
@@ -98,7 +102,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
     #[DataProvider('acceptHeaders')]
     public function testCreateResponseFromThrowableCreatesExpectedTypeWithExtraInformation(
         string $header,
-        string $expectedType
+        string $expectedType,
     ): void {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
@@ -113,13 +117,13 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $factory = new ProblemDetailsResponseFactory(
             fn(): MockObject => $this->response,
-            ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
+            ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS,
         );
 
         $exception = new RuntimeException();
         $response  = $factory->createResponseFromThrowable(
             $this->request,
-            $exception
+            $exception,
         );
 
         self::assertSame($this->response, $response);
@@ -159,7 +163,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             static function (array $payload) use ($expectedKeyNames): void {
                 Assert::assertIsArray($payload['foo']);
                 Assert::assertEquals($expectedKeyNames, array_keys($payload['foo']));
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -172,7 +176,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             'Unknown error occurred',
             'Title',
             'Type',
-            $additional
+            $additional,
         );
 
         self::assertSame($this->response, $response);
@@ -214,7 +218,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
                 Assert::assertSame('Invalid client request', $payload['title']);
                 Assert::assertSame('https://example.com/api/doc/invalid-client-request', $payload['type']);
                 Assert::assertSame('bar', $payload['foo']);
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -228,7 +232,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
-            $e
+            $e,
         );
 
         self::assertSame($this->response, $response);
@@ -264,7 +268,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
                 'args' => [
                     'resource' => $fh,
                 ],
-            ]
+            ],
         );
         fclose($fh);
 
@@ -288,7 +292,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $response = $this->factory->createResponse(
             $this->request,
             500,
-            'Unknown error occurred'
+            'Unknown error occurred',
         );
 
         self::assertSame($this->response, $response);
@@ -312,7 +316,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
                 Assert::assertIsArray($payload['exception']['stack'][0]);
                 Assert::assertEquals(101010, $payload['exception']['stack'][0]['code']);
                 Assert::assertEquals('first', $payload['exception']['stack'][0]['message']);
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -327,12 +331,12 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $factory = new ProblemDetailsResponseFactory(
             fn(): MockObject => $this->response,
-            ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS
+            ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS,
         );
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
-            $second
+            $second,
         );
 
         self::assertSame($this->response, $response);
@@ -374,7 +378,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $stream,
             static function (array $payload): void {
                 Assert::assertSame(500, $payload['status']);
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -399,7 +403,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $stream,
             static function (array $payload) use ($fragileMessage): void {
                 Assert::assertSame($fragileMessage, $payload['detail']);
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -413,7 +417,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             fn(): MockObject => $this->response,
             false,
             null,
-            true
+            true,
         );
 
         $response = $factory->createResponseFromThrowable($this->request, $exception);
@@ -430,7 +434,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $stream,
             static function (array $payload) use ($detailMessage): void {
                 Assert::assertSame($detailMessage, $payload['detail']);
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -445,7 +449,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             false,
             null,
             false,
-            $detailMessage
+            $detailMessage,
         );
 
         $response = $factory->createResponseFromThrowable($this->request, new Exception());
@@ -466,7 +470,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $stream,
             static function (array $payload): void {
                 Assert::assertArrayHasKey('malformed-utf8', $payload);
-            }
+            },
         );
 
         $this->response->method('getBody')->willReturn($stream);
@@ -480,7 +484,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $factory->createResponseFromThrowable(
             $this->request,
-            $e
+            $e,
         );
 
         self::assertSame($this->response, $response);
@@ -497,8 +501,8 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         return [
             [$defaultTypesMap, 404, 'https://example.com/problem-details/error/not-found'],
             [$defaultTypesMap, 500, 'https://example.com/problem-details/error/internal-server-error'],
-            [$defaultTypesMap, 400, 'https://httpstatus.es/400'],
-            [[], 500, 'https://httpstatus.es/500'],
+            [$defaultTypesMap, 400, 'https://httpwg.org/specs/rfc9110.html#status.400'],
+            [[], 500, 'https://httpwg.org/specs/rfc9110.html#status.500'],
         ];
     }
 
@@ -539,9 +543,51 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             null,
             false,
             '',
-            $map
+            $map,
         );
 
         $factory->createResponse($this->request, $status, 'detail');
+    }
+
+    public function testEmptyTitleInCreateResponseWillYieldDefaultTitle(): void
+    {
+        $factory = new ProblemDetailsResponseFactory(
+            new ResponseFactory(),
+            false,
+            null,
+            false,
+            '',
+            [],
+        );
+
+        $serverRequest = (new ServerRequest())->withAddedHeader('Accept', 'application/json');
+
+        $response = $factory->createResponse($serverRequest, 400, 'Some Message', '');
+
+        $body = json_decode((string) $response->getBody(), true, JSON_THROW_ON_ERROR);
+        self::assertIsArray($body);
+        self::assertArrayHasKey('title', $body);
+        self::assertSame('Bad Request', $body['title']);
+    }
+
+    public function testEmptyTypeInCreateResponseWillYieldDefaultType(): void
+    {
+        $factory = new ProblemDetailsResponseFactory(
+            new ResponseFactory(),
+            false,
+            null,
+            false,
+            '',
+            [],
+        );
+
+        $serverRequest = (new ServerRequest())->withAddedHeader('Accept', 'application/json');
+
+        $response = $factory->createResponse($serverRequest, 400, 'Some Message', '', '');
+
+        $body = json_decode((string) $response->getBody(), true, JSON_THROW_ON_ERROR);
+        self::assertIsArray($body);
+        self::assertArrayHasKey('type', $body);
+        self::assertSame('https://httpwg.org/specs/rfc9110.html#status.400', $body['type']);
     }
 }

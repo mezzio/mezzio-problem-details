@@ -415,7 +415,7 @@ class ProblemDetailsResponseFactory
 
     private function createTypeFromStatus(int $status): string
     {
-        return $this->defaultTypesMap[$status] ?? sprintf('https://httpstatus.es/%s', $status);
+        return $this->defaultTypesMap[$status] ?? sprintf('https://httpwg.org/specs/rfc9110.html#status.%s', $status);
     }
 
     /** @return array<string, mixed> */
