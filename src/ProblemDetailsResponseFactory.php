@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Mezzio\ProblemDetails;
 
-use Closure;
 use DOMElement;
 use Fig\Http\Message\StatusCodeInterface as StatusCode;
 use Mezzio\ProblemDetails\Response\CallableResponseFactoryDecorator;
@@ -394,8 +393,8 @@ class ProblemDetailsResponseFactory
         $mediaType = (new Negotiator())->getBest($accept, self::NEGOTIATION_PRIORITIES);
 
         return ! $mediaType || ! str_contains((string) $mediaType->getValue(), 'json')
-            ? Closure::fromCallable([$this, 'generateXmlResponse'])
-            : Closure::fromCallable([$this, 'generateJsonResponse']);
+            ? $this->generateXmlResponse(...)
+            : $this->generateJsonResponse(...);
     }
 
     /** @return int<400, 599> */
