@@ -22,5 +22,5 @@ jobs:
         with:
           php-version: ${{ env.default_php }}
           tools: composer
-      - uses: ramsey/composer-install@3.1.1
+      - uses: ramsey/composer-install@3.2.0
       - run: composer rector
