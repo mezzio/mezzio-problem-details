@@ -12,4 +12,5 @@ return RectorConfig::configure()
     ])
     ->withPreparedSets(
         typeDeclarations: true,
+        privatization: true,
     );
