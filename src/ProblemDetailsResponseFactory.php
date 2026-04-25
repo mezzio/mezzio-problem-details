@@ -254,7 +254,7 @@ class ProblemDetailsResponseFactory
             'detail' => $detail,
         ];
 
-        if ($additional) {
+        if ($additional !== []) {
             // ensure payload can be json_encoded
             array_walk_recursive($additional, static function (mixed &$value): void {
                 if (is_resource($value)) {
@@ -441,7 +441,7 @@ class ProblemDetailsResponseFactory
             ];
         }
 
-        if (! empty($previous)) {
+        if ($previous !== []) {
             $detail['stack'] = $previous;
         }
 
