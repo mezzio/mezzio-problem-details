@@ -61,7 +61,7 @@ final class ProblemDetailsMiddlewareTest extends TestCase
 
         $result = $this->middleware->process($this->request, $handler);
 
-        self::assertSame($response, $result);
+        $this->assertSame($response, $result);
     }
 
     #[DataProvider('acceptHeaders')]
@@ -88,7 +88,7 @@ final class ProblemDetailsMiddlewareTest extends TestCase
 
         $result = $this->middleware->process($this->request, $handler);
 
-        self::assertSame($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     #[WithoutErrorHandler]
@@ -112,16 +112,16 @@ final class ProblemDetailsMiddlewareTest extends TestCase
         $this->responseFactory
             ->method('createResponseFromThrowable')
             ->with($this->request, self::callback(function ($e): bool {
-                self::assertInstanceOf(ErrorException::class, $e);
-                self::assertEquals(E_USER_WARNING, $e->getSeverity());
-                self::assertEquals('Triggered error!', $e->getMessage());
+                $this->assertInstanceOf(ErrorException::class, $e);
+                $this->assertSame(E_USER_WARNING, $e->getSeverity());
+                $this->assertSame('Triggered error!', $e->getMessage());
                 return true;
             }))
             ->willReturn($expected);
 
         $result = $this->middleware->process($this->request, $handler);
 
-        self::assertSame($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testRethrowsCaughtExceptionIfUnableToNegotiateAcceptHeader(): void
@@ -174,9 +174,9 @@ final class ProblemDetailsMiddlewareTest extends TestCase
             $exception,
             $expected
         ): void {
-            self::assertSame($exception, $error, 'Listener did not receive same exception as was raised');
-            self::assertSame($this->request, $request, 'Listener did not receive same request');
-            self::assertSame($expected, $response, 'Listener did not receive same response');
+            $this->assertSame($exception, $error, 'Listener did not receive same exception as was raised');
+            $this->assertSame($this->request, $request, 'Listener did not receive same request');
+            $this->assertSame($expected, $response, 'Listener did not receive same response');
         };
         $listener2 = clone $listener;
         $this->middleware->attachListener($listener);
@@ -184,6 +184,6 @@ final class ProblemDetailsMiddlewareTest extends TestCase
 
         $result = $this->middleware->process($this->request, $handler);
 
-        self::assertSame($expected, $result);
+        $this->assertSame($expected, $result);
     }
 }

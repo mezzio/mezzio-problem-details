@@ -76,7 +76,7 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
         ]);
         $container->set(ResponseFactoryInterface::class, $responseFactory);
         $detectedResponseFactory = ($this->factory)($container);
-        self::assertSame($responseFactory, $detectedResponseFactory);
+        $this->assertSame($responseFactory, $detectedResponseFactory);
     }
 
     /**
@@ -94,8 +94,8 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
         $container->set(ResponseInterface::class, static fn(): ResponseInterface => $response);
 
         $detectedResponseFactory = ($this->factory)($container);
-        self::assertNotSame($responseFactory, $detectedResponseFactory);
-        self::assertInstanceOf(CallableResponseFactoryDecorator::class, $detectedResponseFactory);
-        self::assertEquals($response, $detectedResponseFactory->getResponseFromCallable());
+        $this->assertNotSame($responseFactory, $detectedResponseFactory);
+        $this->assertInstanceOf(CallableResponseFactoryDecorator::class, $detectedResponseFactory);
+        $this->assertEquals($response, $detectedResponseFactory->getResponseFromCallable());
     }
 }

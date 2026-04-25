@@ -18,24 +18,21 @@ final class ConfigProviderTest extends TestCase
         $provider = new ConfigProvider();
         $config   = $provider();
 
-        self::assertArrayHasKey('dependencies', $config);
+        $this->assertArrayHasKey('dependencies', $config);
         $dependencies = $config['dependencies'];
-        self::assertIsArray($dependencies);
-        self::assertArrayHasKey('factories', $dependencies);
+        $this->assertIsArray($dependencies);
+        $this->assertArrayHasKey('factories', $dependencies);
 
         $factories = $dependencies['factories'];
-        self::assertIsArray($factories);
-        self::assertCount(3, $factories);
-        self::assertArrayHasKey(ProblemDetailsMiddleware::class, $factories);
-        self::assertArrayHasKey(ProblemDetailsResponseFactory::class, $factories);
+        $this->assertIsArray($factories);
+        $this->assertCount(3, $factories);
+        $this->assertArrayHasKey(ProblemDetailsMiddleware::class, $factories);
+        $this->assertArrayHasKey(ProblemDetailsResponseFactory::class, $factories);
 
-        self::assertSame(
-            ProblemDetailsMiddlewareFactory::class,
-            $factories[ProblemDetailsMiddleware::class]
-        );
-        self::assertSame(
+        $this->assertSame(ProblemDetailsMiddlewareFactory::class, $factories[ProblemDetailsMiddleware::class]);
+        $this->assertSame(
             ProblemDetailsResponseFactoryFactory::class,
-            $factories[ProblemDetailsResponseFactory::class]
+            $factories[ProblemDetailsResponseFactory::class],
         );
     }
 }
