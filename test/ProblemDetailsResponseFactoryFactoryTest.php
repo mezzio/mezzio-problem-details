@@ -37,8 +37,8 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
     ): void {
         $r               = new ReflectionProperty($factory, 'responseFactory');
         $responseFactory = $r->getValue($factory);
-        self::assertInstanceOf(ResponseFactoryInterface::class, $responseFactory);
-        self::assertSame($expected, $responseFactory->createResponse());
+        $this->assertInstanceOf(ResponseFactoryInterface::class, $responseFactory);
+        $this->assertSame($expected, $responseFactory->createResponse());
     }
 
     public function testLackOfResponseServiceResultsInException(): void
@@ -67,14 +67,11 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $isDebug        = (new ReflectionObject($factory))->getProperty('isDebug');
         $jsonFlags      = (new ReflectionObject($factory))->getProperty('jsonFlags');
 
-        self::assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
-        self::assertSame(
-            JSON_UNESCAPED_SLASHES
-            | JSON_UNESCAPED_UNICODE
-            | JSON_PRESERVE_ZERO_FRACTION
-            | JSON_PARTIAL_OUTPUT_ON_ERROR,
-            $jsonFlags->getValue($factory)
-        );
+        $this->assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        $this->assertSame(JSON_UNESCAPED_SLASHES
+        | JSON_UNESCAPED_UNICODE
+        | JSON_PRESERVE_ZERO_FRACTION
+        | JSON_PARTIAL_OUTPUT_ON_ERROR, $jsonFlags->getValue($factory));
 
         $this->assertResponseFactoryReturns($response, $factory);
     }
@@ -88,8 +85,8 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $factory        = $factoryFactory($this->container);
         $jsonFlags      = (new ReflectionObject($factory))->getProperty('jsonFlags');
         $value          = $jsonFlags->getValue($factory);
-        self::assertIsInt($value);
-        self::assertSame(JSON_PRETTY_PRINT, $value & JSON_PRETTY_PRINT);
+        $this->assertIsInt($value);
+        $this->assertSame(JSON_PRETTY_PRINT, $value & JSON_PRETTY_PRINT);
     }
 
     public function testUsesDebugSettingFromConfigWhenPresent(): void
@@ -102,8 +99,8 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $isDebug                    = (new ReflectionObject($factory))->getProperty('isDebug');
         $exceptionDetailsInResponse = (new ReflectionObject($factory))->getProperty('exceptionDetailsInResponse');
 
-        self::assertSame(ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
-        self::assertSame(true, $exceptionDetailsInResponse->getValue($factory));
+        $this->assertSame(ProblemDetailsResponseFactory::INCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        $this->assertTrue($exceptionDetailsInResponse->getValue($factory));
     }
 
     public function testUsesJsonFlagsSettingFromConfigWhenPresent(): void
@@ -115,7 +112,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $factory        = $factoryFactory($this->container);
         $jsonFlags      = (new ReflectionObject($factory))->getProperty('jsonFlags');
 
-        self::assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory));
+        $this->assertSame(JSON_PRETTY_PRINT, $jsonFlags->getValue($factory));
     }
 
     public function testUsesDefaultTypesSettingFromConfigWhenPresent(): void
@@ -131,7 +128,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $factory         = $factoryFactory($this->container);
         $defaultTypesMap = (new ReflectionObject($factory))->getProperty('defaultTypesMap');
 
-        self::assertSame($expectedDefaultTypes, $defaultTypesMap->getValue($factory));
+        $this->assertSame($expectedDefaultTypes, $defaultTypesMap->getValue($factory));
     }
 
     public function testUsesIncludeThrowableDetailsSettingFromConfigWhenPresent(): void
@@ -151,7 +148,7 @@ final class ProblemDetailsResponseFactoryFactoryTest extends TestCase
         $isDebug                    = (new ReflectionObject($factory))->getProperty('isDebug');
         $exceptionDetailsInResponse = (new ReflectionObject($factory))->getProperty('exceptionDetailsInResponse');
 
-        self::assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
-        self::assertSame(true, $exceptionDetailsInResponse->getValue($factory));
+        $this->assertSame(ProblemDetailsResponseFactory::EXCLUDE_THROWABLE_DETAILS, $isDebug->getValue($factory));
+        $this->assertTrue($exceptionDetailsInResponse->getValue($factory));
     }
 }

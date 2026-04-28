@@ -51,35 +51,35 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
 
     public function testCanPullDetailsIndividually(): void
     {
-        self::assertEquals($this->status, $this->exception->getStatus());
-        self::assertEquals($this->detail, $this->exception->getDetail());
-        self::assertEquals($this->title, $this->exception->getTitle());
-        self::assertEquals($this->type, $this->exception->getType());
-        self::assertEquals($this->additional, $this->exception->getAdditionalData());
+        $this->assertSame($this->status, $this->exception->getStatus());
+        $this->assertSame($this->detail, $this->exception->getDetail());
+        $this->assertSame($this->title, $this->exception->getTitle());
+        $this->assertSame($this->type, $this->exception->getType());
+        $this->assertEquals($this->additional, $this->exception->getAdditionalData());
     }
 
     public function testCanCastDetailsToArray(): void
     {
-        self::assertEquals([
+        $this->assertSame([
+            'foo'    => 'bar',
             'status' => $this->status,
             'detail' => $this->detail,
             'title'  => $this->title,
             'type'   => $this->type,
-            'foo'    => 'bar',
         ], $this->exception->toArray());
     }
 
     public function testIsJsonSerializable(): void
     {
         $problem = json_decode(json_encode($this->exception, JSON_THROW_ON_ERROR), true, JSON_THROW_ON_ERROR);
-        self::assertIsArray($problem);
+        $this->assertIsArray($problem);
 
-        self::assertEquals([
+        $this->assertSame([
+            'foo'    => 'bar',
             'status' => $this->status,
             'detail' => $this->detail,
             'title'  => $this->title,
             'type'   => $this->type,
-            'foo'    => 'bar',
         ], $problem);
     }
 }

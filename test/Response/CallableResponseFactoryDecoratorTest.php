@@ -25,7 +25,7 @@ final class CallableResponseFactoryDecoratorTest extends TestCase
     public function testWillPassStatusCodeAndPhraseToCallable(): void
     {
         $this->response
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('withStatus')
             ->with(500, 'Foo')
             ->willReturnSelf();
@@ -36,10 +36,10 @@ final class CallableResponseFactoryDecoratorTest extends TestCase
     public function testWillReturnSameResponseInstance(): void
     {
         $this->response
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('withStatus')
             ->willReturnSelf();
 
-        self::assertEquals($this->response, $this->factory->createResponse());
+        $this->assertEquals($this->response, $this->factory->createResponse());
     }
 }

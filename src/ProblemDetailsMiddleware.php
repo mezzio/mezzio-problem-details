@@ -110,7 +110,7 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
          * @throws ErrorException if error is not within the error_reporting mask.
          */
         return static function (int $errno, string $errstr, string $errfile, int $errline): void {
-            if (! (error_reporting() & $errno)) {
+            if ((error_reporting() & $errno) === 0) {
                 // error_reporting does not include this error
                 return;
             }

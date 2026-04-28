@@ -63,7 +63,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects(self::atLeastOnce())->method('write')->with(self::isString());
+        $stream->expects($this->atLeastOnce())->method('write')->with(self::isString());
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -75,7 +75,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             'Unknown error occurred',
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     #[DataProvider('acceptHeaders')]
@@ -84,7 +84,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects(self::atLeastOnce())->method('write')->with(self::isString());
+        $stream->expects($this->atLeastOnce())->method('write')->with(self::isString());
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -96,7 +96,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $exception,
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     #[DataProvider('acceptHeaders')]
@@ -105,13 +105,15 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         string $expectedType,
     ): void {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn($header);
+        $this->prepareResponsePayloadAssertions(
+            $expectedType,
+            $this->createMock(StreamInterface::class),
+            static function (array $payload): void {
+                Assert::assertArrayHasKey('exception', $payload);
+            }
+        );
 
-        $stream = $this->createMock(StreamInterface::class);
-        $this->prepareResponsePayloadAssertions($expectedType, $stream, static function (array $payload): void {
-            Assert::assertArrayHasKey('exception', $payload);
-        });
-
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
@@ -126,7 +128,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $exception,
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     #[DataProvider('acceptHeaders')]
@@ -155,18 +157,16 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         } else {
             $expectedKeyNames = array_keys($additional['foo']);
         }
-
-        $stream = $this->createMock(StreamInterface::class);
         $this->prepareResponsePayloadAssertions(
             $expectedType,
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload) use ($expectedKeyNames): void {
                 Assert::assertIsArray($payload['foo']);
                 Assert::assertEquals($expectedKeyNames, array_keys($payload['foo']));
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
@@ -179,7 +179,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $additional,
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     /** @param array<string, mixed> $additional */
@@ -208,10 +208,9 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
     public function testCreateResponseFromThrowableWillPullDetailsFromProblemDetailsExceptionInterface(): void
     {
-        $e      = $this->createProblemDetailsExceptionWithAdditional(['foo' => 'bar']);
-        $stream = $this->createMock(StreamInterface::class);
+        $e = $this->createProblemDetailsExceptionWithAdditional(['foo' => 'bar']);
         $this->preparePayloadForJsonResponse(
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload): void {
                 Assert::assertSame(400, $payload['status']);
                 Assert::assertSame('Exception details', $payload['detail']);
@@ -221,7 +220,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(400)->willReturn($this->response);
         $this->response
             ->method('withHeader')
@@ -235,7 +234,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $e,
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     #[DataProvider('acceptHeaders')]
@@ -245,7 +244,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('write')
             ->with(self::callback(static function ($body): bool {
                 Assert::assertNotEmpty($body);
@@ -257,7 +256,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $this->response->method('withHeader')->with('Content-Type', $expectedType)->willReturn($this->response);
 
         $fh = fopen(__FILE__, 'r');
-        self::assertNotFalse($fh);
+        $this->assertNotFalse($fh);
         $response = $this->factory->createResponse(
             $this->request,
             500,
@@ -272,7 +271,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         );
         fclose($fh);
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testFactoryGeneratesXmlResponseIfNegotiationFails(): void
@@ -280,7 +279,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('text/plain');
 
         $stream = $this->createMock(StreamInterface::class);
-        $stream->expects(self::atLeastOnce())->method('write')->with(self::isString());
+        $stream->expects($this->atLeastOnce())->method('write')->with(self::isString());
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
@@ -295,16 +294,14 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             'Unknown error occurred',
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testFactoryRendersPreviousExceptionsInDebugMode(): void
     {
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
-
-        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload): void {
                 Assert::assertArrayHasKey('exception', $payload);
                 Assert::assertIsArray($payload['exception']);
@@ -319,7 +316,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response
             ->method('withHeader')
@@ -339,7 +336,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $second,
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testFragileDataInExceptionMessageShouldBeHiddenInResponseBodyInNoDebugMode(): void
@@ -349,7 +346,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('write')
             ->with(self::callback(static function (string $body) use ($fragileMessage): bool {
                 Assert::assertStringNotContainsString($fragileMessage, $body);
@@ -366,22 +363,20 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $this->factory->createResponseFromThrowable($this->request, $exception);
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testExceptionCodeShouldBeIgnoredAnd500ServedInResponseBodyInNonDebugMode(): void
     {
         $exception = new Exception('', 400);
-
-        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload): void {
                 Assert::assertSame(500, $payload['status']);
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response
             ->method('withHeader')
@@ -390,23 +385,21 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $this->factory->createResponseFromThrowable($this->request, $exception);
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testFragileDataInExceptionMessageShouldBeVisibleInResponseBodyInNonDebugModeWhenAllowToShowByFlag(): void //phpcs:ignore
     {
         $fragileMessage = 'Your SQL or password here';
         $exception      = new Exception($fragileMessage);
-
-        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload) use ($fragileMessage): void {
                 Assert::assertSame($fragileMessage, $payload['detail']);
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response
             ->method('withHeader')
@@ -422,22 +415,20 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $factory->createResponseFromThrowable($this->request, $exception);
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testCustomDetailMessageShouldBeVisible(): void
     {
         $detailMessage = 'Custom detail message';
-
-        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload) use ($detailMessage): void {
                 Assert::assertSame($detailMessage, $payload['detail']);
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(500)->willReturn($this->response);
         $this->response
             ->method('withHeader')
@@ -454,7 +445,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $response = $factory->createResponseFromThrowable($this->request, new Exception());
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     public function testRenderWithMalformedUtf8Sequences(): void
@@ -464,16 +455,14 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         ]);
 
         $this->request->method('getHeaderLine')->with('Accept')->willReturn('application/json');
-
-        $stream = $this->createMock(StreamInterface::class);
         $this->preparePayloadForJsonResponse(
-            $stream,
+            $this->createMock(StreamInterface::class),
             static function (array $payload): void {
                 Assert::assertArrayHasKey('malformed-utf8', $payload);
             },
         );
 
-        $this->response->method('getBody')->willReturn($stream);
+        $this->response->method('getBody')->willReturn($this->createMock(StreamInterface::class));
         $this->response->method('withStatus')->with(400)->willReturn($this->response);
         $this->response
             ->method('withHeader')
@@ -487,7 +476,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
             $e,
         );
 
-        self::assertSame($this->response, $response);
+        $this->assertSame($this->response, $response);
     }
 
     /** @return list<array{0: array<int, string>, 1: int, 2: string}> */
@@ -516,7 +505,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $stream = $this->createMock(StreamInterface::class);
         $stream
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('write')
             ->with(self::callback(static function (string $body) use ($expectedType): bool {
                 $payload = json_decode($body, true);
@@ -528,7 +517,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
 
         $this->response->method('getBody')->willReturn($stream);
         $this->response
-            ->expects(self::atLeastOnce())
+            ->expects($this->atLeastOnce())
             ->method('withStatus')
             ->with($status)
             ->willReturn($this->response);
@@ -565,9 +554,9 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $response = $factory->createResponse($serverRequest, 400, 'Some Message', '');
 
         $body = json_decode((string) $response->getBody(), true, JSON_THROW_ON_ERROR);
-        self::assertIsArray($body);
-        self::assertArrayHasKey('title', $body);
-        self::assertSame('Bad Request', $body['title']);
+        $this->assertIsArray($body);
+        $this->assertArrayHasKey('title', $body);
+        $this->assertSame('Bad Request', $body['title']);
     }
 
     public function testEmptyTypeInCreateResponseWillYieldDefaultType(): void
@@ -586,8 +575,8 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
         $response = $factory->createResponse($serverRequest, 400, 'Some Message', '', '');
 
         $body = json_decode((string) $response->getBody(), true, JSON_THROW_ON_ERROR);
-        self::assertIsArray($body);
-        self::assertArrayHasKey('type', $body);
-        self::assertSame('https://httpwg.org/specs/rfc9110.html#status.400', $body['type']);
+        $this->assertIsArray($body);
+        $this->assertArrayHasKey('type', $body);
+        $this->assertSame('https://httpwg.org/specs/rfc9110.html#status.400', $body['type']);
     }
 }
