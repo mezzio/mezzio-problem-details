@@ -1,0 +1,12 @@
+{
+    "name": "mezzio/problem-details-tools-unused",
+    "description": "composer-unused for mezzio-problem-details",
+    "license": "BSD-3-Clause",
+    "require": {
+        "icanhazstring/composer-unused": "^0.8"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
+

@@ -36,12 +36,14 @@
         }
     },
     "require": {
+        "ext-dom": "*",
         "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
         "ext-json": "*",
         "fig/http-message-util": "^1.1.2",
         "psr/container": "^1.0 || ^2.0",
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0 || ^2.0",
+        "psr/http-server-handler": "^1.0",
         "psr/http-server-middleware": "^1.0",
         "spatie/array-to-xml": "^3.3.0",
         "webmozart/assert": "^1.10 || ^2.0",
@@ -52,7 +54,6 @@
         "laminas/laminas-diactoros": "^3.8",
         "phpunit/phpunit": "^11.5.46",
         "psalm/plugin-phpunit": "^0.19.5",
-        "rector/rector": "^2.2.14",
         "vimeo/psalm": "^6.14.1"
     },
     "autoload": {
@@ -67,13 +68,17 @@
     },
     "scripts": {
         "check": [
+            "@composer-checks",
             "@cs-check",
+            "@static-analysis",
             "@test"
+        ],
+        "composer-checks": [
+            "composer validate --strict",
+            "composer dump-autoload --strict-psr --optimize"
         ],
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "rector": "rector -n",
-        "rector:fix": "rector",
         "static-analysis": "psalm --shepherd --stats",
         "static-analysis:b": "psalm --update-baseline",
         "static-analysis:clear": "psalm --clear-cache",

@@ -1,0 +1,9 @@
+{
+    "symbol-whitelist": [
+        "Mezzio\\Container\\ResponseFactoryFactory",
+        "Zend\\ProblemDetails\\ProblemDetailsMiddleware",
+        "Zend\\ProblemDetails\\ProblemDetailsNotFoundHandler",
+        "Zend\\ProblemDetails\\ProblemDetailsResponseFactory"
+    ]
+}
+

@@ -1,0 +1,12 @@
+{
+    "name": "mezzio/problem-details-tools-rector",
+    "description": "Rector for mezzio-problem-details",
+    "license": "BSD-3-Clause",
+    "require": {
+        "rector/rector": "^2.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
+

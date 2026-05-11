@@ -8,10 +8,9 @@ use Rector\PHPUnit\PHPUnit120\Rector\CallLike\CreateStubOverCreateMockArgRector;
 use Rector\PHPUnit\PHPUnit120\Rector\ClassMethod\ExpressionCreateMockToCreateStubRector;
 
 return RectorConfig::configure()
-    ->withPhpSets(php82: true)
     ->withPaths([
-        __DIR__ . '/src',
-        __DIR__ . '/test',
+        __DIR__ . '/../../src',
+        __DIR__ . '/../../test',
     ])
     ->withPreparedSets(
         codeQuality: true,
@@ -19,6 +18,7 @@ return RectorConfig::configure()
         privatization: true,
         phpunitCodeQuality: true,
     )
+    ->withPhpSets(php82: true)
     ->withSkip([
         YieldDataProviderRector::class,
         CreateStubOverCreateMockArgRector::class,
