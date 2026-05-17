@@ -27,7 +27,7 @@ build-mkdocs-image: documentation-theme ## Build the mkdocs image with necessary
 .PHONY: build-mkdocs-image
 
 build-php-image: ## Build the PHP image with necessary dependencies
-	@$(if ${IMAGE_ID},, docker build -t ${IMAGE_NAME} .)
+	@$(if ${IMAGE_ID},, docker build --build-arg PHP_VERSION=${PHP_VERSION} --pull -t ${IMAGE_NAME} .)
 .PHONY: build-php-image
 
 rebuild-php-image: ## Forcefully rebuild the PHP image
