@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: shivammathur/setup-php@2.37.0
+      - uses: shivammathur/setup-php@2.37.1
         with:
           php-version: ${{ env.default_php }}
           ini-values: memory_limit=-1
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: shivammathur/setup-php@2.37.0
+      - uses: shivammathur/setup-php@2.37.1
         with:
           php-version: ${{ env.default_php }}
           extensions: ${{ env.php_extensions }}
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: shivammathur/setup-php@2.37.0
+      - uses: shivammathur/setup-php@2.37.1
         with:
           php-version: ${{ env.default_php }}
           extensions: ${{ env.php_extensions }}
@@ -47,7 +47,7 @@ jobs:
       - name: "Psalm"
         run: vendor/bin/psalm --report=results.sarif
       - name: "Upload Security Analysis results to GitHub"
-        uses: github/codeql-action/upload-sarif@v3.29.0
+        uses: github/codeql-action/upload-sarif@v3.35.5
         with:
           sarif_file: results.sarif
   rector:
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6.0.2
-      - uses: shivammathur/setup-php@2.37.0
+      - uses: shivammathur/setup-php@2.37.1
         with:
           php-version: ${{ env.default_php }}
           extensions: ${{ env.php_extensions }}
