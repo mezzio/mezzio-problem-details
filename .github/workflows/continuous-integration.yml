@@ -47,7 +47,7 @@ jobs:
       - name: "Psalm"
         run: vendor/bin/psalm --report=results.sarif
       - name: "Upload Security Analysis results to GitHub"
-        uses: github/codeql-action/upload-sarif@v3.35.5
+        uses: github/codeql-action/upload-sarif@v4.35.5
         with:
           sarif_file: results.sarif
   rector:
