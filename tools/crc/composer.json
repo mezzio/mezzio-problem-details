@@ -1,0 +1,12 @@
+{
+    "name": "mezzio/problem-details-tools-crc",
+    "description": "Composer Require Checker for mezzio-problem-details",
+    "license": "BSD-3-Clause",
+    "require": {
+        "maglnet/composer-require-checker": "^4.15"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
+

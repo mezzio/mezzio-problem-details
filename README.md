@@ -33,7 +33,7 @@ $ composer require mezzio/mezzio-problem-details
 
 ## Documentation
 
-Documentation is [in the doc tree](docs/book/), and can be compiled using [mkdocs](https://www.mkdocs.org):
+Documentation is in the `docs/book/` tree, and can be compiled using [mkdocs](https://www.mkdocs.org):
 
 ```bash
 $ mkdocs build
