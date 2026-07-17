@@ -49,6 +49,31 @@ final class ProblemDetailsExceptionInterfaceTest extends TestCase
         };
     }
 
+    public function testGettersReturnSafeDefaultsWhenPropertiesWereNeverSet(): void
+    {
+        // A composing class that does not set every property (e.g. a plain
+        // `new CustomException()` path never routed through a static factory)
+        // must remain well-formed: the typed getters return the documented
+        // defaults instead of raising a TypeError on the uninitialized/null
+        // properties. '' for title/type is the ProblemDetailsResponseFactory
+        // sentinel for "derive from status".
+        $exception = new class extends Exception implements ProblemDetailsExceptionInterface {
+            use CommonProblemDetailsExceptionTrait;
+        };
+
+        $this->assertSame(500, $exception->getStatus());
+        $this->assertSame('', $exception->getDetail());
+        $this->assertSame('', $exception->getTitle());
+        $this->assertSame('', $exception->getType());
+        $this->assertSame([], $exception->getAdditionalData());
+        $this->assertSame([
+            'status' => 500,
+            'detail' => '',
+            'title'  => '',
+            'type'   => '',
+        ], $exception->toArray());
+    }
+
     public function testCanPullDetailsIndividually(): void
     {
         $this->assertSame($this->status, $this->exception->getStatus());
