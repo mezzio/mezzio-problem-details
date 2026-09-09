@@ -3,7 +3,7 @@
     "description": "composer-unused for mezzio-problem-details",
     "license": "BSD-3-Clause",
     "require": {
-        "icanhazstring/composer-unused": "^0.8"
+        "icanhazstring/composer-unused": "^0.8 || ^0.9"
     },
     "config": {
         "sort-packages": true
