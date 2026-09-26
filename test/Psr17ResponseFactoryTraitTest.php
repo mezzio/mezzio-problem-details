@@ -34,7 +34,7 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
                 'dependencies' => [
                     'factories' => [
                         ResponseInterface::class
-                            => fn(): ResponseInterface => new TextResponse('foo'),
+                            => static fn(): ResponseInterface => new TextResponse('foo'),
                     ],
                 ],
             ],
@@ -55,7 +55,7 @@ final class Psr17ResponseFactoryTraitTest extends TestCase
                 'dependencies' => [
                     'delegators' => [
                         ResponseInterface::class => [
-                            fn(): ResponseInterface => new TextResponse('foo'),
+                            static fn(): ResponseInterface => new TextResponse('foo'),
                         ],
                     ],
                 ],
