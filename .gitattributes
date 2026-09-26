@@ -9,6 +9,7 @@
 /test/ export-ignore
 /psalm.xml export-ignore
 /psalm-baseline.xml export-ignore
+/structarmed.php export-ignore
 /renovate.json export-ignore
 /composer.lock export-ignore
 /tools/ export-ignore
