@@ -12,30 +12,28 @@ use function array_merge;
 /**
  * Common functionality for ProblemDetailsExceptionInterface implementations.
  *
- * Requires setting the following properties in the composing class:
+ * Composing classes may set the following properties (each has a safe default,
+ * so an instance constructed without setting them stays well-formed instead of
+ * causing a TypeError in the typed getters):
  *
- * - status (int)
- * - detail (string)
- * - title (string)
- * - type (string)
- * - additional (array)
+ * - status (int; default 500)
+ * - detail (string; default '')
+ * - title (string; default '' — ProblemDetailsResponseFactory derives it from status)
+ * - type (string; default '' — ProblemDetailsResponseFactory derives it from status)
+ * - additional (array; default [])
  */
 trait CommonProblemDetailsExceptionTrait
 {
-    /** @var int */
-    private $status;
+    private int $status = 500;
 
-    /** @var string */
-    private $detail;
+    private string $detail = '';
 
-    /** @var string */
-    private $title;
+    private string $title = '';
 
-    /** @var string */
-    private $type;
+    private string $type = '';
 
     /** @var array<string, mixed> */
-    private $additional = [];
+    private array $additional = [];
 
     public function getStatus(): int
     {
