@@ -36,7 +36,7 @@ final class ProblemDetailsResponseFactoryTest extends TestCase
     private ResponseInterface&MockObject $response;
     private ProblemDetailsResponseFactory $factory;
 
-    private const UTF_8_INVALID_2_OCTET_SEQUENCE = "\xc3\x28";
+    private const string UTF_8_INVALID_2_OCTET_SEQUENCE = "\xc3\x28";
 
     protected function setUp(): void
     {
