@@ -6,3 +6,5 @@
 /phpunit.xml
 /vendor/
 /.markdownlint.json
+/doc/html/
+/documentation-theme/

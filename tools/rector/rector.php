@@ -18,7 +18,7 @@ return RectorConfig::configure()
         privatization: true,
         phpunitCodeQuality: true,
     )
-    ->withPhpSets(php82: true)
+    ->withPhpSets(php83: true)
     ->withSkip([
         YieldDataProviderRector::class,
         CreateStubOverCreateMockArgRector::class,
